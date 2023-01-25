@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+private let appAssembler: AppAssembler = AppAssembler()
+
 @main
 struct SynopicApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppRootCoordinatorView(coordinator: appAssembler.resolve(AppRootCoordinatorViewModel.self)!)
         }
     }
 }

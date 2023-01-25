@@ -7,13 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E2BC374295525F000A4821A /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC373295525F000A4821A /* CameraManager.swift */; };
+		1E2BC377295550B900A4821A /* ImagePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC376295550B900A4821A /* ImagePreviewView.swift */; };
+		1E2BC37C295567E600A4821A /* Publisher+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */; };
+		1E2BC37E2955681500A4821A /* Publisher+DefinedScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */; };
+		1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37F29556AF700A4821A /* CancelBag.swift */; };
+		1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC3832957B9B100A4821A /* Button+Extensions.swift */; };
+		1EA187212952BC590017B38B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187202952BC590017B38B /* ViewModel.swift */; };
+		1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */; };
+		1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187242952BFD00017B38B /* AppAssembler.swift */; };
+		1EA187272952BFDF0017B38B /* CoordinatorAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187262952BFDF0017B38B /* CoordinatorAssembly.swift */; };
+		1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187282952BFE80017B38B /* ServiceAssembly.swift */; };
+		1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA1872A2952BFF20017B38B /* ViewModelAssembly.swift */; };
+		1EA1872E2952C0850017B38B /* AppRootCoordinatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA1872D2952C0850017B38B /* AppRootCoordinatorViewModel.swift */; };
+		1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA1872F2952C0990017B38B /* AppRootCoordinatorView.swift */; };
 		1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */; };
-		1EC0BFAE294BD72E00C7541B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAD294BD72E00C7541B /* ContentView.swift */; };
 		1EC0BFB0294BD73000C7541B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAF294BD73000C7541B /* Assets.xcassets */; };
-		1EC0BFB3294BD73000C7541B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFB2294BD73000C7541B /* Preview Assets.xcassets */; };
 		1EC0BFBD294BD73000C7541B /* SynopicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFBC294BD73000C7541B /* SynopicTests.swift */; };
 		1EC0BFC7294BD73000C7541B /* SynopicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFC6294BD73000C7541B /* SynopicUITests.swift */; };
 		1EC0BFC9294BD73000C7541B /* SynopicUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFC8294BD73000C7541B /* SynopicUITestsLaunchTests.swift */; };
+		1EC0BFE0294E74A100C7541B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */; };
+		1EC0BFE3294E800200C7541B /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE2294E800200C7541B /* Swinject */; };
+		1EC0BFE6294E80AF00C7541B /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE5294E80AF00C7541B /* CombineExt */; };
+		1EC0BFF9294FA9E400C7541B /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFF8294FA9E400C7541B /* CameraView.swift */; };
+		1EC0C014294FB22400C7541B /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0C013294FB22400C7541B /* CameraViewModel.swift */; };
+		1EC5D6BE294FD5B000A29BF0 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC5D6BD294FD5B000A29BF0 /* CameraService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,16 +52,32 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E2BC373295525F000A4821A /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		1E2BC376295550B900A4821A /* ImagePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewView.swift; sourceTree = "<group>"; };
+		1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Extensions.swift"; sourceTree = "<group>"; };
+		1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+DefinedScheduler.swift"; sourceTree = "<group>"; };
+		1E2BC37F29556AF700A4821A /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
+		1E2BC3832957B9B100A4821A /* Button+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Extensions.swift"; sourceTree = "<group>"; };
+		1EA187202952BC590017B38B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackProvider.swift; sourceTree = "<group>"; };
+		1EA187242952BFD00017B38B /* AppAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembler.swift; sourceTree = "<group>"; };
+		1EA187262952BFDF0017B38B /* CoordinatorAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorAssembly.swift; sourceTree = "<group>"; };
+		1EA187282952BFE80017B38B /* ServiceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAssembly.swift; sourceTree = "<group>"; };
+		1EA1872A2952BFF20017B38B /* ViewModelAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelAssembly.swift; sourceTree = "<group>"; };
+		1EA1872D2952C0850017B38B /* AppRootCoordinatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootCoordinatorViewModel.swift; sourceTree = "<group>"; };
+		1EA1872F2952C0990017B38B /* AppRootCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootCoordinatorView.swift; sourceTree = "<group>"; };
 		1EC0BFA8294BD72E00C7541B /* Synopic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synopic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicApp.swift; sourceTree = "<group>"; };
-		1EC0BFAD294BD72E00C7541B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1EC0BFAF294BD73000C7541B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1EC0BFB2294BD73000C7541B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1EC0BFB8294BD73000C7541B /* SynopicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SynopicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFBC294BD73000C7541B /* SynopicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicTests.swift; sourceTree = "<group>"; };
 		1EC0BFC2294BD73000C7541B /* SynopicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SynopicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFC6294BD73000C7541B /* SynopicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITests.swift; sourceTree = "<group>"; };
 		1EC0BFC8294BD73000C7541B /* SynopicUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Preview Assets.xcassets"; path = "Preview Content/Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1EC0BFF8294FA9E400C7541B /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		1EC0C013294FB22400C7541B /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		1EC5D6BD294FD5B000A29BF0 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EC0BFE6294E80AF00C7541B /* CombineExt in Frameworks */,
+				1EC0BFE3294E800200C7541B /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +107,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E12FBF0297CD5B50077F046 /* OCRService */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = OCRService;
+			sourceTree = "<group>";
+		};
+		1E2BC3752955508E00A4821A /* ImagePreview */ = {
+			isa = PBXGroup;
+			children = (
+				1E2BC376295550B900A4821A /* ImagePreviewView.swift */,
+			);
+			path = ImagePreview;
+			sourceTree = "<group>";
+		};
+		1E2BC37A295567CA00A4821A /* Combine */ = {
+			isa = PBXGroup;
+			children = (
+				1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */,
+				1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */,
+				1E2BC37F29556AF700A4821A /* CancelBag.swift */,
+			);
+			path = Combine;
+			sourceTree = "<group>";
+		};
+		1EA1872C2952C0710017B38B /* AppRootCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				1EA1872F2952C0990017B38B /* AppRootCoordinatorView.swift */,
+				1EA1872D2952C0850017B38B /* AppRootCoordinatorViewModel.swift */,
+			);
+			path = AppRootCoordinator;
+			sourceTree = "<group>";
+		};
+		1EA187312952C60A0017B38B /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				1E2BC3832957B9B100A4821A /* Button+Extensions.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
 		1EC0BF9F294BD72E00C7541B = {
 			isa = PBXGroup;
 			children = (
@@ -95,19 +173,14 @@
 			isa = PBXGroup;
 			children = (
 				1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */,
-				1EC0BFAD294BD72E00C7541B /* ContentView.swift */,
 				1EC0BFAF294BD73000C7541B /* Assets.xcassets */,
-				1EC0BFB1294BD73000C7541B /* Preview Content */,
+				1EC0BFF2294E841D00C7541B /* Architecture */,
+				1EC0BFF5294F97C900C7541B /* Core */,
+				1EC0BFDE294E747800C7541B /* Preview Content */,
+				1EC0BFF4294E846900C7541B /* Services */,
+				1EC0BFF6294F97D300C7541B /* UI */,
 			);
 			path = Synopic;
-			sourceTree = "<group>";
-		};
-		1EC0BFB1294BD73000C7541B /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				1EC0BFB2294BD73000C7541B /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		1EC0BFBB294BD73000C7541B /* SynopicTests */ = {
@@ -127,6 +200,89 @@
 			path = SynopicUITests;
 			sourceTree = "<group>";
 		};
+		1EC0BFDE294E747800C7541B /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */,
+			);
+			name = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1EC0BFF2294E841D00C7541B /* Architecture */ = {
+			isa = PBXGroup;
+			children = (
+				1EA187202952BC590017B38B /* ViewModel.swift */,
+				1EA187242952BFD00017B38B /* AppAssembler.swift */,
+				1EA187262952BFDF0017B38B /* CoordinatorAssembly.swift */,
+				1EA187282952BFE80017B38B /* ServiceAssembly.swift */,
+				1EA1872A2952BFF20017B38B /* ViewModelAssembly.swift */,
+			);
+			path = Architecture;
+			sourceTree = "<group>";
+		};
+		1EC0BFF4294E846900C7541B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1EC5D6BB294FD57700A29BF0 /* API */,
+				1EC5D6BA294FD56B00A29BF0 /* Local */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1EC0BFF5294F97C900C7541B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				1E2BC37A295567CA00A4821A /* Combine */,
+				1EA187312952C60A0017B38B /* SwiftUI */,
+				1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		1EC0BFF6294F97D300C7541B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				1EA1872C2952C0710017B38B /* AppRootCoordinator */,
+				1EC0BFF7294FA99C00C7541B /* Camera */,
+				1E2BC3752955508E00A4821A /* ImagePreview */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		1EC0BFF7294FA99C00C7541B /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				1EC0BFF8294FA9E400C7541B /* CameraView.swift */,
+				1EC0C013294FB22400C7541B /* CameraViewModel.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		1EC5D6BA294FD56B00A29BF0 /* Local */ = {
+			isa = PBXGroup;
+			children = (
+				1E12FBF0297CD5B50077F046 /* OCRService */,
+				1EC5D6BC294FD59C00A29BF0 /* CameraService */,
+			);
+			path = Local;
+			sourceTree = "<group>";
+		};
+		1EC5D6BB294FD57700A29BF0 /* API */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		1EC5D6BC294FD59C00A29BF0 /* CameraService */ = {
+			isa = PBXGroup;
+			children = (
+				1E2BC373295525F000A4821A /* CameraManager.swift */,
+				1EC5D6BD294FD5B000A29BF0 /* CameraService.swift */,
+			);
+			path = CameraService;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +299,10 @@
 			dependencies = (
 			);
 			name = Synopic;
+			packageProductDependencies = (
+				1EC0BFE2294E800200C7541B /* Swinject */,
+				1EC0BFE5294E80AF00C7541B /* CombineExt */,
+			);
 			productName = Synopic;
 			productReference = 1EC0BFA8294BD72E00C7541B /* Synopic.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +375,10 @@
 				Base,
 			);
 			mainGroup = 1EC0BF9F294BD72E00C7541B;
+			packageReferences = (
+				1EC0BFE1294E800200C7541B /* XCRemoteSwiftPackageReference "Swinject" */,
+				1EC0BFE4294E80AF00C7541B /* XCRemoteSwiftPackageReference "CombineExt" */,
+			);
 			productRefGroup = 1EC0BFA9294BD72E00C7541B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -231,7 +395,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1EC0BFB3294BD73000C7541B /* Preview Assets.xcassets in Resources */,
+				1EC0BFE0294E74A100C7541B /* Preview Assets.xcassets in Resources */,
 				1EC0BFB0294BD73000C7541B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,8 +421,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1EC0BFAE294BD72E00C7541B /* ContentView.swift in Sources */,
+				1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */,
+				1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */,
+				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
+				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
+				1EC0BFF9294FA9E400C7541B /* CameraView.swift in Sources */,
+				1EC5D6BE294FD5B000A29BF0 /* CameraService.swift in Sources */,
+				1EA187272952BFDF0017B38B /* CoordinatorAssembly.swift in Sources */,
+				1E2BC374295525F000A4821A /* CameraManager.swift in Sources */,
+				1E2BC37E2955681500A4821A /* Publisher+DefinedScheduler.swift in Sources */,
+				1E2BC377295550B900A4821A /* ImagePreviewView.swift in Sources */,
+				1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */,
+				1EA187212952BC590017B38B /* ViewModel.swift in Sources */,
 				1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */,
+				1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */,
+				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
+				1EA1872E2952C0850017B38B /* AppRootCoordinatorViewModel.swift in Sources */,
+				1E2BC37C295567E600A4821A /* Publisher+Extensions.swift in Sources */,
+				1EC0C014294FB22400C7541B /* CameraViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,7 +525,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -399,7 +579,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -420,11 +600,14 @@
 				DEVELOPMENT_TEAM = B9HGZT984S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow us to use your camera";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow us to use camera";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -432,6 +615,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = bundysdevelopment.Synopic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -449,11 +635,14 @@
 				DEVELOPMENT_TEAM = B9HGZT984S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow us to use your camera";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow us to use camera";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -461,6 +650,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = bundysdevelopment.Synopic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -583,6 +775,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1EC0BFE1294E800200C7541B /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.8.3;
+			};
+		};
+		1EC0BFE4294E80AF00C7541B /* XCRemoteSwiftPackageReference "CombineExt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineExt.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1EC0BFE2294E800200C7541B /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1EC0BFE1294E800200C7541B /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		1EC0BFE5294E80AF00C7541B /* CombineExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1EC0BFE4294E80AF00C7541B /* XCRemoteSwiftPackageReference "CombineExt" */;
+			productName = CombineExt;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1EC0BFA0294BD72E00C7541B /* Project object */;
 }
