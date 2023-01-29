@@ -18,7 +18,12 @@ struct AppRootCoordinatorView: View {
         NavigationView {
             LandingView(viewModel: self.coordinator.landingViewModel)
                 .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { c in
-                    ScanDocumentsCoordinatorView(coordinator: c)
+                    NavigationView {
+                        ZStack {
+                            Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
+                            ScanDocumentsCoordinatorView(coordinator: c)
+                        }
+                    }
                 }
         }
     }
