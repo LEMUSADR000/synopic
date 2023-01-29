@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct AppRootCoordinatorView: View {
-    @ObservedObject var coordinator: AppRootCoordinatorViewModel
+    @ObservedObject var coordinator: AppRootCoordinator
 
-    init(coordinator: AppRootCoordinatorViewModel) {
+    init(coordinator: AppRootCoordinator) {
         self.coordinator = coordinator
     }
 
     var body: some View {
         NavigationView {
-            CameraView(model: self.coordinator.cameraViewModel)
+            LandingView(viewModel: self.coordinator.landingViewModel)
+                .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { coordinator in
+                    ScanDocumentsCoordinatorView(coordinator)
+                }
         }
     }
 }

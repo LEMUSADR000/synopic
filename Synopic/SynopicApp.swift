@@ -13,7 +13,7 @@ private let appAssembler: AppAssembler = AppAssembler()
 struct SynopicApp: App {
     var body: some Scene {
         WindowGroup {
-            AppRootCoordinatorView(coordinator: appAssembler.resolve(AppRootCoordinatorViewModel.self)!)
+            AppRootCoordinatorView(coordinator: appAssembler.resolve(AppRootCoordinator.self)!)
         }
     }
 }
