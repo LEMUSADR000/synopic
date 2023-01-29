@@ -10,12 +10,12 @@ import Swinject
 
 class ViewModelAssembly: Assembly {
     func assemble(container: Container) {
-//        container.register(CameraViewModel.self) { r in
-//            CameraViewModel(cameraService: r.resolve(CameraServiceProtocol.self)!)
-//        }.inObjectScope(.transient)
-        
         container.register(LandingViewModel.self) { r in
-            LandingViewModel(/* insert services */)
+            LandingViewModel(ocrService: r.resolve(OCRServiceProtocol.self)!)
+        }.inObjectScope(.transient)
+        
+        container.register(ScanDocumentsViewModel.self) { r in
+            ScanDocumentsViewModel(ocrService: r.resolve(OCRServiceProtocol.self)!)
         }.inObjectScope(.transient)
     }
 }

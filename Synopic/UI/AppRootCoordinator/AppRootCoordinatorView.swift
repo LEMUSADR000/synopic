@@ -17,8 +17,8 @@ struct AppRootCoordinatorView: View {
     var body: some View {
         NavigationView {
             LandingView(viewModel: self.coordinator.landingViewModel)
-                .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { coordinator in
-                    ScanDocumentsCoordinatorView(coordinator)
+                .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { c in
+                    ScanDocumentsCoordinatorView(coordinator: c)
                 }
         }
     }

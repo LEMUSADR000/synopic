@@ -16,10 +16,14 @@ struct LandingView: View {
                 ScrollView {
                     ZStack {
                         LazyVStack {
-                            ForEach(self.viewModel.items, id: \.self) {
-                                Text($0)
+                            ForEach(self.viewModel.results.indices, id: \.self) { i in
+                                ScanResultView(result: self.viewModel.results[i])
+                                    .transition(.slide)
+                                    .zIndex(0)
                             }
                         }
+                        .id(UUID())
+                        .transition(AnyTransition.opacity.animation(.default))
                     }
                     .padding()
                 }
@@ -39,7 +43,7 @@ struct LandingView: View {
                 .padding()
             }
             .navigationBarTitle("Text Recognition")
-        }
+        }.navigationBarHidden(true)
     }
 }
 

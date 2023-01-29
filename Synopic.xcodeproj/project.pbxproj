@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1E045CB2298245EE00917E75 /* ScanDocumentsCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E045CB1298245EE00917E75 /* ScanDocumentsCoordinatorView.swift */; };
-		1E2BC377295550B900A4821A /* ImagePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC376295550B900A4821A /* ImagePreviewView.swift */; };
 		1E2BC37C295567E600A4821A /* Publisher+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */; };
 		1E2BC37E2955681500A4821A /* Publisher+DefinedScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */; };
 		1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37F29556AF700A4821A /* CancelBag.swift */; };
@@ -25,6 +24,9 @@
 		1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA1872A2952BFF20017B38B /* ViewModelAssembly.swift */; };
 		1EA1872E2952C0850017B38B /* AppRootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA1872D2952C0850017B38B /* AppRootCoordinator.swift */; };
 		1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA1872F2952C0990017B38B /* AppRootCoordinatorView.swift */; };
+		1EA8D8962986D37F0016AFFA /* ScanDocumentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA8D8952986D37F0016AFFA /* ScanDocumentsViewModel.swift */; };
+		1EA8D8992986DB390016AFFA /* OCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA8D8982986DB390016AFFA /* OCRService.swift */; };
+		1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA8D89B2986E2990016AFFA /* DocumentScanResult.swift */; };
 		1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */; };
 		1EC0BFB0294BD73000C7541B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAF294BD73000C7541B /* Assets.xcassets */; };
 		1EC0BFBD294BD73000C7541B /* SynopicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFBC294BD73000C7541B /* SynopicTests.swift */; };
@@ -33,6 +35,8 @@
 		1EC0BFE0294E74A100C7541B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */; };
 		1EC0BFE3294E800200C7541B /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE2294E800200C7541B /* Swinject */; };
 		1EC0BFE6294E80AF00C7541B /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE5294E80AF00C7541B /* CombineExt */; };
+		1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */; };
+		1EFB3F6729871BC8005227FB /* ScanResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F6629871BC8005227FB /* ScanResultView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +58,6 @@
 
 /* Begin PBXFileReference section */
 		1E045CB1298245EE00917E75 /* ScanDocumentsCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDocumentsCoordinatorView.swift; sourceTree = "<group>"; };
-		1E2BC376295550B900A4821A /* ImagePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewView.swift; sourceTree = "<group>"; };
 		1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Extensions.swift"; sourceTree = "<group>"; };
 		1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+DefinedScheduler.swift"; sourceTree = "<group>"; };
 		1E2BC37F29556AF700A4821A /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
@@ -71,6 +74,9 @@
 		1EA1872A2952BFF20017B38B /* ViewModelAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelAssembly.swift; sourceTree = "<group>"; };
 		1EA1872D2952C0850017B38B /* AppRootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootCoordinator.swift; sourceTree = "<group>"; };
 		1EA1872F2952C0990017B38B /* AppRootCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootCoordinatorView.swift; sourceTree = "<group>"; };
+		1EA8D8952986D37F0016AFFA /* ScanDocumentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDocumentsViewModel.swift; sourceTree = "<group>"; };
+		1EA8D8982986DB390016AFFA /* OCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRService.swift; sourceTree = "<group>"; };
+		1EA8D89B2986E2990016AFFA /* DocumentScanResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScanResult.swift; sourceTree = "<group>"; };
 		1EC0BFA8294BD72E00C7541B /* Synopic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synopic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicApp.swift; sourceTree = "<group>"; };
 		1EC0BFAF294BD73000C7541B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -80,6 +86,8 @@
 		1EC0BFC6294BD73000C7541B /* SynopicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITests.swift; sourceTree = "<group>"; };
 		1EC0BFC8294BD73000C7541B /* SynopicUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Preview Assets.xcassets"; path = "Preview Content/Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		1EFB3F6629871BC8005227FB /* ScanResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,8 +120,9 @@
 		1E045CB0298245BA00917E75 /* ScanDocuments */ = {
 			isa = PBXGroup;
 			children = (
-				1E045CB1298245EE00917E75 /* ScanDocumentsCoordinatorView.swift */,
+				1EA8D8972986D3910016AFFA /* Content */,
 				1E4B14C82984C972002D1105 /* ScanDocumentsCoordinator.swift */,
+				1E045CB1298245EE00917E75 /* ScanDocumentsCoordinatorView.swift */,
 			);
 			path = ScanDocuments;
 			sourceTree = "<group>";
@@ -121,16 +130,10 @@
 		1E12FBF0297CD5B50077F046 /* OCRService */ = {
 			isa = PBXGroup;
 			children = (
+				1EA8D8982986DB390016AFFA /* OCRService.swift */,
+				1EA8D89B2986E2990016AFFA /* DocumentScanResult.swift */,
 			);
 			path = OCRService;
-			sourceTree = "<group>";
-		};
-		1E2BC3752955508E00A4821A /* ImagePreview */ = {
-			isa = PBXGroup;
-			children = (
-				1E2BC376295550B900A4821A /* ImagePreviewView.swift */,
-			);
-			path = ImagePreview;
 			sourceTree = "<group>";
 		};
 		1E2BC37A295567CA00A4821A /* Combine */ = {
@@ -147,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				1E4B14CD2984D332002D1105 /* String+Extensions.swift */,
+				1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -177,6 +181,14 @@
 			path = SwiftUI;
 			sourceTree = "<group>";
 		};
+		1EA8D8972986D3910016AFFA /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				1EA8D8952986D37F0016AFFA /* ScanDocumentsViewModel.swift */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
 		1EC0BF9F294BD72E00C7541B = {
 			isa = PBXGroup;
 			children = (
@@ -200,12 +212,12 @@
 		1EC0BFAA294BD72E00C7541B /* Synopic */ = {
 			isa = PBXGroup;
 			children = (
-				1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */,
-				1EC0BFAF294BD73000C7541B /* Assets.xcassets */,
 				1EC0BFF2294E841D00C7541B /* Architecture */,
+				1EC0BFAF294BD73000C7541B /* Assets.xcassets */,
 				1EC0BFF5294F97C900C7541B /* Core */,
 				1EC0BFDE294E747800C7541B /* Preview Content */,
 				1EC0BFF4294E846900C7541B /* Services */,
+				1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */,
 				1EC0BFF6294F97D300C7541B /* UI */,
 			);
 			path = Synopic;
@@ -271,10 +283,10 @@
 		1EC0BFF6294F97D300C7541B /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1EFB3F6529871B76005227FB /* ScanResult */,
+				1EA1872C2952C0710017B38B /* AppRootCoordinator */,
 				1E4B14CF2984DB3A002D1105 /* Landing */,
 				1E045CB0298245BA00917E75 /* ScanDocuments */,
-				1EA1872C2952C0710017B38B /* AppRootCoordinator */,
-				1E2BC3752955508E00A4821A /* ImagePreview */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -292,6 +304,14 @@
 			children = (
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		1EFB3F6529871B76005227FB /* ScanResult */ = {
+			isa = PBXGroup;
+			children = (
+				1EFB3F6629871BC8005227FB /* ScanResultView.swift */,
+			);
+			path = ScanResult;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -433,23 +453,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E045CB2298245EE00917E75 /* ScanDocumentsCoordinatorView.swift in Sources */,
+				1EA8D8992986DB390016AFFA /* OCRService.swift in Sources */,
 				1E4B14D32984DB89002D1105 /* LandingView.swift in Sources */,
 				1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */,
 				1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
+				1EA8D8962986D37F0016AFFA /* ScanDocumentsViewModel.swift in Sources */,
 				1EA187272952BFDF0017B38B /* CoordinatorAssembly.swift in Sources */,
 				1E4B14D52984DC5F002D1105 /* LandingViewModel.swift in Sources */,
 				1E2BC37E2955681500A4821A /* Publisher+DefinedScheduler.swift in Sources */,
-				1E2BC377295550B900A4821A /* ImagePreviewView.swift in Sources */,
 				1E4B14CE2984D332002D1105 /* String+Extensions.swift in Sources */,
 				1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */,
 				1EA187212952BC590017B38B /* ViewModel.swift in Sources */,
 				1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */,
+				1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */,
 				1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */,
 				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
 				1E4B14C92984C972002D1105 /* ScanDocumentsCoordinator.swift in Sources */,
+				1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */,
 				1EA1872E2952C0850017B38B /* AppRootCoordinator.swift in Sources */,
+				1EFB3F6729871BC8005227FB /* ScanResultView.swift in Sources */,
 				1E2BC37C295567E600A4821A /* Publisher+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

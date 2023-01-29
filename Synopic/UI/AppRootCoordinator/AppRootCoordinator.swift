@@ -33,8 +33,12 @@ extension AppRootCoordinator: LandingViewModelDelegate {
 
 // MARK: ScanDocumentsCoordinatorDelegate
 
-//extension AppRootCoordinator: ScanDocumentsCoordinatorDelegate {
-//    func scanDocumentsCoordinatorDidComplete(_ source: ScanDocumentsCoordinator) {
-//        self.scanDocumentsCoordinator = nil
-//    }
-//}
+extension AppRootCoordinator: ScanDocumentsCoordinatorDelegate {
+    func scanDocumentsViewModelDidCancel(_ source: ScanDocumentsCoordinator) {
+        self.scanDocumentsCoordinator = nil
+    }
+    
+    func scanDocumentsViewModelDidSave(_ source: ScanDocumentsCoordinator) {
+        self.scanDocumentsCoordinator = nil
+    }
+}

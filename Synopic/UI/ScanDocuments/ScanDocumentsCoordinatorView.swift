@@ -12,8 +12,8 @@ import Vision
 struct ScanDocumentsCoordinatorView: UIViewControllerRepresentable {
     private var scanDocumentsCoordinator: ScanDocumentsCoordinator
     
-    init(_ scanDocumentsCoordinator: ScanDocumentsCoordinator) {
-        self.scanDocumentsCoordinator = scanDocumentsCoordinator
+    init(coordinator: ScanDocumentsCoordinator) {
+        self.scanDocumentsCoordinator = coordinator
     }
     
     func makeCoordinator() -> ScanDocumentsCoordinator {
@@ -21,6 +21,7 @@ struct ScanDocumentsCoordinatorView: UIViewControllerRepresentable {
     }
     
     func makeUIViewController(context: Context) -> VNDocumentCameraViewController {
+        // TODO: Figure out how to delay creatin of VNDocumentCameraViewController in order to check if scanning is supported on running device
         let documentViewController = VNDocumentCameraViewController()
         documentViewController.delegate = context.coordinator
         return documentViewController
@@ -34,6 +35,6 @@ struct ScanDocumentsView_Previews: PreviewProvider {
     static let appAssembler = AppAssembler()
 
     static var previews: some View {
-        ScanDocumentsCoordinatorView(appAssembler.resolve(ScanDocumentsCoordinator.self)!)
+        ScanDocumentsCoordinatorView(coordinator: appAssembler.resolve(ScanDocumentsCoordinator.self)!)
     }
 }
