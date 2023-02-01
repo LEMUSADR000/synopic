@@ -14,28 +14,29 @@ struct LandingView: View {
         GeometryReader { geometry in
             ScrollViewReader { scrollView in
                 ScrollView {
-                    LazyVStack {
-                        ForEach(0..<self.viewModel.results.count + 1, id: \.self) { i in
-                            if (i == self.viewModel.results.count) {
-                                Button(action: self.viewModel.openScanSheet) {
-                                    ExpandingCardView(background: .gray.opacity(0.2)) {
-                                        Image(systemName: "plus")
-                                            .scaledToFit()
-                                            .padding(20)
-                                            .font(.system(size: 20, weight: .bold))
-                                            .foregroundColor(.gray.opacity(0.5))
-                                    }.padding(50)
-                                }.foregroundColor(.white)
-                            } else {
-                                ScanResultView(result: self.viewModel.results[i])
-                                    .foregroundColor(.white)
-                            }
-                        }.onChange(of: self.viewModel.results) { results in
-                            withAnimation(.easeIn(duration: 0.5)) {
-                                scrollView.scrollTo(results.count, anchor: .bottom)
-                            }
+                    ForEach(self.viewModel.results) { result in
+                        ScanResultView(result: result)
+                            .foregroundColor(.white)
+                    }
+                    .onChange(of: self.viewModel.results) { results in
+                        withAnimation(.easeIn(duration: 0.5)) {
+                            scrollView.scrollTo("button_identifier", anchor: .bottom)
                         }
                     }
+                    
+                    Button(action: self.viewModel.openScanSheet) {
+                        ExpandingCardView(background: .gray.opacity(0.2)) {
+                            Image(systemName: "plus")
+                                .scaledToFit()
+                                .padding(.vertical, 20)
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.gray.opacity(0.5))
+                        }
+                        .padding(.horizontal, 50)
+                        .padding(.vertical, 20)
+                    }
+                    .foregroundColor(.white)
+                    .id("button_identifier")
                 }
             }
         }

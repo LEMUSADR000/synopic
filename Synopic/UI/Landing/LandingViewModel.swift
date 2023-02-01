@@ -63,14 +63,15 @@ public class LandingViewModel: ViewModel {
     }
 }
 
-class LandingViewResult: Equatable {
-    static func == (lhs: LandingViewResult, rhs: LandingViewResult) -> Bool {
-        return lhs.background != rhs.background && lhs.image != rhs.image && lhs.text != rhs.text
-    }
-    
+struct LandingViewResult: Identifiable, Hashable {
+    let id = UUID()
     let background: Color
     let image: Image
     let text: String
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     init(background: Color, image: Image, text: String) {
         self.background = background

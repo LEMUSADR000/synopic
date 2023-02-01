@@ -202,13 +202,6 @@
 			path = Content;
 			sourceTree = "<group>";
 		};
-		1EB9D806298A195900E2E3CC /* Repositories */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Repositories;
-			sourceTree = "<group>";
-		};
 		1EC0BF9F294BD72E00C7541B = {
 			isa = PBXGroup;
 			children = (
@@ -315,7 +308,6 @@
 		1EC5D6BA294FD56B00A29BF0 /* Local */ = {
 			isa = PBXGroup;
 			children = (
-				1EB9D806298A195900E2E3CC /* Repositories */,
 				1E12FBF0297CD5B50077F046 /* OCRService */,
 			);
 			path = Local;
