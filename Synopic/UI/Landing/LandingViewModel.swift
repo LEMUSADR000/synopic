@@ -35,43 +35,52 @@ public class LandingViewModel: ViewModel {
     }
     
     // MARK: STATE
-    @Published private(set) var results: [LandingViewResult] = []
+    @Published var results: [LandingViewResult] = []
     
     // MARK: EVENT
     let openScanSheet: PassthroughSubject<Void, Never> = PassthroughSubject()
     
     private func onOpenSheet() {
         self.openScanSheet
+            .receive(on: .main)
             .sink(receiveValue: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.landingViewModelDidTapOpenSheet(self)
             })
             .store(in: &self.cancelBag)
     }
-    
+
     private func onScanResult() {
         self.ocrService.documentScanResults
             .receive(on: .main)
             .sink(receiveValue: { [weak self] in
                 guard let self = self, let raw = $0 else { return }
-                
-                let result = LandingViewResult.init(from: raw)
+
+                let result = LandingViewResult(from: raw)
                 self.results.append(result)
             })
             .store(in: &self.cancelBag)
     }
 }
 
-struct LandingViewResult {
+class LandingViewResult: Equatable {
+    static func == (lhs: LandingViewResult, rhs: LandingViewResult) -> Bool {
+        return lhs.background != rhs.background && lhs.image != rhs.image && lhs.text != rhs.text
+    }
+    
     let background: Color
     let image: Image
     let text: String
-}
-
-extension LandingViewResult {
+    
+    init(background: Color, image: Image, text: String) {
+        self.background = background
+        self.image = image
+        self.text = text
+    }
+    
     init(from result: DocumentScanResult) {
-        background = Color(result.image.averageUIColor ?? UIColor(.gray))
-        image = Image(uiImage: result.image)
-        text = result.text
+        self.background = Color(result.image.averageUIColor ?? UIColor(.gray))
+        self.image = Image(uiImage: result.image)
+        self.text = result.text
     }
 }

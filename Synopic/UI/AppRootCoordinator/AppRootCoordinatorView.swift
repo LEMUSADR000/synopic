@@ -17,6 +17,7 @@ struct AppRootCoordinatorView: View {
     var body: some View {
         NavigationView {
             LandingView(viewModel: self.coordinator.landingViewModel)
+                .navigationTitle("Text Recognition")
                 .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { c in
                     NavigationView {
                         ZStack {

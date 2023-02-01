@@ -11,39 +11,35 @@ struct LandingView: View {
     @ObservedObject var viewModel: LandingViewModel
     
     var body: some View {
-        NavigationView {
-            VStack {
+        GeometryReader { geometry in
+            ScrollViewReader { scrollView in
                 ScrollView {
-                    ZStack {
-                        LazyVStack {
-                            ForEach(self.viewModel.results.indices, id: \.self) { i in
+                    LazyVStack {
+                        ForEach(0..<self.viewModel.results.count + 1, id: \.self) { i in
+                            if (i == self.viewModel.results.count) {
+                                Button(action: self.viewModel.openScanSheet) {
+                                    ExpandingCardView(background: .gray.opacity(0.2)) {
+                                        Image(systemName: "plus")
+                                            .scaledToFit()
+                                            .padding(20)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .foregroundColor(.gray.opacity(0.5))
+                                    }.padding(50)
+                                }.foregroundColor(.white)
+                            } else {
                                 ScanResultView(result: self.viewModel.results[i])
-                                    .transition(.slide)
-                                    .zIndex(0)
+                                    .foregroundColor(.white)
                             }
-                        }
-                        .id(UUID())
-                        .transition(AnyTransition.opacity.animation(.default))
+                        }.onChange(of: self.viewModel.results, perform: { results in
+                            withAnimation(.linear(duration: 0.25)) {
+                                scrollView.scrollTo(results.count, anchor: .bottom)
+                            }
+                        })
                     }
-                    .padding()
+                    .frame(minHeight: geometry.size.height)
                 }
-                
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    Button(action: self.viewModel.openScanSheet) {
-                        Text("Start Scanning")
-                    }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Capsule().fill(Color.blue))
-                }
-                .padding()
             }
-            .navigationBarTitle("Text Recognition")
-        }.navigationBarHidden(true)
+        }
     }
 }
 

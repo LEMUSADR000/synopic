@@ -35,6 +35,8 @@ struct ScanDocumentsView_Previews: PreviewProvider {
     static let appAssembler = AppAssembler()
 
     static var previews: some View {
-        ScanDocumentsCoordinatorView(coordinator: appAssembler.resolve(ScanDocumentsCoordinator.self)!)
+        ScanDocumentsCoordinatorView(
+            coordinator: appAssembler.resolve(ScanDocumentsCoordinator.self)!
+        )
     }
 }
