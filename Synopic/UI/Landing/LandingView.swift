@@ -30,13 +30,12 @@ struct LandingView: View {
                                 ScanResultView(result: self.viewModel.results[i])
                                     .foregroundColor(.white)
                             }
-                        }.onChange(of: self.viewModel.results, perform: { results in
-                            withAnimation(.linear(duration: 0.25)) {
+                        }.onChange(of: self.viewModel.results) { results in
+                            withAnimation(.easeIn(duration: 0.5)) {
                                 scrollView.scrollTo(results.count, anchor: .bottom)
                             }
-                        })
+                        }
                     }
-                    .frame(minHeight: geometry.size.height)
                 }
             }
         }
