@@ -16,8 +16,8 @@ struct AppRootCoordinatorView: View {
 
     var body: some View {
         NavigationView {
-            LandingView(/*viewModel: self.coordinator.landingViewModel*/)
-                .navigationTitle("Books")
+            LandingView(viewModel: self.coordinator.landingViewModel)
+                .navigationTitle("Note Groups")
                 .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { c in
                     NavigationView {
                         ZStack {
