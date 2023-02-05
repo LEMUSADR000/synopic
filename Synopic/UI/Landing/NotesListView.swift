@@ -26,7 +26,7 @@ struct NotesListView: View {
     
     var body: some View {
         HStack {
-            VStack(spacing: 0) {
+            LazyVStack(spacing: 0) {
                 HStack {
                     Spacer().frame(width: 5)
                     Text(section.title)
@@ -36,20 +36,25 @@ struct NotesListView: View {
                         .foregroundColor(Color(UIColor.systemGray))
                     Spacer()
                 }
-                ForEach(Array(section.items.enumerated()), id: \.element.self) { (i, item) in
-                    VStack(spacing: 0) {
-                        GroupRow(item: item)
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(UIColor.secondarySystemBackground))
-                            .cornerRadius(20, corners: cornerRadius(index: i, length: section.items.count))
-                        
-                        if (i != section.items.count - 1) {
-                            Divider()
+                VStack(spacing: 0) {
+                    ForEach(Array(section.items.enumerated()), id: \.element.self) { (i, item) in
+                        VStack(spacing: 0) {
+                            Button(action: {}) {
+                                GroupRow(item: item)
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            
+                            if (i != section.items.count - 1) {
+                                Divider().padding(.leading, 20)
+                            }
                         }
                     }
                 }
-            }.padding(.horizontal, 20)
+                .background(Color(UIColor.secondarySystemBackground))
+                .cornerRadius(20)
+            }
+            .padding(.horizontal, 20)
 
             Spacer()
         }

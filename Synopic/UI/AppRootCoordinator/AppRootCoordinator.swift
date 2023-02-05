@@ -26,6 +26,10 @@ class AppRootCoordinator: ViewModel {
 // MARK: CameraViewModelDelegate
 
 extension AppRootCoordinator: LandingViewModelDelegate {
+    func landingViewModelDidTapNotesItem(_ source: LandingViewModel) {
+        // set up navigation here?
+    }
+    
     func landingViewModelDidTapOpenSheet(_ source: LandingViewModel) {
         self.scanDocumentsCoordinator = self.resolver.resolve(ScanDocumentsCoordinator.self)!.setup(delegate: self)
     }

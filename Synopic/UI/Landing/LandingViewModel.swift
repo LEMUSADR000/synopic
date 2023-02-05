@@ -11,6 +11,7 @@ import SwiftUI
 
 protocol LandingViewModelDelegate: AnyObject {
     func landingViewModelDidTapOpenSheet(_ source: LandingViewModel)
+    func landingViewModelDidTapNotesItem(_ source: LandingViewModel)
 }
 
 public class LandingViewModel: ViewModel {
@@ -23,23 +24,34 @@ public class LandingViewModel: ViewModel {
         
         let today = Date()
         let data = [
-            today: "Today",
-            Calendar.current.date(byAdding: .day, value: -1, to: today)!: "Yesterday",
-            Calendar.current.date(byAdding: .day, value: -7, to: today)!: "Last Week"
+            today,
+            Calendar.current.date(byAdding: .day, value: -1, to: today)!,
+            Calendar.current.date(byAdding: .day, value: -7, to: today)!,
         ]
         
-        for d in data {
-            sections.append(
-                ViewSection(
-                    title: d.value,
-                    items: [
-                        NoteGroup(created: d.key, title: "Lion's King"),
-                        NoteGroup(created: d.key.adding(hours: -2), title: "Enders Game"),
-                        NoteGroup(created: d.key.adding(hours: -4), title: "Star Wars"),
-                    ]
-                )
+        self.sections = [
+            ViewSection(
+                title: "Today",
+                items: [
+                    NoteGroup(created: data[0], title: "Lion's King", author: "Author 1"),
+                    NoteGroup(created: data[0].adding(hours: -2), title: "Enders Game", author: "Author 2"),
+                    NoteGroup(created: data[0].adding(hours: -4), title: "Star Wars", author: "Author 3"),
+                ]
+            ),
+            ViewSection(
+                title: "Yesterday",
+                items: [
+                    NoteGroup(created: data[1], title: "Lion's King", author: "Author 1"),
+                    NoteGroup(created: data[1].adding(hours: -2), title: "Enders Game", author: "Author 2"),
+                ]
+            ),
+            ViewSection(
+                title: "Last Week",
+                items: [
+                    NoteGroup(created: data[2], title: "Lion's King", author: "Author 1"),
+                ]
             )
-        }
+        ]
     }
     
     func setup(delegate: LandingViewModelDelegate) -> Self {

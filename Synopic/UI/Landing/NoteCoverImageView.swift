@@ -34,6 +34,6 @@ struct NoteCoverImageView: View {
 struct NoteCoverImageView_Previews: PreviewProvider {
     static let image = Image("lion_king_cover")
     static var previews: some View {
-        NoteCoverImageView(image: nil)
+        NoteCoverImageView(image: image)
     }
 }
