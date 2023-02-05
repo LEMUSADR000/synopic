@@ -11,14 +11,14 @@ import Combine
 import VisionKit
 import Vision
 
-protocol OCRServiceProtocol: AnyObject {
+protocol OCRService: AnyObject {
     var canScan: AnyPublisher<Bool?, Never> { get }
     var documentScanResults: AnyPublisher<DocumentScanResult?, Never> { get }
     
     func processDocumentScan(_ scan: VNDocumentCameraScan)
 }
 
-class OCRService: NSObject, OCRServiceProtocol {
+class OCRServiceImpl: NSObject, OCRService {
     // MARK: Public API
     
     lazy private(set) var canScan: AnyPublisher<Bool?, Never> = self._canScan.eraseToAnyPublisher()

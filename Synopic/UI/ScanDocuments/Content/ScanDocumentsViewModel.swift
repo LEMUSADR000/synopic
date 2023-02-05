@@ -15,13 +15,13 @@ protocol ScanDocumentsViewModelDelegate: AnyObject {
 }
 
 public class ScanDocumentsViewModel: ViewModel {
-    private let ocrService: OCRServiceProtocol
+    private let ocrService: OCRService
     
     private var cancelBag: CancelBag!
     
     private weak var delegate: ScanDocumentsViewModelDelegate?
     
-    init(ocrService: OCRServiceProtocol) {
+    init(ocrService: OCRService) {
         self.ocrService = ocrService
     }
     

@@ -22,7 +22,6 @@ struct ExpandingCardView<Content>: View where Content: View {
                 .foregroundColor(background)
             child
         }
-        .fixedSize(horizontal: false, vertical: true)
     }
 }
 

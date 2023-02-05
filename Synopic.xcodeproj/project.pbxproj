@@ -29,6 +29,10 @@
 		1EA8D8962986D37F0016AFFA /* ScanDocumentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA8D8952986D37F0016AFFA /* ScanDocumentsViewModel.swift */; };
 		1EA8D8992986DB390016AFFA /* OCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA8D8982986DB390016AFFA /* OCRService.swift */; };
 		1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA8D89B2986E2990016AFFA /* DocumentScanResult.swift */; };
+		1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301D6298F1B19000CA862 /* ChatGPTService.swift */; };
+		1EB301DB298F1B66000CA862 /* Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DA298F1B66000CA862 /* Summary.swift */; };
+		1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DD298F2019000CA862 /* ApiErrors.swift */; };
+		1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DF298F2538000CA862 /* SummariesRepository.swift */; };
 		1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */; };
 		1EC0BFB0294BD73000C7541B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAF294BD73000C7541B /* Assets.xcassets */; };
 		1EC0BFBD294BD73000C7541B /* SynopicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFBC294BD73000C7541B /* SynopicTests.swift */; };
@@ -37,6 +41,8 @@
 		1EC0BFE0294E74A100C7541B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */; };
 		1EC0BFE3294E800200C7541B /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE2294E800200C7541B /* Swinject */; };
 		1EC0BFE6294E80AF00C7541B /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE5294E80AF00C7541B /* CombineExt */; };
+		1ED88E2D298F3E5B0052BD10 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */; };
+		1ED88E2F298F78E00052BD10 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E2E298F78E00052BD10 /* View+Extensions.swift */; };
 		1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */; };
 		1EFB3F6729871BC8005227FB /* ScanResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F6629871BC8005227FB /* ScanResultView.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +87,10 @@
 		1EA8D8952986D37F0016AFFA /* ScanDocumentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDocumentsViewModel.swift; sourceTree = "<group>"; };
 		1EA8D8982986DB390016AFFA /* OCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRService.swift; sourceTree = "<group>"; };
 		1EA8D89B2986E2990016AFFA /* DocumentScanResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScanResult.swift; sourceTree = "<group>"; };
+		1EB301D6298F1B19000CA862 /* ChatGPTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGPTService.swift; sourceTree = "<group>"; };
+		1EB301DA298F1B66000CA862 /* Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Summary.swift; sourceTree = "<group>"; };
+		1EB301DD298F2019000CA862 /* ApiErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiErrors.swift; sourceTree = "<group>"; };
+		1EB301DF298F2538000CA862 /* SummariesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummariesRepository.swift; sourceTree = "<group>"; };
 		1EC0BFA8294BD72E00C7541B /* Synopic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synopic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicApp.swift; sourceTree = "<group>"; };
 		1EC0BFAF294BD73000C7541B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -90,6 +100,8 @@
 		1EC0BFC6294BD73000C7541B /* SynopicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITests.swift; sourceTree = "<group>"; };
 		1EC0BFC8294BD73000C7541B /* SynopicUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Preview Assets.xcassets"; path = "Preview Content/Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		1ED88E2E298F78E00052BD10 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		1EFB3F6629871BC8005227FB /* ScanResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanResultView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -131,13 +143,13 @@
 			path = ScanDocuments;
 			sourceTree = "<group>";
 		};
-		1E12FBF0297CD5B50077F046 /* OCRService */ = {
+		1E12FBF0297CD5B50077F046 /* OCR */ = {
 			isa = PBXGroup;
 			children = (
 				1EA8D8982986DB390016AFFA /* OCRService.swift */,
 				1EA8D89B2986E2990016AFFA /* DocumentScanResult.swift */,
 			);
-			path = OCRService;
+			path = OCR;
 			sourceTree = "<group>";
 		};
 		1E2BC37A295567CA00A4821A /* Combine */ = {
@@ -155,6 +167,7 @@
 			children = (
 				1E4B14CD2984D332002D1105 /* String+Extensions.swift */,
 				1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */,
+				1ED88E2E298F78E00052BD10 /* View+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -172,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				1E63E7D7298781C500571DD3 /* ExpandingCardView.swift */,
+				1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -202,6 +216,30 @@
 			path = Content;
 			sourceTree = "<group>";
 		};
+		1EB301D5298F192A000CA862 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				1EB301DF298F2538000CA862 /* SummariesRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		1EB301D8298F1B29000CA862 /* ChatGPT */ = {
+			isa = PBXGroup;
+			children = (
+				1EB301D6298F1B19000CA862 /* ChatGPTService.swift */,
+			);
+			path = ChatGPT;
+			sourceTree = "<group>";
+		};
+		1EB301E1298F2542000CA862 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1EB301DA298F1B66000CA862 /* Summary.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		1EC0BF9F294BD72E00C7541B = {
 			isa = PBXGroup;
 			children = (
@@ -229,7 +267,7 @@
 				1EC0BFAF294BD73000C7541B /* Assets.xcassets */,
 				1EC0BFF5294F97C900C7541B /* Core */,
 				1EC0BFDE294E747800C7541B /* Preview Content */,
-				1EC0BFF4294E846900C7541B /* Services */,
+				1EC0BFF4294E846900C7541B /* Data */,
 				1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */,
 				1EC0BFF6294F97D300C7541B /* UI */,
 			);
@@ -273,13 +311,15 @@
 			path = Architecture;
 			sourceTree = "<group>";
 		};
-		1EC0BFF4294E846900C7541B /* Services */ = {
+		1EC0BFF4294E846900C7541B /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				1EB301E1298F2542000CA862 /* Models */,
+				1EB301D5298F192A000CA862 /* Repositories */,
 				1EC5D6BB294FD57700A29BF0 /* API */,
 				1EC5D6BA294FD56B00A29BF0 /* Local */,
 			);
-			path = Services;
+			path = Data;
 			sourceTree = "<group>";
 		};
 		1EC0BFF5294F97C900C7541B /* Core */ = {
@@ -308,7 +348,7 @@
 		1EC5D6BA294FD56B00A29BF0 /* Local */ = {
 			isa = PBXGroup;
 			children = (
-				1E12FBF0297CD5B50077F046 /* OCRService */,
+				1E12FBF0297CD5B50077F046 /* OCR */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -316,6 +356,8 @@
 		1EC5D6BB294FD57700A29BF0 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				1EB301D8298F1B29000CA862 /* ChatGPT */,
+				1EB301DD298F2019000CA862 /* ApiErrors.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -467,10 +509,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E045CB2298245EE00917E75 /* ScanDocumentsCoordinatorView.swift in Sources */,
+				1ED88E2F298F78E00052BD10 /* View+Extensions.swift in Sources */,
 				1EA8D8992986DB390016AFFA /* OCRService.swift in Sources */,
 				1E4B14D32984DB89002D1105 /* LandingView.swift in Sources */,
 				1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */,
 				1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */,
+				1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */,
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
@@ -482,9 +526,13 @@
 				1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */,
 				1E63E7D8298781C500571DD3 /* ExpandingCardView.swift in Sources */,
 				1EA187212952BC590017B38B /* ViewModel.swift in Sources */,
+				1ED88E2D298F3E5B0052BD10 /* SearchBar.swift in Sources */,
 				1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */,
 				1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */,
+				1EB301DB298F1B66000CA862 /* Summary.swift in Sources */,
 				1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */,
+				1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */,
+				1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */,
 				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
 				1E4B14C92984C972002D1105 /* ScanDocumentsCoordinator.swift in Sources */,
 				1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */,

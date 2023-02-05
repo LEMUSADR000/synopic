@@ -14,11 +14,11 @@ protocol LandingViewModelDelegate: AnyObject {
 }
 
 public class LandingViewModel: ViewModel {
-    private let ocrService: OCRServiceProtocol
+    private let ocrService: OCRService
     private weak var delegate: LandingViewModelDelegate?
     private var cancelBag: CancelBag!
     
-    init(ocrService: OCRServiceProtocol) {
+    init(ocrService: OCRService) {
         self.ocrService = ocrService
     }
     
