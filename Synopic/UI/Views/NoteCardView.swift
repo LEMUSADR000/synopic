@@ -7,9 +7,13 @@
 
 import SwiftUI
 
-struct ExpandingCardView<Content>: View where Content: View {
+struct NoteCardView<Content>: View where Content: View {
     var background: Color
     private var child: Content
+    
+    @inlinable init(@ViewBuilder _ content: () -> Content) {
+        self.init(background: Color(UIColor.secondarySystemBackground), content: content)
+    }
     
     init(background: Color, @ViewBuilder content: () -> Content) {
         self.background = background
@@ -18,16 +22,17 @@ struct ExpandingCardView<Content>: View where Content: View {
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 25, style: .continuous)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .foregroundColor(background)
+                .aspectRatio(0.6, contentMode: .fill)
             child
         }
     }
 }
 
-struct ExpandingCardView_Previews: PreviewProvider {
+struct NoteCardView_Preview: PreviewProvider {
     static var previews: some View {
-        ExpandingCardView(background: .gray.opacity(0.2)) {
+        NoteCardView(background: .gray.opacity(0.2)) {
             Spacer().frame(minHeight: 200)
         }
     }

@@ -14,7 +14,7 @@ class AppRootCoordinator: ViewModel {
     
     @Published private(set) var landingViewModel: LandingViewModel!
     
-    @Published var scanDocumentsCoordinator: ScanDocumentsCoordinator?
+    @Published var noteDetailsCoordinator: NoteDetailsCoordinator?
   
     init(resolver: Resolver) {
         self.resolver = resolver
@@ -26,23 +26,15 @@ class AppRootCoordinator: ViewModel {
 // MARK: CameraViewModelDelegate
 
 extension AppRootCoordinator: LandingViewModelDelegate {
-    func landingViewModelDidTapNotesItem(_ source: LandingViewModel) {
-        // set up navigation here?
-    }
-    
-    func landingViewModelDidTapOpenSheet(_ source: LandingViewModel) {
-        self.scanDocumentsCoordinator = self.resolver.resolve(ScanDocumentsCoordinator.self)!.setup(delegate: self)
+    func landingViewModelDidTapCreateGroup(_ source: LandingViewModel) {
+        self.noteDetailsCoordinator = self.resolver.resolve(NoteDetailsCoordinator.self)!.setup(delegate: self)
     }
 }
 
-// MARK: ScanDocumentsCoordinatorDelegate
+// MARK: NoteDetailsViewModelDelegate
 
-extension AppRootCoordinator: ScanDocumentsCoordinatorDelegate {
-    func scanDocumentsViewModelDidCancel(_ source: ScanDocumentsCoordinator) {
-        self.scanDocumentsCoordinator = nil
-    }
-    
-    func scanDocumentsViewModelDidSave(_ source: ScanDocumentsCoordinator) {
-        self.scanDocumentsCoordinator = nil
+extension AppRootCoordinator: NoteDetailsCoordinatorDelegate {
+    func noteDetailsCoordinatorDidTapCreateNote(_ source: NoteDetailsCoordinator) {
+        // nothing yet
     }
 }

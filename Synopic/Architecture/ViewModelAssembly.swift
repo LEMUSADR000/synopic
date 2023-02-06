@@ -17,5 +17,9 @@ class ViewModelAssembly: Assembly {
         container.register(ScanDocumentsViewModel.self) { r in
             ScanDocumentsViewModel(ocrService: r.resolve(OCRService.self)!)
         }.inObjectScope(.transient)
+        
+        container.register(NotesGridViewModel.self) { r in
+            NotesGridViewModel(ocrService: r.resolve(OCRService.self)!)
+        }.inObjectScope(.transient)
     }
 }

@@ -10,8 +10,7 @@ import Combine
 import SwiftUI
 
 protocol LandingViewModelDelegate: AnyObject {
-    func landingViewModelDidTapOpenSheet(_ source: LandingViewModel)
-    func landingViewModelDidTapNotesItem(_ source: LandingViewModel)
+    func landingViewModelDidTapCreateGroup(_ source: LandingViewModel)
 }
 
 public class LandingViewModel: ViewModel {
@@ -62,38 +61,22 @@ public class LandingViewModel: ViewModel {
     
     private func bind() {
         self.cancelBag = CancelBag()
-        self.onOpenSheet()
-        self.onScanResult()
+        self.onCreateNote()
     }
     
     // MARK: STATE
     @Published var searchText: String = .empty
-    
-    @Published var results: [LandingViewResult] = []
-    
     @Published var sections: [ViewSection] = []
     
     // MARK: EVENT
-    let openScanSheet: PassthroughSubject<Void, Never> = PassthroughSubject()
+    let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
     
-    private func onOpenSheet() {
-        self.openScanSheet
+    private func onCreateNote() {
+        self.createNote
             .receive(on: .main)
             .sink(receiveValue: { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.landingViewModelDidTapOpenSheet(self)
-            })
-            .store(in: &self.cancelBag)
-    }
-
-    private func onScanResult() {
-        self.ocrService.documentScanResults
-            .receive(on: .main)
-            .sink(receiveValue: { [weak self] in
-                guard let self = self, let raw = $0 else { return }
-
-                let result = LandingViewResult(from: raw)
-                self.results.append(result)
+                self.delegate?.landingViewModelDidTapCreateGroup(self)
             })
             .store(in: &self.cancelBag)
     }

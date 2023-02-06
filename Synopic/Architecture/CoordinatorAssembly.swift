@@ -16,6 +16,10 @@ class CoordinatorAssembly: Assembly {
         
         container.register(ScanDocumentsCoordinator.self) { r in
             ScanDocumentsCoordinator(resolver: r)
-        }.inObjectScope(.container)
+        }.inObjectScope(.transient)
+        
+        container.register(NoteDetailsCoordinator.self) { r in
+            NoteDetailsCoordinator(resolver: r)
+        }.inObjectScope(.transient)
     }
 }

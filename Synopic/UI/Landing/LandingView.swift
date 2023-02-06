@@ -11,26 +11,27 @@ struct LandingView: View {
     @ObservedObject var viewModel: LandingViewModel
     
     var body: some View {
-        VStack {
-            GeometryReader { geo in
+        ZStack(alignment: .bottom) {
+            TabView {
                 ScrollView {
-                    LazyVStack(spacing: 20) {
-                        HStack {
-                            Spacer()
-                            SearchBar(text: self.viewModel.searchText)
-                                .background(Color(.clear))
-                            Spacer()
+                    // TODO: Implement search bar
+        //            HStack(spacing: 0) {
+        //                SearchBar(text: self.viewModel.searchText)
+        //                    .background(Color(.clear))
+        //            }
+        //            .padding(.horizontal, 20)
+        //            .padding(.bottom, 10)
+                    
+                    VStack {
+                        LazyVStack(spacing: 20) {
+                            ForEach(self.$viewModel.sections) { section in
+                                NotesListView(section: section)
+                            }
                         }
-                        ForEach(self.$viewModel.sections) { section in
-                            NotesListView(section: section)
-                        }
-                        Spacer()
                     }
-                    .frame(width: geo.size.width)
-                    .frame(minHeight: geo.size.height)
                 }
             }
-            Spacer()
+            TabBarContent(viewModel: self.viewModel)
         }
     }
 }

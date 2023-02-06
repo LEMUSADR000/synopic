@@ -18,14 +18,18 @@ struct AppRootCoordinatorView: View {
         NavigationView {
             LandingView(viewModel: self.coordinator.landingViewModel)
                 .navigationTitle("Note Groups")
-                .fullScreenCover(item: $coordinator.scanDocumentsCoordinator) { c in
-                    NavigationView {
-                        ZStack {
-                            Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
-                            ScanDocumentsCoordinatorView(coordinator: c)
-                        }
-                    }
+                .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
+                    NoteDetailsCoordinatorView(coordinator: c)
                 }
         }
+    }
+}
+
+struct AppRootCoordinatorView_Previews: PreviewProvider {
+    static let appAssembler = AppAssembler()
+    static let coordinator = appAssembler.resolve(AppRootCoordinator.self)!
+    
+    static var previews: some View {
+        AppRootCoordinatorView(coordinator: coordinator)
     }
 }
