@@ -27,6 +27,7 @@ class SummariesRepositoryImpl: SummariesRepository {
     }
     
     func requestSummary(text: String, type: SummaryType) async throws -> Summary {
+        // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
         let prompt = "Summarize the following into \(type.rawValue): \(text)"
         
         let summary: Summary

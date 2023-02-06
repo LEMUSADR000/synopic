@@ -33,8 +33,10 @@ struct NotesGridView: View {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 10) {
                     ForEach(0..<data.count, id: \.self) { i in
-                        NoteCardView {
-                            Text(data[i])
+                        Button(action: self.viewModel.viewNote) {
+                            NoteCardView {
+                                Text(data[i])
+                            }
                         }
                     }
                     Button(action: self.viewModel.createNote) {

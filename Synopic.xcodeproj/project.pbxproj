@@ -41,8 +41,10 @@
 		1EC0BFE0294E74A100C7541B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */; };
 		1EC0BFE3294E800200C7541B /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE2294E800200C7541B /* Swinject */; };
 		1EC0BFE6294E80AF00C7541B /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE5294E80AF00C7541B /* CombineExt */; };
-		1EC949BB29909C5200024142 /* SummaryEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949BA29909C5200024142 /* SummaryEditView.swift */; };
-		1EC949BD29909C5D00024142 /* SummaryEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949BC29909C5D00024142 /* SummaryEditViewModel.swift */; };
+		1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949C12990BF8C00024142 /* NoteCreateCoordinatorView.swift */; };
+		1EC949C42990BFA500024142 /* NoteCreateCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949C32990BFA500024142 /* NoteCreateCoordinator.swift */; };
+		1EC949C72990C05300024142 /* NoteEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949C62990C05300024142 /* NoteEditViewModel.swift */; };
+		1EC949C92990C07300024142 /* NoteEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949C82990C07300024142 /* NoteEditView.swift */; };
 		1ED88E2D298F3E5B0052BD10 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */; };
 		1ED88E2F298F78E00052BD10 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E2E298F78E00052BD10 /* View+Extensions.swift */; };
 		1ED88E33299004F30052BD10 /* GroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E32299004F30052BD10 /* GroupRow.swift */; };
@@ -111,8 +113,10 @@
 		1EC0BFC6294BD73000C7541B /* SynopicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITests.swift; sourceTree = "<group>"; };
 		1EC0BFC8294BD73000C7541B /* SynopicUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Preview Assets.xcassets"; path = "Preview Content/Preview Assets.xcassets"; sourceTree = "<group>"; };
-		1EC949BA29909C5200024142 /* SummaryEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryEditView.swift; sourceTree = "<group>"; };
-		1EC949BC29909C5D00024142 /* SummaryEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryEditViewModel.swift; sourceTree = "<group>"; };
+		1EC949C12990BF8C00024142 /* NoteCreateCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCreateCoordinatorView.swift; sourceTree = "<group>"; };
+		1EC949C32990BFA500024142 /* NoteCreateCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCreateCoordinator.swift; sourceTree = "<group>"; };
+		1EC949C62990C05300024142 /* NoteEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditViewModel.swift; sourceTree = "<group>"; };
+		1EC949C82990C07300024142 /* NoteEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditView.swift; sourceTree = "<group>"; };
 		1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1ED88E2E298F78E00052BD10 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		1ED88E32299004F30052BD10 /* GroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRow.swift; sourceTree = "<group>"; };
@@ -155,14 +159,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1E045CB0298245BA00917E75 /* ScanDocuments */ = {
+		1E045CB0298245BA00917E75 /* NoteCreate */ = {
 			isa = PBXGroup;
 			children = (
+				1EC949C52990BFD000024142 /* ScanDocumentsView */,
 				1EA8D8972986D3910016AFFA /* Content */,
-				1E4B14C82984C972002D1105 /* ScanDocumentsCoordinator.swift */,
-				1E045CB1298245EE00917E75 /* ScanDocumentsCoordinatorView.swift */,
+				1EC949C12990BF8C00024142 /* NoteCreateCoordinatorView.swift */,
+				1EC949C32990BFA500024142 /* NoteCreateCoordinator.swift */,
 			);
-			path = ScanDocuments;
+			path = NoteCreate;
 			sourceTree = "<group>";
 		};
 		1E12FBF0297CD5B50077F046 /* OCR */ = {
@@ -387,21 +392,38 @@
 			path = API;
 			sourceTree = "<group>";
 		};
-		1EC949B929909C3900024142 /* SummaryEdit */ = {
+		1EC949B929909C3900024142 /* NoteEdit */ = {
 			isa = PBXGroup;
 			children = (
-				1EC949BA29909C5200024142 /* SummaryEditView.swift */,
-				1EC949BC29909C5D00024142 /* SummaryEditViewModel.swift */,
+				1EC949C62990C05300024142 /* NoteEditViewModel.swift */,
+				1EC949C82990C07300024142 /* NoteEditView.swift */,
 			);
-			path = SummaryEdit;
+			path = NoteEdit;
+			sourceTree = "<group>";
+		};
+		1EC949BE2990BF3100024142 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1EC949B929909C3900024142 /* NoteEdit */,
+				1E045CB0298245BA00917E75 /* NoteCreate */,
+				1ED88E4B29905F2C0052BD10 /* NotesGridView */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		1EC949C52990BFD000024142 /* ScanDocumentsView */ = {
+			isa = PBXGroup;
+			children = (
+				1E4B14C82984C972002D1105 /* ScanDocumentsCoordinator.swift */,
+				1E045CB1298245EE00917E75 /* ScanDocumentsCoordinatorView.swift */,
+			);
+			path = ScanDocumentsView;
 			sourceTree = "<group>";
 		};
 		1ED88E3D2990337B0052BD10 /* NoteDetails */ = {
 			isa = PBXGroup;
 			children = (
-				1EC949B929909C3900024142 /* SummaryEdit */,
-				1E045CB0298245BA00917E75 /* ScanDocuments */,
-				1ED88E4B29905F2C0052BD10 /* NotesGridView */,
+				1EC949BE2990BF3100024142 /* Components */,
 				1ED88E4E29905FDF0052BD10 /* NoteDetailsCoordinatorView.swift */,
 				1ED88E5029905FEA0052BD10 /* NoteDetailsCoordinator.swift */,
 			);
@@ -565,6 +587,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EC949C92990C07300024142 /* NoteEditView.swift in Sources */,
+				1EC949C42990BFA500024142 /* NoteCreateCoordinator.swift in Sources */,
 				1E045CB2298245EE00917E75 /* ScanDocumentsCoordinatorView.swift in Sources */,
 				1ED88E2F298F78E00052BD10 /* View+Extensions.swift in Sources */,
 				1EA8D8992986DB390016AFFA /* OCRService.swift in Sources */,
@@ -572,13 +596,14 @@
 				1ED88E4F29905FDF0052BD10 /* NoteDetailsCoordinatorView.swift in Sources */,
 				1E4B14D32984DB89002D1105 /* LandingView.swift in Sources */,
 				1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */,
-				1EC949BB29909C5200024142 /* SummaryEditView.swift in Sources */,
 				1ED88E4729905AFC0052BD10 /* View+Navigation.swift in Sources */,
 				1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */,
+				1EC949C72990C05300024142 /* NoteEditViewModel.swift in Sources */,
 				1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */,
 				1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */,
 				1ED88E35299005540052BD10 /* NotesListView.swift in Sources */,
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
+				1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
 				1ED88E45299053750052BD10 /* NotesGridView.swift in Sources */,
@@ -602,7 +627,6 @@
 				1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */,
 				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
 				1E4B14C92984C972002D1105 /* ScanDocumentsCoordinator.swift in Sources */,
-				1EC949BD29909C5D00024142 /* SummaryEditViewModel.swift in Sources */,
 				1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */,
 				1EA1872E2952C0850017B38B /* AppRootCoordinator.swift in Sources */,
 				1ED88E5129905FEA0052BD10 /* NoteDetailsCoordinator.swift in Sources */,

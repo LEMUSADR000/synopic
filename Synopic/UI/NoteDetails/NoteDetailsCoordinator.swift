@@ -39,17 +39,15 @@ public class NoteDetailsCoordinator: ViewModel {
     private func bind() {
         self.cancelBag = CancelBag()
     }
-    
-    // MARK: STATE
-    
-    
-    // MARK: EVENT
-    
 }
 
 // MARK: NotesGridViewModelDelegate
 
 extension NoteDetailsCoordinator: NotesGridViewModelDelegate {
+    func notesGridViewModelDidTapViewNote(id: String, _ source: NotesGridViewModel) {
+        // TODO: Navigate to 
+    }
+    
     func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel) {
         self.scanDocumentsCoordinator = self.resolver.resolve(ScanDocumentsCoordinator.self)!
     }

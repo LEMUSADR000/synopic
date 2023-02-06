@@ -16,7 +16,7 @@ struct NoteDetailsCoordinatorView: View {
     
     var body: some View {
         NotesGridView(viewModel: self.noteDetailsCoordinator.notesGridViewModel)
-            .fullScreenCover(item: self.$noteDetailsCoordinator.scanDocumentsCoordinator) { c in
+            .sheet(item: self.$noteDetailsCoordinator.scanDocumentsCoordinator) { c in
                 NavigationView {
                     ZStack {
                         Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
