@@ -145,20 +145,18 @@ extension Publisher {
     let upstream = share()
     // `zip`ping and discarding `\.1` allows for
     return other.map { second in upstream.map { resultSelector($0, second) } }
-      .switchToLatest().zip(upstream)
-      // upstream completions to be projected down immediately.
+      .switchToLatest().zip(upstream)  // upstream completions to be projected down immediately.
       .map(\.0).eraseToAnyPublisher()
   }
 
   /// .withLatestFromFix(_:) in CombineExt is leaky for long-lived streams: https://github.com/CombineCommunity/CombineExt/issues/87
   /// This version fixes the stream issue (see comment on 8/6/2021 by freak4pc) https://gist.github.com/freak4pc/8d46ea6a6f5e5902c3fb5eba440a55c3
-  func withLatestFromUnretained<Other: Publisher>(
-    _ other: Other
-  ) -> AnyPublisher<Other.Output, Other.Failure>
+  func withLatestFromUnretained<Other: Publisher>(_ other: Other)
+    -> AnyPublisher<Other.Output, Other.Failure>
   where Failure == Other.Failure {
     let upstream = share()
-    return other.map { second in upstream.map { _ in second } }.switchToLatest()
-      .zip(upstream)  // `zip`ping and discarding `\.1` allows for
+    return other.map { second in upstream.map { _ in second } }
+      .switchToLatest().zip(upstream)  // `zip`ping and discarding `\.1` allows for
       // upstream completions to be projected down immediately.
       .map(\.0).eraseToAnyPublisher()
   }

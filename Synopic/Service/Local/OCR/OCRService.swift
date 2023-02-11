@@ -40,7 +40,8 @@ class OCRServiceImpl: NSObject, OCRService {
       do {
         let textRequest = try perform(request, on: cgImage)
         combinedOutput += try postProcess(request: textRequest)
-      } catch {
+      }
+      catch {
         logger.log("Encountered exception on processing of document scan")
         continue
       }
@@ -55,19 +56,17 @@ class OCRServiceImpl: NSObject, OCRService {
   // MARK: Private Members & Utility
   private var cancelBag: CancelBag
 
-  private let _canScan: CurrentValueSubject<Bool?, Never> = CurrentValueSubject(
-    nil
-  )
+  private let _canScan: CurrentValueSubject<Bool?, Never> =
+    CurrentValueSubject(nil)
 
   private lazy var request: VNRecognizeTextRequest = {
     let req = VNRecognizeTextRequest()
     return req
   }()
 
-  private func perform(
-    _ request: VNRequest,
-    on image: CGImage
-  ) throws -> VNRequest {
+  private func perform(_ request: VNRequest, on image: CGImage) throws
+    -> VNRequest
+  {
     let requestHandler = VNImageRequestHandler(cgImage: image, options: [:])
     try requestHandler.perform([request])
     return request

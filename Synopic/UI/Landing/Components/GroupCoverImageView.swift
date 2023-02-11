@@ -19,7 +19,8 @@ struct GroupCoverImageView: View {
         value.resizable().aspectRatio(contentMode: .fill)
           .frame(width: 70, height: 110)
           .clipShape(RoundedRectangle(cornerRadius: 10))
-      } else {
+      }
+      else {
         Image(systemName: "camera.circle.fill")
           .foregroundColor(Color(UIColor.systemGray))
       }

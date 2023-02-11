@@ -16,9 +16,7 @@ class AppRootCoordinator: ViewModel {
 
   @Published var noteDetailsCoordinator: NoteGroupDetailsCoordinator?
 
-  init(
-    resolver: Resolver
-  ) {
+  init(resolver: Resolver) {
     self.resolver = resolver
 
     self.landingViewModel = self.resolver.resolve(LandingViewModel.self)!

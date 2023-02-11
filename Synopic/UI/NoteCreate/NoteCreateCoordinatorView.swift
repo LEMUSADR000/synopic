@@ -13,8 +13,9 @@ struct NoteCreateCoordinatorView: View {
   init(coordinator: NoteCreateCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
-    ScanDocumentsView(noteCreateViewModel: self.coordinator.noteCreateViewModel)
-    //            .navigation(item: self.$coordinator.didProcess) { _ in
+    ScanDocumentsView(
+      noteCreateViewModel: self.coordinator.noteCreateViewModel
+    )  //            .navigation(item: self.$coordinator.didProcess) { _ in
     //                ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
     //            }
   }

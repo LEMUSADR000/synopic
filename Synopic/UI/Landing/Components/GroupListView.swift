@@ -17,9 +17,11 @@ struct GroupListView: View {
 
     if index == 0 {
       radius = [.topLeft, .topRight]
-    } else if index == length - 1 {
+    }
+    else if index == length - 1 {
       radius = [.bottomLeft, .bottomRight]
-    } else {
+    }
+    else {
       radius = []
     }
 

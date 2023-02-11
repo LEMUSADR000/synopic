@@ -24,18 +24,14 @@ enum DefinedScheduler {
 
 extension Publisher {
   /// downstream
-  func receive(
-    on definedScheduler: DefinedScheduler
-  ) -> Publishers.ReceiveOn<Self, DispatchQueue> {
-    self.receive(on: definedScheduler.dispatchQueue)
-  }
+  func receive(on definedScheduler: DefinedScheduler)
+    -> Publishers.ReceiveOn<Self, DispatchQueue>
+  { self.receive(on: definedScheduler.dispatchQueue) }
 
   /// upstream
-  func subscribe(
-    on definedScheduler: DefinedScheduler
-  ) -> Publishers.SubscribeOn<Self, DispatchQueue> {
-    self.subscribe(on: definedScheduler.dispatchQueue)
-  }
+  func subscribe(on definedScheduler: DefinedScheduler)
+    -> Publishers.SubscribeOn<Self, DispatchQueue>
+  { self.subscribe(on: definedScheduler.dispatchQueue) }
 
   func debounce(
     for dueTime: DispatchQueue.SchedulerTimeType.Stride,

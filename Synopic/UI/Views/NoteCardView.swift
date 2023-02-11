@@ -11,19 +11,14 @@ struct NoteCardView<Content>: View where Content: View {
   var background: Color
   private var child: Content
 
-  @inlinable init(
-    @ViewBuilder _ content: () -> Content
-  ) {
+  @inlinable init(@ViewBuilder _ content: () -> Content) {
     self.init(
       background: Color(UIColor.secondarySystemBackground),
       content: content
     )
   }
 
-  init(
-    background: Color,
-    @ViewBuilder content: () -> Content
-  ) {
+  init(background: Color, @ViewBuilder content: () -> Content) {
     self.background = background
     self.child = content()
   }

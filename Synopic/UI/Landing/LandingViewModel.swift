@@ -22,9 +22,7 @@ public class LandingViewModel: ViewModel {
   private weak var delegate: LandingViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(
-    ocrService: OCRService
-  ) {
+  init(ocrService: OCRService) {
     self.ocrService = ocrService
 
     let today = Date()
@@ -37,7 +35,11 @@ public class LandingViewModel: ViewModel {
       ViewSection(
         created: data[0],
         items: [
-          NoteGroup(created: data[0], title: "Lion's King", author: "Author 1"),
+          NoteGroup(
+            created: data[0],
+            title: "Lion's King",
+            author: "Author 1"
+          ),
           NoteGroup(
             created: data[0].adding(hours: -2),
             title: "Enders Game",
@@ -53,7 +55,11 @@ public class LandingViewModel: ViewModel {
       ViewSection(
         created: data[1],
         items: [
-          NoteGroup(created: data[1], title: "Lion's King", author: "Author 1"),
+          NoteGroup(
+            created: data[1],
+            title: "Lion's King",
+            author: "Author 1"
+          ),
           NoteGroup(
             created: data[1].adding(hours: -2),
             title: "Enders Game",
@@ -92,7 +98,8 @@ public class LandingViewModel: ViewModel {
 
   private func onCreateGroup() {
     self.createGroup
-      .sink(receiveValue: { [weak self] in guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
         self.delegate?.landingViewModelDidTapCreateGroup(self)
       })
       .store(in: &self.cancelBag)
@@ -100,7 +107,8 @@ public class LandingViewModel: ViewModel {
 
   private func onViewGroup() {
     self.viewGroup
-      .sink(receiveValue: { [weak self] in guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
         self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: $0, self)
       })
       .store(in: &self.cancelBag)

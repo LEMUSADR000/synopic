@@ -23,9 +23,7 @@ class NoteCreateCoordinator: ViewModel {
 
   @Published var didProcess: Bool = false
 
-  init(
-    resolver: Resolver
-  ) {
+  init(resolver: Resolver) {
     self.resolver = resolver
 
     self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self)!

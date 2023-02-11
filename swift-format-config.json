@@ -1,10 +1,10 @@
 {
   "version": 1,
   "lineBreakAroundMultilineExpressionChainComponents": true,
-  "lineBreakBeforeControlFlowKeywords": false,
+  "lineBreakBeforeControlFlowKeywords": true,
   "lineBreakBeforeEachArgument": true,
   "lineBreakBeforeEachGenericRequirement": true,
   "respectsExistingLineBreaks" : false,
-  "prioritizeKeepingFunctionOutputTogether" : true,
-  "lineLength" : 80
+  "prioritizeKeepingFunctionOutputTogether" : false,
+  "lineLength" : 79
 }

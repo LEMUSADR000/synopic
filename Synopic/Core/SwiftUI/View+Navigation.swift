@@ -13,7 +13,9 @@ extension View {
       get: { false },
       set: { newValue in if newValue { action() } }
     )
-    return NavigationLink(destination: EmptyView(), isActive: isActive) { self }
+    return NavigationLink(destination: EmptyView(), isActive: isActive) {
+      self
+    }
   }
 
   func navigation<Item, Destination: View>(
@@ -24,7 +26,9 @@ extension View {
       get: { item.wrappedValue != nil },
       set: { value in if !value { item.wrappedValue = nil } }
     )
-    return navigation(isActive: isActive) { item.wrappedValue.map(destination) }
+    return navigation(isActive: isActive) {
+      item.wrappedValue.map(destination)
+    }
   }
 
   func navigation<Destination: View>(

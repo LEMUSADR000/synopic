@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct NoteGroup: Identifiable { let id: String = UUID().uuidString
+struct NoteGroup: Identifiable {
+  let id: String = UUID().uuidString
   let created: Date
   var title: String = .empty
   var author: String = .empty
@@ -16,22 +17,13 @@ struct NoteGroup: Identifiable { let id: String = UUID().uuidString
 
   init(created: Date) { self.created = created }
 
-  init(
-    created: Date,
-    title: String,
-    author: String
-  ) {
+  init(created: Date, title: String, author: String) {
     self.created = created
     self.title = title
     self.author = author
   }
 
-  init(
-    created: Date,
-    title: String,
-    author: String,
-    imageName: String?
-  ) {
+  init(created: Date, title: String, author: String, imageName: String?) {
     self.created = created
     self.title = title
     self.author = author

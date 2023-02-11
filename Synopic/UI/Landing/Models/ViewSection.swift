@@ -12,10 +12,7 @@ class ViewSection: ViewModel {
 
   @Published var items: [NoteGroup]
 
-  init(
-    created: Date,
-    items: [NoteGroup]
-  ) {
+  init(created: Date, items: [NoteGroup]) {
     self.dateCreated = created
     self.items = items
   }
@@ -30,9 +27,11 @@ extension ViewSection {
 
     if day == 0 {
       return "Today"
-    } else if day >= 7 {
+    }
+    else if day >= 7 {
       return "Last Week"
-    } else {
+    }
+    else {
       let formatter = DateFormatter()
       formatter.dateFormat = "yyyy"
       return formatter.string(from: self.dateCreated)

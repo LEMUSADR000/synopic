@@ -53,7 +53,8 @@ public class NotesGridViewModel: ViewModel {
 
   private func onCreateNote() {
     self.createNote
-      .sink(receiveValue: { [weak self] in guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
         self.delegate?.notesGridViewModelDidTapCreateNote(self)
       })
       .store(in: &self.cancelBag)
@@ -61,7 +62,8 @@ public class NotesGridViewModel: ViewModel {
 
   private func onViewNote() {
     self.viewNote
-      .sink(receiveValue: { [weak self] in guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
         self.delegate?.notesGridViewModelDidTapViewNote(id: $0, self)
       })
       .store(in: &self.cancelBag)

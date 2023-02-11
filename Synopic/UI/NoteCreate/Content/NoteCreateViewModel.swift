@@ -44,13 +44,15 @@ public class NoteCreateViewModel: NSObject, ViewModel {
   private func onScanReceived() {
     // TODO: Consider running this work in a background thread
     self.scanReceived
-      .sink(receiveValue: { [weak self] in guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
         do {
           let output = try self.ocrService.processDocumentScan($0)
           self.content += output
 
           self.delegate?.noteCreateViewModelDidProcessScan(self)
-        } catch {
+        }
+        catch {
           self.delegate?.noteCreateViewModelFailedToGenerateResult(self)
         }
       })
@@ -59,7 +61,8 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   private func onToggleProcessMode() {
     self.toggleProcessMode
-      .sink(receiveValue: { [weak self] in guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
         self.processType = $0
       })
       .store(in: &self.cancelBag)

@@ -15,12 +15,9 @@ class AppAssembler {
     return assembler.resolver.resolve(serviceType)
   }
 
-  func resolve<Service, Arg1>(
-    _ serviceType: Service.Type,
-    argument: Arg1
-  ) -> Service? {
-    return assembler.resolver.resolve(serviceType, argument: argument)
-  }
+  func resolve<Service, Arg1>(_ serviceType: Service.Type, argument: Arg1)
+    -> Service?
+  { return assembler.resolver.resolve(serviceType, argument: argument) }
 
   init() {
     self.assembler = Assembler([
