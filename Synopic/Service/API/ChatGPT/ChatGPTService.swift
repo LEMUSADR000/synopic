@@ -15,14 +15,11 @@ protocol ChatGPTService {
 class ChatGPTServiceImpl: ChatGPTService {
   private let token: String
 
-  init(token: String) {
-    self.token = token
-  }
+  init(token: String) { self.token = token }
 
   func makeRequest(prompt: String) async throws -> Data {
-    guard let endpoint = URL(string: "https://api.openai.com/v1/completions") else {
-      throw ApiError.invalidURL
-    }
+    guard let endpoint = URL(string: "https://api.openai.com/v1/completions")
+    else { throw ApiError.invalidURL }
 
     var request = URLRequest(url: endpoint)
     request.httpMethod = "POST"
@@ -31,12 +28,8 @@ class ChatGPTServiceImpl: ChatGPTService {
     request.addValue("application/json", forHTTPHeaderField: "Bearer \(token)")
 
     let body: [String: Any] = [
-      "model": "text-davinci-003",
-      "prompt": "\(prompt)",
-      "temperature": 0.7,
-      "max_tokens": 60,
-      "top_p": 1,
-      "frequency_penalty": 0,
+      "model": "text-davinci-003", "prompt": "\(prompt)", "temperature": 0.7,
+      "max_tokens": 60, "top_p": 1, "frequency_penalty": 0,
       "presence_penalty": 1,
     ]
     let jsonData = try JSONSerialization.data(withJSONObject: body)

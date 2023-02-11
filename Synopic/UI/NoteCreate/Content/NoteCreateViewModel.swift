@@ -21,9 +21,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService) {
-    self.ocrService = ocrService
-  }
+  init(ocrService: OCRService) { self.ocrService = ocrService }
 
   func setup(delegate: NoteCreateViewModelDelegate) -> Self {
     self.delegate = delegate
@@ -38,14 +36,15 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   // MARK: EVENT
 
-  let scanReceived: PassthroughSubject<VNDocumentCameraScan, Never> = PassthroughSubject()
-  let toggleProcessMode: PassthroughSubject<ProcessType, Never> = PassthroughSubject()
+  let scanReceived: PassthroughSubject<VNDocumentCameraScan, Never> =
+    PassthroughSubject()
+  let toggleProcessMode: PassthroughSubject<ProcessType, Never> =
+    PassthroughSubject()
 
   private func onScanReceived() {
+    // TODO: Consider running this work in a background thread
     self.scanReceived
-      // TODO: Consider running this work in a background thread
-      .sink(receiveValue: { [weak self] in
-        guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in guard let self = self else { return }
         do {
           let output = try self.ocrService.processDocumentScan($0)
           self.content += output
@@ -60,8 +59,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   private func onToggleProcessMode() {
     self.toggleProcessMode
-      .sink(receiveValue: { [weak self] in
-        guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in guard let self = self else { return }
         self.processType = $0
       })
       .store(in: &self.cancelBag)
@@ -82,18 +80,16 @@ enum ProcessType {
 
 extension NoteCreateViewModel: VNDocumentCameraViewControllerDelegate {
   public func documentCameraViewController(
-    _ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan
-  ) {
-    self.scanReceived.send(scan)
-  }
+    _ controller: VNDocumentCameraViewController,
+    didFinishWith scan: VNDocumentCameraScan
+  ) { self.scanReceived.send(scan) }
 
   public func documentCameraViewController(
-    _ controller: VNDocumentCameraViewController, didFailWithError error: Error
-  ) {
-    self.delegate?.noteCreateViewModelDidCancel(self)
-  }
+    _ controller: VNDocumentCameraViewController,
+    didFailWithError error: Error
+  ) { self.delegate?.noteCreateViewModelDidCancel(self) }
 
-  public func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
-    self.delegate?.noteCreateViewModelDidCancel(self)
-  }
+  public func documentCameraViewControllerDidCancel(
+    _ controller: VNDocumentCameraViewController
+  ) { self.delegate?.noteCreateViewModelDidCancel(self) }
 }

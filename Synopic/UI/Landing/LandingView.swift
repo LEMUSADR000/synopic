@@ -25,14 +25,18 @@ struct LandingView: View {
           VStack {
             LazyVStack(spacing: 20) {
               ForEach(self.$viewModel.sections) { section in
-                GroupListView(section: section, action: { id in self.viewModel.viewGroup.send(id) })
+                GroupListView(
+                  section: section,
+                  action: { id in self.viewModel.viewGroup.send(id) }
+                )
               }
             }
           }
         }
       }
       TabBarContent(viewModel: self.viewModel)
-    }.navigationTitle("Note Groups")
+    }
+    .navigationTitle("Note Groups")
   }
 }
 
@@ -40,7 +44,5 @@ struct LandingView_Previews: PreviewProvider {
   static let appAssembler = AppAssembler()
   static let viewModel = appAssembler.resolve(LandingViewModel.self)!
 
-  static var previews: some View {
-    LandingView(viewModel: viewModel)
-  }
+  static var previews: some View { LandingView(viewModel: viewModel) }
 }

@@ -24,7 +24,8 @@ class OCRServiceImpl: NSObject, OCRService {
   }
 
   // MARK: Public
-  lazy private(set) var canScan: AnyPublisher<Bool?, Never> = self._canScan.eraseToAnyPublisher()
+  lazy private(set) var canScan: AnyPublisher<Bool?, Never> = self._canScan
+    .eraseToAnyPublisher()
 
   func processDocumentScan(_ scan: VNDocumentCameraScan) throws -> String {
     var combinedOutput = ""
@@ -46,9 +47,7 @@ class OCRServiceImpl: NSObject, OCRService {
     }
 
     // Should we bubble up any other exceptions?
-    if combinedOutput.isEmpty {
-      throw OCRError.noTextFound
-    }
+    if combinedOutput.isEmpty { throw OCRError.noTextFound }
 
     return combinedOutput
   }
@@ -56,28 +55,37 @@ class OCRServiceImpl: NSObject, OCRService {
   // MARK: Private Members & Utility
   private var cancelBag: CancelBag
 
-  private let _canScan: CurrentValueSubject<Bool?, Never> = CurrentValueSubject(nil)
+  private let _canScan: CurrentValueSubject<Bool?, Never> = CurrentValueSubject(
+    nil
+  )
 
   private lazy var request: VNRecognizeTextRequest = {
     let req = VNRecognizeTextRequest()
     return req
   }()
 
-  private func perform(_ request: VNRequest, on image: CGImage) throws -> VNRequest {
+  private func perform(
+    _ request: VNRequest,
+    on image: CGImage
+  ) throws -> VNRequest {
     let requestHandler = VNImageRequestHandler(cgImage: image, options: [:])
     try requestHandler.perform([request])
     return request
   }
 
   private func postProcess(request: VNRequest) throws -> String {
-    guard let observations = request.results as? [VNRecognizedTextObservation] else {
+    guard let observations = request.results as? [VNRecognizedTextObservation]
+    else {
       logger.log("Failed to retrieve observations from request results")
       throw OCRError.noObservations
     }
 
     var entireRecognizedText = ""
     for observation in observations {
-      guard let candidate = observation.topCandidates(maxRecognitionCandidates).first else {
+      guard
+        let candidate = observation.topCandidates(maxRecognitionCandidates)
+          .first
+      else {
         logger.log("Failed to generate a candidate for observation")
         continue
       }
@@ -91,7 +99,10 @@ class OCRServiceImpl: NSObject, OCRService {
 
 private let maxRecognitionCandidates = 1
 
-private let logger = Logger(subsystem: "com.adriandevelopments.synopic", category: "OCRService")
+private let logger = Logger(
+  subsystem: "com.adriandevelopments.synopic",
+  category: "OCRService"
+)
 
 enum OCRError: Error {
   case noTextFound

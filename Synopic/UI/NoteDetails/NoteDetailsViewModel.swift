@@ -16,9 +16,7 @@ class NoteDetailsViewModel: ViewModel {
   private weak var delegate: NoteDetailsViewModelDelegate?
   private let noteId: String
 
-  init(noteId: String) {
-    self.noteId = noteId
-  }
+  init(noteId: String) { self.noteId = noteId }
 
   func setup(delegate: NoteDetailsViewModelDelegate) -> Self {
     self.delegate = delegate
@@ -26,7 +24,5 @@ class NoteDetailsViewModel: ViewModel {
     return self
   }
 
-  private func bind() {
-    self.cancelBag = CancelBag()
-  }
+  private func bind() { self.cancelBag = CancelBag() }
 }

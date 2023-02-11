@@ -9,7 +9,8 @@ import Combine
 import SwiftUI
 
 extension Button {
-  init(action: PassthroughSubject<Void, Never>, @ViewBuilder label: () -> Label) {
-    self.init(action: { action.send() }, label: label)
-  }
+  init(
+    action: PassthroughSubject<Void, Never>,
+    @ViewBuilder label: () -> Label
+  ) { self.init(action: { action.send() }, label: label) }
 }

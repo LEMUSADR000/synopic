@@ -10,9 +10,7 @@ import SwiftUI
 struct NoteCreateCoordinatorView: View {
   @ObservedObject var coordinator: NoteCreateCoordinator
 
-  init(coordinator: NoteCreateCoordinator) {
-    self.coordinator = coordinator
-  }
+  init(coordinator: NoteCreateCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
     ScanDocumentsView(noteCreateViewModel: self.coordinator.noteCreateViewModel)

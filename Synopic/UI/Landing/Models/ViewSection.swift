@@ -12,7 +12,10 @@ class ViewSection: ViewModel {
 
   @Published var items: [NoteGroup]
 
-  init(created: Date, items: [NoteGroup]) {
+  init(
+    created: Date,
+    items: [NoteGroup]
+  ) {
     self.dateCreated = created
     self.items = items
   }
@@ -20,10 +23,10 @@ class ViewSection: ViewModel {
 
 extension ViewSection {
   var title: String {
-    guard let day = Calendar.current.dateComponents([.day], from: self.dateCreated, to: .now).day
-    else {
-      return "N/A"
-    }
+    guard
+      let day = Calendar.current
+        .dateComponents([.day], from: self.dateCreated, to: .now).day
+    else { return "N/A" }
 
     if day == 0 {
       return "Today"

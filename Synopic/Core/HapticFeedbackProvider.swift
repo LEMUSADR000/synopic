@@ -8,11 +8,12 @@
 import SwiftUI
 import UIKit
 
-private let impactLightFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(
-  style: .light)
-private let impactMediumFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator()
-private let impactHeavyFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(
-  style: .heavy)
+private let impactLightFeedbackGenerator: UIImpactFeedbackGenerator =
+  UIImpactFeedbackGenerator(style: .light)
+private let impactMediumFeedbackGenerator: UIImpactFeedbackGenerator =
+  UIImpactFeedbackGenerator()
+private let impactHeavyFeedbackGenerator: UIImpactFeedbackGenerator =
+  UIImpactFeedbackGenerator(style: .heavy)
 private let selectionFeedbackGenerator: UISelectionFeedbackGenerator =
   UISelectionFeedbackGenerator()
 private let notificationFeedbackGenerator: UINotificationFeedbackGenerator =
@@ -40,14 +41,10 @@ extension HapticFeedbackProvider {
   static func hapticFeedback(_ style: HapticFeedbackStyle) {
     DispatchQueue.main.async {
       switch style {
-      case .impactLight:
-        impactLightFeedbackGenerator.impactOccurred()
-      case .impactMedium:
-        impactMediumFeedbackGenerator.impactOccurred()
-      case .impactHeavy:
-        impactHeavyFeedbackGenerator.impactOccurred()
-      case .selection:
-        selectionFeedbackGenerator.selectionChanged()
+      case .impactLight: impactLightFeedbackGenerator.impactOccurred()
+      case .impactMedium: impactMediumFeedbackGenerator.impactOccurred()
+      case .impactHeavy: impactHeavyFeedbackGenerator.impactOccurred()
+      case .selection: selectionFeedbackGenerator.selectionChanged()
       case .notifySuccess:
         notificationFeedbackGenerator.notificationOccurred(.success)
       case .notifyWarning:
@@ -60,13 +57,9 @@ extension HapticFeedbackProvider {
 }
 
 struct HapticFeedbackViewProxy: HapticFeedbackProvider {
-  func generate(_ style: HapticFeedbackStyle) {
-    Self.hapticFeedback(style)
-  }
+  func generate(_ style: HapticFeedbackStyle) { Self.hapticFeedback(style) }
 }
 
 extension View {
-  var haptics: HapticFeedbackViewProxy {
-    HapticFeedbackViewProxy()
-  }
+  var haptics: HapticFeedbackViewProxy { HapticFeedbackViewProxy() }
 }

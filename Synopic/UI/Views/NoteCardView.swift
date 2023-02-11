@@ -11,11 +11,19 @@ struct NoteCardView<Content>: View where Content: View {
   var background: Color
   private var child: Content
 
-  @inlinable init(@ViewBuilder _ content: () -> Content) {
-    self.init(background: Color(UIColor.secondarySystemBackground), content: content)
+  @inlinable init(
+    @ViewBuilder _ content: () -> Content
+  ) {
+    self.init(
+      background: Color(UIColor.secondarySystemBackground),
+      content: content
+    )
   }
 
-  init(background: Color, @ViewBuilder content: () -> Content) {
+  init(
+    background: Color,
+    @ViewBuilder content: () -> Content
+  ) {
     self.background = background
     self.child = content()
   }
@@ -23,8 +31,7 @@ struct NoteCardView<Content>: View where Content: View {
   var body: some View {
     ZStack {
       RoundedRectangle(cornerRadius: 10, style: .continuous)
-        .foregroundColor(background)
-        .aspectRatio(0.6, contentMode: .fill)
+        .foregroundColor(background).aspectRatio(0.6, contentMode: .fill)
       child
     }
   }

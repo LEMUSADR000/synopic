@@ -20,7 +20,8 @@ extension UIImage {
     case squareRoot
   }
 
-  func findAverageColor(algorithm: AverageColorAlgorithm = .simple) -> UIColor? {
+  func findAverageColor(algorithm: AverageColorAlgorithm = .simple) -> UIColor?
+  {
     guard let cgImage = cgImage else { return nil }
 
     // First, resize the image. We do this for two reasons, 1) less pixels to deal with means faster calculation and a resized image still has the "gist" of the colors, and 2) the image we're dealing with may come in any of a variety of color formats (CMYK, ARGB, RGBA, etc.) which complicates things, and redrawing it normalizes that into a base color format we can deal with.
@@ -35,13 +36,20 @@ extension UIImage {
 
     // ARGB format
     let bitmapInfo: UInt32 =
-      CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
+      CGBitmapInfo.byteOrder32Little.rawValue
+      | CGImageAlphaInfo.premultipliedFirst.rawValue
 
     // 8 bits for each color channel, we're doing ARGB so 32 bits (4 bytes) total, and thus if the image is n pixels wide, and has 4 bytes per pixel, the total bytes per row is 4n. That gives us 2^8 = 256 color variations for each RGB channel or 256 * 256 * 256 = ~16.7M color options in total. That seems like a lot, but lots of HDR movies are in 10 bit, which is (2^10)^3 = 1 billion color options!
     guard
       let context = CGContext(
-        data: nil, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
-        space: colorSpace, bitmapInfo: bitmapInfo)
+        data: nil,
+        width: width,
+        height: height,
+        bitsPerComponent: 8,
+        bytesPerRow: width * 4,
+        space: colorSpace,
+        bitmapInfo: bitmapInfo
+      )
     else { return nil }
 
     // Draw our resized image
@@ -50,7 +58,10 @@ extension UIImage {
     guard let pixelBuffer = context.data else { return nil }
 
     // Bind the pixel buffer's memory location to a pointer we can use/access
-    let pointer = pixelBuffer.bindMemory(to: UInt32.self, capacity: width * height)
+    let pointer = pixelBuffer.bindMemory(
+      to: UInt32.self,
+      capacity: width * height
+    )
 
     // Keep track of total colors (note: we don't care about alpha and will always assume alpha of 1, AKA opaque)
     var totalRed = 0
@@ -98,7 +109,11 @@ extension UIImage {
 
     // Convert from [0 ... 255] format to the [0 ... 1.0] format UIColor wants
     return UIColor(
-      red: averageRed / 255.0, green: averageGreen / 255.0, blue: averageBlue / 255.0, alpha: 1.0)
+      red: averageRed / 255.0,
+      green: averageGreen / 255.0,
+      blue: averageBlue / 255.0,
+      alpha: 1.0
+    )
   }
 
   private func red(for pixelData: UInt32) -> UInt8 {

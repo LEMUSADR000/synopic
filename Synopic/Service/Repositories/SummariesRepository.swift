@@ -22,9 +22,9 @@ class SummariesRepositoryImpl: SummariesRepository {
 
   private let chatGptApiService: ChatGPTService
 
-  init(chatGptApiService: ChatGPTService) {
-    self.chatGptApiService = chatGptApiService
-  }
+  init(
+    chatGptApiService: ChatGPTService
+  ) { self.chatGptApiService = chatGptApiService }
 
   func requestSummary(text: String, type: SummaryType) async throws -> Summary {
     // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
@@ -34,9 +34,7 @@ class SummariesRepositoryImpl: SummariesRepository {
     do {
       let result = try await chatGptApiService.makeRequest(prompt: prompt)
       summary = try JSONDecoder().decode(Summary.self, from: result)
-    } catch {
-      throw error
-    }
+    } catch { throw error }
 
     return summary
   }

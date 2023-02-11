@@ -12,14 +12,17 @@ class CoordinatorAssembly: Assembly {
   func assemble(container: Container) {
     container.register(AppRootCoordinator.self) { r in
       AppRootCoordinator(resolver: r)
-    }.inObjectScope(.container)
+    }
+    .inObjectScope(.container)
 
     container.register(NoteCreateCoordinator.self) { r in
       NoteCreateCoordinator(resolver: r)
-    }.inObjectScope(.transient)
+    }
+    .inObjectScope(.transient)
 
     container.register(NoteGroupDetailsCoordinator.self) { r, id in
       NoteGroupDetailsCoordinator(resolver: r, groupId: id)
-    }.inObjectScope(.transient)
+    }
+    .inObjectScope(.transient)
   }
 }

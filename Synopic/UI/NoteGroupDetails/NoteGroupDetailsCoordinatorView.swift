@@ -10,9 +10,9 @@ import SwiftUI
 struct NoteGroupDetailsCoordinatorView: View {
   @ObservedObject var coordinator: NoteGroupDetailsCoordinator
 
-  init(coordinator: NoteGroupDetailsCoordinator) {
-    self.coordinator = coordinator
-  }
+  init(
+    coordinator: NoteGroupDetailsCoordinator
+  ) { self.coordinator = coordinator }
 
   var body: some View {
     NotesGridView(notesGridViewModel: self.coordinator.notesGridViewModel)
@@ -33,7 +33,9 @@ struct NoteGroupDetailsCoordinatorView: View {
 struct NoteGroupDetailsCoordinatorView_Previews: PreviewProvider {
   static let appAssembler = AppAssembler()
   static let coordinator = appAssembler.resolve(
-    NoteGroupDetailsCoordinator.self, argument: nil as String?)!
+    NoteGroupDetailsCoordinator.self,
+    argument: nil as String?
+  )!
 
   static var previews: some View {
     NoteGroupDetailsCoordinatorView(coordinator: coordinator)

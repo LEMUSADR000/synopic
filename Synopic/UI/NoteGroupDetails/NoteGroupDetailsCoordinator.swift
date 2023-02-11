@@ -20,29 +20,43 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   private var noteGroupId: String
 
-  init(resolver: Resolver, groupId: String?) {
+  init(
+    resolver: Resolver,
+    groupId: String?
+  ) {
     self.resolver = resolver
 
     // TODO: Figure out how to better handle this so that if a user taps create we only generate a new NoteGroup object if they make changes to said group
     let uuid = groupId ?? UUID().uuidString
     self.noteGroupId = uuid
 
-    self.notesGridViewModel = self.resolver.resolve(NotesGridViewModel.self, argument: uuid)!.setup(
-      delegate: self)
+    self.notesGridViewModel = self.resolver.resolve(
+      NotesGridViewModel.self,
+      argument: uuid
+    )!
+    .setup(delegate: self)
   }
 }
 
 // MARK: NotesGridViewModelDelegate
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
-  func notesGridViewModelDidTapViewNote(id: String, _ source: NotesGridViewModel) {
+  func notesGridViewModelDidTapViewNote(
+    id: String,
+    _ source: NotesGridViewModel
+  ) {
     self.noteDetailsViewModel = self.resolver.resolve(
-      NoteDetailsViewModel.self, argument: self.noteGroupId)!.setup(delegate: self)
+      NoteDetailsViewModel.self,
+      argument: self.noteGroupId
+    )!
+    .setup(delegate: self)
   }
 
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel) {
-    self.noteCreateCoordinator = self.resolver.resolve(NoteCreateCoordinator.self)!.setup(
-      delegate: self)
+    self.noteCreateCoordinator = self.resolver.resolve(
+      NoteCreateCoordinator.self
+    )!
+    .setup(delegate: self)
   }
 }
 

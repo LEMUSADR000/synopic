@@ -14,8 +14,12 @@ struct ProcessScansView: View {
   var body: some View {
     VStack {
       ScrollView {
-        TextField(viewModel.content, text: $viewModel.content, prompt: Text("Empty"))
-          .font(.headline)
+        TextField(
+          viewModel.content,
+          text: $viewModel.content,
+          prompt: Text("Empty")
+        )
+        .font(.headline)
       }
       Spacer()
       HStack {
@@ -25,7 +29,8 @@ struct ProcessScansView: View {
             NoteCardView {
 
             }
-          })
+          }
+        )
         Spacer()
         Button(
           action: { viewModel.toggleProcessMode.send(.bulleted) },
@@ -33,7 +38,8 @@ struct ProcessScansView: View {
             NoteCardView {
 
             }
-          })
+          }
+        )
       }
     }
   }
@@ -42,7 +48,5 @@ struct ProcessScansView: View {
 struct ProcessScansView_Previews: PreviewProvider {
   static let appAssembler = AppAssembler()
   static let viewModel = appAssembler.resolve(NoteCreateViewModel.self)!
-  static var previews: some View {
-    ProcessScansView(viewModel: viewModel)
-  }
+  static var previews: some View { ProcessScansView(viewModel: viewModel) }
 }

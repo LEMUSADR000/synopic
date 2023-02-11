@@ -11,7 +11,10 @@ import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
-  func notesGridViewModelDidTapViewNote(id: String, _ source: NotesGridViewModel)
+  func notesGridViewModelDidTapViewNote(
+    id: String,
+    _ source: NotesGridViewModel
+  )
 }
 
 public class NotesGridViewModel: ViewModel {
@@ -20,9 +23,7 @@ public class NotesGridViewModel: ViewModel {
 
   private let noteGroupId: String
 
-  init(noteGroupId: String) {
-    self.noteGroupId = noteGroupId
-  }
+  init(noteGroupId: String) { self.noteGroupId = noteGroupId }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
     self.delegate = delegate
@@ -52,8 +53,7 @@ public class NotesGridViewModel: ViewModel {
 
   private func onCreateNote() {
     self.createNote
-      .sink(receiveValue: { [weak self] in
-        guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in guard let self = self else { return }
         self.delegate?.notesGridViewModelDidTapCreateNote(self)
       })
       .store(in: &self.cancelBag)
@@ -61,8 +61,7 @@ public class NotesGridViewModel: ViewModel {
 
   private func onViewNote() {
     self.viewNote
-      .sink(receiveValue: { [weak self] in
-        guard let self = self else { return }
+      .sink(receiveValue: { [weak self] in guard let self = self else { return }
         self.delegate?.notesGridViewModelDidTapViewNote(id: $0, self)
       })
       .store(in: &self.cancelBag)

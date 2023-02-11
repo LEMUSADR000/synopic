@@ -11,19 +11,22 @@ import Swinject
 class ServiceAssembly: Assembly {
   func assemble(container: Container) {
     // MARK: Local
-    container.register(OCRService.self) { _ in
-      OCRServiceImpl()
-    }.inObjectScope(.container)
+    container.register(OCRService.self) { _ in OCRServiceImpl() }
+      .inObjectScope(.container)
 
     // MARK: Repositories
     container.register(SummariesRepository.self) { r in
-      SummariesRepositoryImpl(chatGptApiService: r.resolve(ChatGPTService.self)!)
-    }.inObjectScope(.container)
+      SummariesRepositoryImpl(
+        chatGptApiService: r.resolve(ChatGPTService.self)!
+      )
+    }
+    .inObjectScope(.container)
 
     // MARK: API
     container.register(ChatGPTService.self) { _ in
       // TODO: Find where we will be getting token from!
       ChatGPTServiceImpl(token: "NONE")
-    }.inObjectScope(.transient)
+    }
+    .inObjectScope(.transient)
   }
 }

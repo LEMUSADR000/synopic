@@ -16,10 +16,13 @@ class AppRootCoordinator: ViewModel {
 
   @Published var noteDetailsCoordinator: NoteGroupDetailsCoordinator?
 
-  init(resolver: Resolver) {
+  init(
+    resolver: Resolver
+  ) {
     self.resolver = resolver
 
-    self.landingViewModel = self.resolver.resolve(LandingViewModel.self)!.setup(delegate: self)
+    self.landingViewModel = self.resolver.resolve(LandingViewModel.self)!
+      .setup(delegate: self)
   }
 }
 
@@ -28,12 +31,19 @@ class AppRootCoordinator: ViewModel {
 extension AppRootCoordinator: LandingViewModelDelegate {
   func landingViewModelDidTapCreateGroup(_ source: LandingViewModel) {
     self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self, argument: nil as String?)!
+      NoteGroupDetailsCoordinator.self,
+      argument: nil as String?
+    )!
   }
 
-  func landingViewModelDidTapViewGroup(noteGroupId: String, _ source: LandingViewModel) {
+  func landingViewModelDidTapViewGroup(
+    noteGroupId: String,
+    _ source: LandingViewModel
+  ) {
     self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self, argument: noteGroupId as String?)!
+      NoteGroupDetailsCoordinator.self,
+      argument: noteGroupId as String?
+    )!
   }
 }
 

@@ -23,10 +23,13 @@ class NoteCreateCoordinator: ViewModel {
 
   @Published var didProcess: Bool = false
 
-  init(resolver: Resolver) {
+  init(
+    resolver: Resolver
+  ) {
     self.resolver = resolver
 
-    self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self)!.setup(delegate: self)
+    self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self)!
+      .setup(delegate: self)
   }
 
   func setup(delegate: NoteCreateCoordinatorDelegate) -> Self {
@@ -49,7 +52,8 @@ extension NoteCreateCoordinator: NoteCreateViewModelDelegate {
     self.didProcess = !self.didProcess
   }
 
-  func noteCreateViewModelFailedToGenerateResult(_ source: NoteCreateViewModel) {
+  func noteCreateViewModelFailedToGenerateResult(_ source: NoteCreateViewModel)
+  {
     // TODO: Should we do anything else here?
     self.delegate?.noteCreateCoordinatorDidComplete(self)
   }

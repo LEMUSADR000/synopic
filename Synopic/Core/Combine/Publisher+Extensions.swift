@@ -36,13 +36,10 @@ extension Publisher {
   ///         Just(100).assign(to: &model2.$id)
   ///
   /// - Parameter published: A property marked with the `@Published` attribute, which receives and republishes all elements received from the upstream publisher.
-  func assign<Root: AnyObject>(to keyPath: ReferenceWritableKeyPath<Root, Output>, on root: Root)
-    -> AnyCancellable
-  {
-    sink { [weak root] in
-      root?[keyPath: keyPath] = $0
-    }
-  }
+  func assign<Root: AnyObject>(
+    to keyPath: ReferenceWritableKeyPath<Root, Output>,
+    on root: Root
+  ) -> AnyCancellable { sink { [weak root] in root?[keyPath: keyPath] = $0 } }
 
   /// Attaches a subscriber with closure-based behavior.
   ///
@@ -68,10 +65,13 @@ extension Publisher {
   /// - parameter receiveComplete: The closure to execute on completion.
   /// - parameter receiveValue: The closure to execute on receipt of a value.
   /// - Returns: A cancellable instance, which you use when you end assignment of the received value. Deallocation of the result will tear down the subscription stream.
-  public func sink(receiveCompletion: ((Subscribers.Completion<Self.Failure>) -> Void)? = nil)
-    -> AnyCancellable
-  {
-    self.sink(receiveCompletion: receiveCompletion ?? { _ in }, receiveValue: { _ in })
+  public func sink(
+    receiveCompletion: ((Subscribers.Completion<Self.Failure>) -> Void)? = nil
+  ) -> AnyCancellable {
+    self.sink(
+      receiveCompletion: receiveCompletion ?? { _ in },
+      receiveValue: { _ in }
+    )
   }
 
   /// Attaches a subscriber with closure-based behavior.
@@ -101,22 +101,23 @@ extension Publisher {
   /// - parameter failure: The closure to execute on failure.
   /// - Returns: A cancellable instance, which you use when you end assignment of the received value. Deallocation of the result will tear down the subscription stream.
   public func sink(
-    receiveValue: ((Self.Output) -> Void)? = nil, completion: (() -> Void)? = nil,
+    receiveValue: ((Self.Output) -> Void)? = nil,
+    completion: (() -> Void)? = nil,
     failure: ((Self.Failure) -> Void)? = nil
   ) -> AnyCancellable {
     self.sink(
       receiveCompletion: { receivedCompletion in
         switch receivedCompletion {
-        case .finished:
-          completion?()
-        case .failure(let error):
-          failure?(error)
+        case .finished: completion?()
+        case .failure(let error): failure?(error)
         }
       },
-      receiveValue: receiveValue ?? { _ in })
+      receiveValue: receiveValue ?? { _ in }
+    )
   }
 
-  public func debug(_ label: String) -> AnyPublisher<Self.Output, Self.Failure> {
+  public func debug(_ label: String) -> AnyPublisher<Self.Output, Self.Failure>
+  {
     self.handleEvents(
       receiveSubscription: { subscription in
         Swift.print("\(Date()) \(label) subscribed \(subscription)")
@@ -127,9 +128,7 @@ extension Publisher {
       receiveCompletion: { completion in
         Swift.print("\(Date()) \(label) completion \(completion)")
       },
-      receiveCancel: {
-        Swift.print("\(Date()) \(label) cancel")
-      },
+      receiveCancel: { Swift.print("\(Date()) \(label) cancel") },
       receiveRequest: { demand in
         Swift.print("\(Date()) \(label) request \(demand)")
       }
@@ -140,32 +139,27 @@ extension Publisher {
   /// .withLatestFromFix(_:) in CombineExt is leaky for long-lived streams: https://github.com/CombineCommunity/CombineExt/issues/87
   /// This version fixes the stream issue (see comment on 8/6/2021 by freak4pc) https://gist.github.com/freak4pc/8d46ea6a6f5e5902c3fb5eba440a55c3
   func withLatestFromUnretained<Other: Publisher, Result>(
-    _ other: Other, resultSelector: @escaping (Output, Other.Output) -> Result
+    _ other: Other,
+    resultSelector: @escaping (Output, Other.Output) -> Result
   ) -> AnyPublisher<Result, Failure> where Other.Failure == Failure {
     let upstream = share()
-    return
-      other
-      .map { second in upstream.map { resultSelector($0, second) } }
-      .switchToLatest()
-      .zip(upstream)  // `zip`ping and discarding `\.1` allows for
+    // `zip`ping and discarding `\.1` allows for
+    return other.map { second in upstream.map { resultSelector($0, second) } }
+      .switchToLatest().zip(upstream)
       // upstream completions to be projected down immediately.
-      .map(\.0)
-      .eraseToAnyPublisher()
+      .map(\.0).eraseToAnyPublisher()
   }
 
   /// .withLatestFromFix(_:) in CombineExt is leaky for long-lived streams: https://github.com/CombineCommunity/CombineExt/issues/87
   /// This version fixes the stream issue (see comment on 8/6/2021 by freak4pc) https://gist.github.com/freak4pc/8d46ea6a6f5e5902c3fb5eba440a55c3
-  func withLatestFromUnretained<Other: Publisher>(_ other: Other) -> AnyPublisher<
-    Other.Output, Other.Failure
-  > where Failure == Other.Failure {
+  func withLatestFromUnretained<Other: Publisher>(
+    _ other: Other
+  ) -> AnyPublisher<Other.Output, Other.Failure>
+  where Failure == Other.Failure {
     let upstream = share()
-    return
-      other
-      .map { second in upstream.map { _ in second } }
-      .switchToLatest()
+    return other.map { second in upstream.map { _ in second } }.switchToLatest()
       .zip(upstream)  // `zip`ping and discarding `\.1` allows for
       // upstream completions to be projected down immediately.
-      .map(\.0)
-      .eraseToAnyPublisher()
+      .map(\.0).eraseToAnyPublisher()
   }
 }

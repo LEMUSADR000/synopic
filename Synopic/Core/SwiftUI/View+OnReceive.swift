@@ -22,13 +22,12 @@ extension View {
   /// - Returns: A view that triggers `action` when `publisher` emits an
   ///   event.
   @inlinable public func onReceive<P>(
-    _ publisher: P, withAnimation animation: Animation?,
+    _ publisher: P,
+    withAnimation animation: Animation?,
     perform action: @escaping (P.Output) -> Void
   ) -> some View where P: Publisher, P.Failure == Never {
     self.onReceive(publisher) { value in
-      withAnimation(animation) {
-        action(value)
-      }
+      withAnimation(animation) { action(value) }
     }
   }
 }

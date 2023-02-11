@@ -10,9 +10,7 @@ import SwiftUI
 struct AppRootCoordinatorView: View {
   @ObservedObject var coordinator: AppRootCoordinator
 
-  init(coordinator: AppRootCoordinator) {
-    self.coordinator = coordinator
-  }
+  init(coordinator: AppRootCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
     NavigationView {
