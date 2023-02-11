@@ -8,6 +8,6 @@
 import Foundation
 
 struct Summary: Codable {
-    let id: String
-    let completions: [String]
+  let id: String
+  let completions: [String]
 }

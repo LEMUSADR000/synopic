@@ -8,6 +8,6 @@
 import Foundation
 
 enum ApiError: Error {
-    case invalidURL
-    case failedResponse(String)
+  case invalidURL
+  case failedResponse(String)
 }

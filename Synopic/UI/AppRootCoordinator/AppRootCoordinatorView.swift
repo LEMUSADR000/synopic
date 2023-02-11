@@ -8,28 +8,27 @@
 import SwiftUI
 
 struct AppRootCoordinatorView: View {
-    @ObservedObject var coordinator: AppRootCoordinator
+  @ObservedObject var coordinator: AppRootCoordinator
 
-    init(coordinator: AppRootCoordinator) {
-        self.coordinator = coordinator
-    }
+  init(coordinator: AppRootCoordinator) {
+    self.coordinator = coordinator
+  }
 
-    var body: some View {
-        NavigationView {
-            LandingView(viewModel: self.coordinator.landingViewModel)
-                .navigationTitle("Note Groups")
-                .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
-                    NoteDetailsCoordinatorView(coordinator: c)
-                }
+  var body: some View {
+    NavigationView {
+      LandingView(viewModel: self.coordinator.landingViewModel)
+        .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
+          NoteGroupDetailsCoordinatorView(coordinator: c)
         }
     }
+  }
 }
 
 struct AppRootCoordinatorView_Previews: PreviewProvider {
-    static let appAssembler = AppAssembler()
-    static let coordinator = appAssembler.resolve(AppRootCoordinator.self)!
-    
-    static var previews: some View {
-        AppRootCoordinatorView(coordinator: coordinator)
-    }
+  static let appAssembler = AppAssembler()
+  static let coordinator = appAssembler.resolve(AppRootCoordinator.self)!
+
+  static var previews: some View {
+    AppRootCoordinatorView(coordinator: coordinator)
+  }
 }

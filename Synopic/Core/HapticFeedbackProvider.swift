@@ -5,14 +5,18 @@
 //  Created by Adrian Lemus on 12/20/22.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
-private let impactLightFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+private let impactLightFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(
+  style: .light)
 private let impactMediumFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator()
-private let impactHeavyFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(style: .heavy)
-private let selectionFeedbackGenerator: UISelectionFeedbackGenerator = UISelectionFeedbackGenerator()
-private let notificationFeedbackGenerator: UINotificationFeedbackGenerator = UINotificationFeedbackGenerator()
+private let impactHeavyFeedbackGenerator: UIImpactFeedbackGenerator = UIImpactFeedbackGenerator(
+  style: .heavy)
+private let selectionFeedbackGenerator: UISelectionFeedbackGenerator =
+  UISelectionFeedbackGenerator()
+private let notificationFeedbackGenerator: UINotificationFeedbackGenerator =
+  UINotificationFeedbackGenerator()
 
 enum HapticFeedbackStyle {
   case impactLight
@@ -32,7 +36,7 @@ extension HapticFeedbackProvider {
   func hapticFeedback(_ style: HapticFeedbackStyle) {
     Self.hapticFeedback(style)
   }
-  
+
   static func hapticFeedback(_ style: HapticFeedbackStyle) {
     DispatchQueue.main.async {
       switch style {

@@ -11,9 +11,9 @@ private let appAssembler: AppAssembler = AppAssembler()
 
 @main
 struct SynopicApp: App {
-    var body: some Scene {
-        WindowGroup {
-            AppRootCoordinatorView(coordinator: appAssembler.resolve(AppRootCoordinator.self)!)
-        }
+  var body: some Scene {
+    WindowGroup {
+      AppRootCoordinatorView(coordinator: appAssembler.resolve(AppRootCoordinator.self)!)
     }
+  }
 }

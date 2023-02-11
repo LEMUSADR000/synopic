@@ -24,8 +24,10 @@ extension View {
       self
     }
   }
-  
-  func navigation<Item, Destination: View>(item: Binding<Item?>, @ViewBuilder destination: (Item) -> Destination) -> some View {
+
+  func navigation<Item, Destination: View>(
+    item: Binding<Item?>, @ViewBuilder destination: (Item) -> Destination
+  ) -> some View {
     let isActive = Binding(
       get: { item.wrappedValue != nil },
       set: { value in
@@ -38,8 +40,10 @@ extension View {
       item.wrappedValue.map(destination)
     }
   }
-  
-  func navigation<Destination: View>(isActive: Binding<Bool>, @ViewBuilder destination: () -> Destination) -> some View {
+
+  func navigation<Destination: View>(
+    isActive: Binding<Bool>, @ViewBuilder destination: () -> Destination
+  ) -> some View {
     overlay(
       NavigationLink(
         destination: isActive.wrappedValue ? destination() : nil,
@@ -51,7 +55,9 @@ extension View {
 }
 
 extension NavigationLink {
-  init<T: Identifiable, D: View>(item: Binding<T?>, @ViewBuilder destination: (T) -> D, @ViewBuilder label: () -> Label) where Destination == D? {
+  init<T: Identifiable, D: View>(
+    item: Binding<T?>, @ViewBuilder destination: (T) -> D, @ViewBuilder label: () -> Label
+  ) where Destination == D? {
     let isActive = Binding(
       get: { item.wrappedValue != nil },
       set: { value in
