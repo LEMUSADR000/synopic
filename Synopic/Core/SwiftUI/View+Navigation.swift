@@ -4,7 +4,6 @@
 //
 //  Created by Adrian Lemus on 2/5/23.
 //
-
 import SwiftUI
 
 extension View {
@@ -17,10 +16,9 @@ extension View {
       self
     }
   }
-
-  func navigation<Item, Destination: View>(
-    item: Binding<Item?>,
-    @ViewBuilder destination: (Item) -> Destination
+  func navigation<T, Destination: View>(
+    item: Binding<T?>,
+    @ViewBuilder destination: (T) -> Destination
   ) -> some View {
     let isActive = Binding(
       get: { item.wrappedValue != nil },
@@ -30,7 +28,6 @@ extension View {
       item.wrappedValue.map(destination)
     }
   }
-
   func navigation<Destination: View>(
     isActive: Binding<Bool>,
     @ViewBuilder destination: () -> Destination
@@ -44,7 +41,6 @@ extension View {
     )
   }
 }
-
 extension NavigationLink {
   init<T: Identifiable, D: View>(
     item: Binding<T?>,

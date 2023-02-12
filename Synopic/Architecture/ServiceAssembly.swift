@@ -25,7 +25,9 @@ class ServiceAssembly: Assembly {
     // MARK: API
     container.register(ChatGPTService.self) { _ in
       // TODO: Find where we will be getting token from!
-      ChatGPTServiceImpl(token: "NONE")
+      ChatGPTServiceImpl(
+        token: "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"
+      )
     }
     .inObjectScope(.transient)
   }

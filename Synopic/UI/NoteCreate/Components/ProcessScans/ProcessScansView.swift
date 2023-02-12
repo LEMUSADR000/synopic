@@ -10,38 +10,50 @@ import Swinject
 
 struct ProcessScansView: View {
   @ObservedObject var viewModel: NoteCreateViewModel
+  let buttonHeight: CGFloat = 60
+
+  init(viewModel: NoteCreateViewModel) {
+    UITextView.appearance().backgroundColor = .black
+    self.viewModel = viewModel
+  }
 
   var body: some View {
     VStack {
-      ScrollView {
-        TextField(
-          viewModel.content,
-          text: $viewModel.content,
-          prompt: Text("Empty")
-        )
-        .font(.headline)
-      }
-      Spacer()
+      TextEditor(text: self.$viewModel.content)
+        .cornerRadius(10)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 20)
       HStack {
-        Button(
-          action: { viewModel.toggleProcessMode.send(.singleLine) },
-          label: {
-            NoteCardView {
-
-            }
+        SummaryTypeToggle(
+          model: self.$viewModel.processType,
+          type: .singleSentence,
+          action: {
+            self.viewModel.toggleProcessMode.send(.singleSentence)
           }
         )
-        Spacer()
-        Button(
-          action: { viewModel.toggleProcessMode.send(.bulleted) },
-          label: {
-            NoteCardView {
-
-            }
+        Spacer().frame(width: 30)
+        SummaryTypeToggle(
+          model: self.$viewModel.processType,
+          type: .threePoints,
+          action: {
+            self.viewModel.toggleProcessMode.send(.threePoints)
           }
         )
       }
+      .padding(.horizontal, 50)
+      .frame(minWidth: 100, maxWidth: .infinity)
+      Spacer().frame(height: 20)
+      Button(action: self.viewModel.processText) {
+        Image(systemName: "checkmark")
+          .foregroundColor(Color(.white))
+          .frame(maxWidth: .infinity, minHeight: 55)
+          .background(RoundedRectangle(cornerRadius: 15))
+      }
+      .padding(.horizontal, 50)
+      .frame(minWidth: 100, maxWidth: .infinity)
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
+    .background(Color(UIColor.secondarySystemBackground))
   }
 }
 

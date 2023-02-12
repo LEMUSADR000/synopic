@@ -34,10 +34,17 @@ class SummariesRepositoryImpl: SummariesRepository {
     let summary: Summary
     do {
       let result = try await chatGptApiService.makeRequest(prompt: prompt)
-      summary = try JSONDecoder().decode(Summary.self, from: result)
+      guard !result.choices.isEmpty else {
+        throw SummariesError.requestFailed("No choices found in result")
+      }
+      summary = Summary(id: result.id, result: result.choices.first!.text)
     }
     catch { throw error }
 
     return summary
   }
+}
+
+enum SummariesError: Error {
+  case requestFailed(String)
 }

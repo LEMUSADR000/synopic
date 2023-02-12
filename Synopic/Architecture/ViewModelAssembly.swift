@@ -21,7 +21,10 @@ class ViewModelAssembly: Assembly {
     .inObjectScope(.transient)
 
     container.register(NoteCreateViewModel.self) { r in
-      NoteCreateViewModel(ocrService: r.resolve(OCRService.self)!)
+      NoteCreateViewModel(
+        ocrService: r.resolve(OCRService.self)!,
+        summariesRepository: r.resolve(SummariesRepository.self)!
+      )
     }
     .inObjectScope(.transient)
 

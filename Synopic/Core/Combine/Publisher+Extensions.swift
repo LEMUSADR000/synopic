@@ -4,7 +4,6 @@
 //
 //  Created by Adrian Lemus on 12/22/22.
 //
-
 import Combine
 import CombineExt
 import Foundation
@@ -40,7 +39,6 @@ extension Publisher {
     to keyPath: ReferenceWritableKeyPath<Root, Output>,
     on root: Root
   ) -> AnyCancellable { sink { [weak root] in root?[keyPath: keyPath] = $0 } }
-
   /// Attaches a subscriber with closure-based behavior.
   ///
   /// Use ``Publisher/sink(receiveCompletion:receiveValue:)`` to observe values received by the publisher and process them using a closure you specify.
@@ -73,7 +71,6 @@ extension Publisher {
       receiveValue: { _ in }
     )
   }
-
   /// Attaches a subscriber with closure-based behavior.
   ///
   /// Use ``Publisher/sink(receiveCompletion:receiveValue:)`` to observe values received by the publisher and process them using a closure you specify.
@@ -115,7 +112,6 @@ extension Publisher {
       receiveValue: receiveValue ?? { _ in }
     )
   }
-
   public func debug(_ label: String) -> AnyPublisher<Self.Output, Self.Failure>
   {
     self.handleEvents(
@@ -135,7 +131,6 @@ extension Publisher {
     )
     .eraseToAnyPublisher()
   }
-
   /// .withLatestFromFix(_:) in CombineExt is leaky for long-lived streams: https://github.com/CombineCommunity/CombineExt/issues/87
   /// This version fixes the stream issue (see comment on 8/6/2021 by freak4pc) https://gist.github.com/freak4pc/8d46ea6a6f5e5902c3fb5eba440a55c3
   func withLatestFromUnretained<Other: Publisher, Result>(
@@ -145,19 +140,40 @@ extension Publisher {
     let upstream = share()
     // `zip`ping and discarding `\.1` allows for
     return other.map { second in upstream.map { resultSelector($0, second) } }
-      .switchToLatest().zip(upstream)  // upstream completions to be projected down immediately.
-      .map(\.0).eraseToAnyPublisher()
+      // upstream completions to be projected down immediately.
+      .switchToLatest().zip(upstream).map(\.0).eraseToAnyPublisher()
   }
-
   /// .withLatestFromFix(_:) in CombineExt is leaky for long-lived streams: https://github.com/CombineCommunity/CombineExt/issues/87
   /// This version fixes the stream issue (see comment on 8/6/2021 by freak4pc) https://gist.github.com/freak4pc/8d46ea6a6f5e5902c3fb5eba440a55c3
   func withLatestFromUnretained<Other: Publisher>(_ other: Other)
     -> AnyPublisher<Other.Output, Other.Failure>
   where Failure == Other.Failure {
     let upstream = share()
+    // `zip`ping and discarding `\.1` allows for
     return other.map { second in upstream.map { _ in second } }
-      .switchToLatest().zip(upstream)  // `zip`ping and discarding `\.1` allows for
+      .switchToLatest().zip(upstream)
       // upstream completions to be projected down immediately.
       .map(\.0).eraseToAnyPublisher()
+  }
+
+
+  public func asyncSink(
+    receiveValue: ((Self.Output) async -> Void)? = nil,
+    completion: (() -> Void)? = nil,
+    failure: ((Self.Failure) -> Void)? = nil
+  ) -> AnyCancellable {
+    self.sink(
+      receiveCompletion: { receivedCompletion in
+        switch receivedCompletion {
+        case .finished: completion?()
+        case .failure(let error): failure?(error)
+        }
+      },
+      receiveValue: { value in
+        Task {
+          await receiveValue?(value)
+        }
+      }
+    )
   }
 }

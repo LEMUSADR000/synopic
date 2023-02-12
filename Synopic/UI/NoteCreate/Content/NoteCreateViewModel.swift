@@ -13,15 +13,23 @@ import VisionKit
 protocol NoteCreateViewModelDelegate: AnyObject {
   func noteCreateViewModelDidCancel(_ source: NoteCreateViewModel)
   func noteCreateViewModelDidProcessScan(_ source: NoteCreateViewModel)
-  func noteCreateViewModelFailedToGenerateResult(_ source: NoteCreateViewModel)
+  func noteCreateViewModelFailedToGenerate(_ source: NoteCreateViewModel)
+  func noteCreateViewModelGenerated(
+    newNoteId: String,
+    _ source: NoteCreateViewModel
+  )
 }
 
 public class NoteCreateViewModel: NSObject, ViewModel {
   private let ocrService: OCRService
+  private let summariesRepository: SummariesRepository
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService) { self.ocrService = ocrService }
+  init(ocrService: OCRService, summariesRepository: SummariesRepository) {
+    self.ocrService = ocrService
+    self.summariesRepository = summariesRepository
+  }
 
   func setup(delegate: NoteCreateViewModelDelegate) -> Self {
     self.delegate = delegate
@@ -31,15 +39,37 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   private func bind() {
     self.cancelBag = CancelBag()
+    self.onProcessText()
     self.onScanReceived()
+    self.onToggleProcessMode()
   }
 
   // MARK: EVENT
 
+  let processText: PassthroughSubject<Void, Never> =
+    PassthroughSubject()
   let scanReceived: PassthroughSubject<VNDocumentCameraScan, Never> =
     PassthroughSubject()
-  let toggleProcessMode: PassthroughSubject<ProcessType, Never> =
+  let toggleProcessMode: PassthroughSubject<SummaryType, Never> =
     PassthroughSubject()
+
+  private func onProcessText() {
+    self.processText
+      .receive(on: .main)
+      .subscribe(on: .global(qos: .userInitiated))
+      .asyncSink(receiveValue: { [weak self] in
+        guard let self = self else { return }
+        if let result = try? await self.summariesRepository.requestSummary(
+          text: self.content,
+          type: self.processType
+        ) {
+          await MainActor.run {
+            self.content = result.result
+          }
+        }
+      })
+      .store(in: &self.cancelBag)
+  }
 
   private func onScanReceived() {
     // TODO: Consider running this work in a background thread
@@ -47,13 +77,12 @@ public class NoteCreateViewModel: NSObject, ViewModel {
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
         do {
-          let output = try self.ocrService.processDocumentScan($0)
-          self.content += output
+          self.content = try self.ocrService.processDocumentScan($0)
 
           self.delegate?.noteCreateViewModelDidProcessScan(self)
         }
         catch {
-          self.delegate?.noteCreateViewModelFailedToGenerateResult(self)
+          self.delegate?.noteCreateViewModelFailedToGenerate(self)
         }
       })
       .store(in: &self.cancelBag)
@@ -71,12 +100,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
   // MARK: STATE
   @Published var content: String = .empty
 
-  @Published var processType: ProcessType = .singleLine
-}
-
-enum ProcessType {
-  case singleLine
-  case bulleted
+  @Published var processType: SummaryType = .singleSentence
 }
 
 // MARK: VNDocumentCameraViewControllerDelegate
