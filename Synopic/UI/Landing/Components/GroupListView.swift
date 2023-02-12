@@ -50,6 +50,7 @@ struct GroupListView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
               )
+              .foregroundColor(Color(UIColor.label))
 
               if i != section.items.count - 1 {
                 Divider().padding(.leading, 20)
@@ -57,7 +58,8 @@ struct GroupListView: View {
             }
           }
         }
-        .background(Color(UIColor.secondarySystemBackground)).cornerRadius(20)
+        .background(Color(UIColor.secondarySystemBackground))
+        .cornerRadius(20)
       }
       .padding(.horizontal, 20)
     }

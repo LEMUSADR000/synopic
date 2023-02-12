@@ -14,7 +14,7 @@ struct GroupCoverImageView: View {
     ZStack {
       Rectangle().foregroundColor(Color(UIColor.secondarySystemBackground))
         .frame(width: 70, height: 100, alignment: .center).cornerRadius(10)
-        .shadow(color: Color(.systemGray4), radius: 10, x: 0, y: 0)
+        .shadow(color: Color(.systemGray4), radius: 5, x: 0, y: 0)
       if let value = image {
         value.resizable().aspectRatio(contentMode: .fill)
           .frame(width: 70, height: 110)
@@ -30,5 +30,5 @@ struct GroupCoverImageView: View {
 
 struct GroupCoverImageView_Previews: PreviewProvider {
   static let image = Image("lion_king_cover")
-  static var previews: some View { GroupCoverImageView(image: image) }
+  static var previews: some View { GroupCoverImageView(image: nil) }
 }

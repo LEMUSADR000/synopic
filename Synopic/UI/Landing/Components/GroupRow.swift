@@ -17,8 +17,13 @@ struct GroupRow: View {
       VStack(alignment: .leading, spacing: 0) {
         Spacer().frame(height: 8)
         Text(item.title).font(.headline)
-        Text(!item.author.isEmpty ? "by \(item.author)" : " ")
-          .font(.subheadline).foregroundColor(.gray)
+
+        if !item.author.isEmpty {
+          Text("by   ")
+            .font(.footnote).foregroundColor(.gray.opacity(0.5))
+            + Text(item.author)
+            .font(.subheadline).foregroundColor(.gray)
+        }
       }
     }
   }
@@ -29,7 +34,7 @@ struct GroupRow_Previews: PreviewProvider {
   static let group = NoteGroup(
     created: date,
     title: "Lion's King",
-    author: "Jamal",
+    author: "Jamal Lahoover",
     imageName: "lion_king_cover"
   )
 

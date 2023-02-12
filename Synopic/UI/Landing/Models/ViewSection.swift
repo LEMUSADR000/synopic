@@ -28,8 +28,11 @@ extension ViewSection {
     if day == 0 {
       return "Today"
     }
+    else if day > 0 && day < 7 {
+      return "Yesterday"
+    }
     else if day >= 7 {
-      return "Last Week"
+      return "Previous 7 Days"
     }
     else {
       let formatter = DateFormatter()
