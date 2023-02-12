@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "lineBreakAroundMultilineExpressionChainComponents": true,
+  "lineBreakBeforeControlFlowKeywords": true,
+  "lineBreakBeforeEachArgument": true,
+  "lineBreakBeforeEachGenericRequirement": true,
+  "respectsExistingLineBreaks" : true,
+  "prioritizeKeepingFunctionOutputTogether" : false,
+  "lineLength" : 79,
+  "maximumBlankLines" : 2
+}

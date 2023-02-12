@@ -8,50 +8,41 @@
 import SwiftUI
 
 struct LandingView: View {
-    @ObservedObject var viewModel: LandingViewModel
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                ScrollView {
-                    ZStack {
-                        LazyVStack {
-                            ForEach(self.viewModel.results.indices, id: \.self) { i in
-                                ScanResultView(result: self.viewModel.results[i])
-                                    .transition(.slide)
-                                    .zIndex(0)
-                            }
-                        }
-                        .id(UUID())
-                        .transition(AnyTransition.opacity.animation(.default))
-                    }
-                    .padding()
-                }
-                
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    Button(action: self.viewModel.openScanSheet) {
-                        Text("Start Scanning")
-                    }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Capsule().fill(Color.blue))
-                }
-                .padding()
+  @ObservedObject var viewModel: LandingViewModel
+
+  var body: some View {
+    ZStack(alignment: .bottom) {
+      TabView {
+        ScrollView {
+          // TODO: Implement search bar
+          //            HStack(spacing: 0) {
+          //                SearchBar(text: self.viewModel.searchText)
+          //                    .background(Color(.clear))
+          //            }
+          //            .padding(.horizontal, 20)
+          //            .padding(.bottom, 10)
+
+          VStack {
+            LazyVStack(spacing: 20) {
+              ForEach(self.$viewModel.sections) { section in
+                GroupListView(
+                  section: section,
+                  action: { id in self.viewModel.viewGroup.send(id) }
+                )
+              }
             }
-            .navigationBarTitle("Text Recognition")
-        }.navigationBarHidden(true)
+          }
+        }
+      }
+      TabBarContent(viewModel: self.viewModel)
     }
+    .navigationTitle("Note Groups")
+  }
 }
 
 struct LandingView_Previews: PreviewProvider {
-    static let appAssembler = AppAssembler()
-    static let viewModel = appAssembler.resolve(LandingViewModel.self)!
-    
-    static var previews: some View {
-        LandingView(viewModel: viewModel)
-    }
+  static let appAssembler = AppAssembler()
+  static let viewModel = appAssembler.resolve(LandingViewModel.self)!
+
+  static var previews: some View { LandingView(viewModel: viewModel) }
 }
