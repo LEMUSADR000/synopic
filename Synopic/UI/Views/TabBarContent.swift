@@ -10,6 +10,8 @@ import SwiftUI
 struct TabBarContent: View {
   var viewModel: LandingViewModel
 
+  @EnvironmentObject var router: Router
+
   var body: some View {
     HStack(alignment: .center) {
       Spacer().frame(maxWidth: .infinity, alignment: .leading)
@@ -18,10 +20,18 @@ struct TabBarContent: View {
       Text("Notes").font(.subheadline)
         .frame(maxWidth: .infinity, alignment: .center)
 
-      Button(action: self.viewModel.createGroup) {
-        Image(systemName: "rectangle.and.pencil.and.ellipsis")
-          .foregroundColor(Color(UIColor.systemGray))
-      }
+      Button(
+        action: {
+          self.router.navigate(
+            to: "create",
+            arguments: ["id": "123456"]
+          )
+        },
+        label: {
+          Image(systemName: "rectangle.and.pencil.and.ellipsis")
+            .foregroundColor(Color(UIColor.systemGray))
+        }
+      )
       .frame(maxWidth: .infinity, alignment: .trailing)
     }
     .padding()

@@ -112,6 +112,32 @@ extension Publisher {
       receiveValue: receiveValue ?? { _ in }
     )
   }
+  /// This method creates the subscriber and immediately requests an unlimited number of values, prior to returning the subscriber.
+  /// The return value should be held, otherwise the stream will be canceled.
+  ///
+  /// - parameter receiveValue: The async-marked closure to execute on receipt of a value.
+  /// - parameter complete: The closure to execute on completion.
+  /// - parameter failure: The closure to execute on failure.
+  /// - Returns: A cancellable instance, which you use when you end assignment of the received value. Deallocation of the result will tear down the subscription stream.
+  public func asyncSink(
+    receiveValue: ((Self.Output) async -> Void)? = nil,
+    completion: (() -> Void)? = nil,
+    failure: ((Self.Failure) -> Void)? = nil
+  ) -> AnyCancellable {
+    self.sink(
+      receiveCompletion: { receivedCompletion in
+        switch receivedCompletion {
+        case .finished: completion?()
+        case .failure(let error): failure?(error)
+        }
+      },
+      receiveValue: { value in
+        Task {
+          await receiveValue?(value)
+        }
+      }
+    )
+  }
   public func debug(_ label: String) -> AnyPublisher<Self.Output, Self.Failure>
   {
     self.handleEvents(
@@ -154,26 +180,5 @@ extension Publisher {
       .switchToLatest().zip(upstream)
       // upstream completions to be projected down immediately.
       .map(\.0).eraseToAnyPublisher()
-  }
-
-
-  public func asyncSink(
-    receiveValue: ((Self.Output) async -> Void)? = nil,
-    completion: (() -> Void)? = nil,
-    failure: ((Self.Failure) -> Void)? = nil
-  ) -> AnyCancellable {
-    self.sink(
-      receiveCompletion: { receivedCompletion in
-        switch receivedCompletion {
-        case .finished: completion?()
-        case .failure(let error): failure?(error)
-        }
-      },
-      receiveValue: { value in
-        Task {
-          await receiveValue?(value)
-        }
-      }
-    )
   }
 }

@@ -9,16 +9,32 @@ import SwiftUI
 
 struct AppRootCoordinatorView: View {
   @ObservedObject var coordinator: AppRootCoordinator
+  @StateObject private var router = Router()
 
   init(coordinator: AppRootCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
-    NavigationView {
-      LandingView(viewModel: self.coordinator.landingViewModel)
-        .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
-          NoteGroupDetailsCoordinatorView(coordinator: c)
+    ZStack(alignment: .bottom) {
+      TabView {
+        NavigationView {
+          LandingView(viewModel: self.coordinator.landingViewModel)
+            .navigation(
+              router: self.router,
+              destination: { bundle in
+                switch bundle.path {
+                case "create":
+                  Text("CREATE")
+                default:
+                  Text("whoooops")
+                }
+              }
+            )
+            .navigationTitle("Note Groups")
         }
+      }
+      TabBarContent(viewModel: self.coordinator.landingViewModel)
     }
+    .environmentObject(router)
   }
 }
 

@@ -44,9 +44,3 @@ extension AppRootCoordinator: LandingViewModelDelegate {
     )!
   }
 }
-
-// MARK: NoteDetailsViewModelDelegate
-
-//extension AppRootCoordinator: NoteGroupDetailsCoordinatorDelegate {
-//
-//}
