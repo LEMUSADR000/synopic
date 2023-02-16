@@ -45,9 +45,12 @@ struct NotesGridView: View {
               label: { NoteCardView { Text(note.content) } }
             )
           }
-          Button(action: self.notesGridViewModel.createNote) {
-            NoteCardView { Image(systemName: "plus") }
-          }
+          Button(
+            action: { self.notesGridViewModel.createNote.send() },
+            label: {
+              NoteCardView { Image(systemName: "plus") }
+            }
+          )
         }
       }
       Spacer()

@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct GroupRow: View {
-  @EnvironmentObject var router: Router
-
   var item: NoteGroup
+  let onTap: (String) -> Void
 
   var body: some View {
     Button(
       action: {
-        self.router.navigate(to: "create")
+        self.onTap(item.id)
       },
       label: {
         HStack(alignment: .top) {
@@ -35,6 +34,7 @@ struct GroupRow: View {
         }
       }
     )
+    .foregroundColor(Color(UIColor.label))
   }
 }
 
@@ -47,5 +47,5 @@ struct GroupRow_Previews: PreviewProvider {
     imageName: "lion_king_cover"
   )
 
-  static var previews: some View { GroupRow(item: group) }
+  static var previews: some View { GroupRow(item: group, onTap: { _ in }) }
 }

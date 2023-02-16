@@ -10,8 +10,6 @@ import SwiftUI
 struct TabBarContent: View {
   var viewModel: LandingViewModel
 
-  @EnvironmentObject var router: Router
-
   var body: some View {
     HStack(alignment: .center) {
       Spacer().frame(maxWidth: .infinity, alignment: .leading)
@@ -22,10 +20,7 @@ struct TabBarContent: View {
 
       Button(
         action: {
-          self.router.navigate(
-            to: "create",
-            arguments: ["id": "123456"]
-          )
+          self.viewModel.createGroup.send()
         },
         label: {
           Image(systemName: "rectangle.and.pencil.and.ellipsis")

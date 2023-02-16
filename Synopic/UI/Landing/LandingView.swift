@@ -15,7 +15,12 @@ struct LandingView: View {
       ForEach(self.viewModel.sections) { section in
         Section {
           ForEach(section.items) { item in
-            GroupRow(item: item)
+            GroupRow(
+              item: item,
+              onTap: { id in
+                self.viewModel.viewGroup.send(id)
+              }
+            )
           }
         } header: {
           Text(section.title)
