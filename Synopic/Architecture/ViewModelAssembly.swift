@@ -15,11 +15,6 @@ class ViewModelAssembly: Assembly {
     }
     .inObjectScope(.transient)
 
-    container.register(NoteDetailsViewModel.self) { _, id in
-      NoteDetailsViewModel(noteId: id)
-    }
-    .inObjectScope(.transient)
-
     container.register(NoteCreateViewModel.self) { r in
       NoteCreateViewModel(
         ocrService: r.resolve(OCRService.self)!,
@@ -30,11 +25,6 @@ class ViewModelAssembly: Assembly {
 
     container.register(NotesGridViewModel.self) { _, id in
       NotesGridViewModel(noteGroupId: id)
-    }
-    .inObjectScope(.transient)
-
-    container.register(NoteDetailsViewModel.self) { _, id in
-      NoteDetailsViewModel(noteId: id)
     }
     .inObjectScope(.transient)
   }

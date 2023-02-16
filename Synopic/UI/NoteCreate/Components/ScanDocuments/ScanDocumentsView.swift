@@ -5,6 +5,7 @@
 //  Created by Adrian Lemus on 1/25/23.
 //
 
+import Combine
 import SwiftUI
 import Vision
 import VisionKit

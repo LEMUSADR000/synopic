@@ -12,18 +12,17 @@ struct NoteGroupDetailsCoordinatorView: View {
     self.coordinator = coordinator
   }
   var body: some View {
-    NotesGridView(notesGridViewModel: self.coordinator.notesGridViewModel)
-      .navigation(item: self.$coordinator.noteDetailsViewModel) { viewModel in
-        NoteDetailsView(viewModel: viewModel)
-      }
-      .fullScreenCover(item: self.$coordinator.noteCreateCoordinator) { c in
-        NavigationView {
-          ZStack {
-            Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
-            NoteCreateCoordinatorView(coordinator: c)
+    NavigationView {
+      NotesGridView(notesGridViewModel: self.coordinator.notesGridViewModel)
+        .fullScreenCover(item: self.$coordinator.noteCreateCoordinator) { c in
+          NavigationView {
+            ZStack {
+              Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
+              NoteCreateCoordinatorView(coordinator: c)
+            }
           }
         }
-      }
+    }
   }
 }
 struct NoteGroupDetailsCoordinatorView_Previews: PreviewProvider {

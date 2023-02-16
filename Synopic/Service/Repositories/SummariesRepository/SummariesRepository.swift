@@ -9,11 +9,12 @@ import Combine
 import Foundation
 
 enum SummaryType: String {
-  case singleSentence = "a sentence"
-  case threePoints = "three points"
+  case singleSentence = "Summarize the following into a sentence"
+  case threePoints = "Summarize the following into three points"
 }
 
 protocol SummariesRepository {
+
   func requestSummary(text: String, type: SummaryType) async throws -> Summary
 }
 
@@ -29,7 +30,7 @@ class SummariesRepositoryImpl: SummariesRepository {
   func requestSummary(text: String, type: SummaryType) async throws -> Summary
   {
     // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
-    let prompt = "Summarize the following into \(type.rawValue): \(text)"
+    let prompt = type.rawValue
 
     let summary: Summary
     do {

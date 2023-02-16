@@ -18,10 +18,15 @@ struct TabBarContent: View {
       Text("Notes").font(.subheadline)
         .frame(maxWidth: .infinity, alignment: .center)
 
-      Button(action: self.viewModel.createGroup) {
-        Image(systemName: "rectangle.and.pencil.and.ellipsis")
-          .foregroundColor(Color(UIColor.systemGray))
-      }
+      Button(
+        action: {
+          self.viewModel.createGroup.send()
+        },
+        label: {
+          Image(systemName: "rectangle.and.pencil.and.ellipsis")
+            .foregroundColor(Color(UIColor.systemGray))
+        }
+      )
       .frame(maxWidth: .infinity, alignment: .trailing)
     }
     .padding()

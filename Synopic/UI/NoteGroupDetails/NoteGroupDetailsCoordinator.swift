@@ -14,8 +14,6 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   @Published private(set) var notesGridViewModel: NotesGridViewModel!
 
-  @Published var noteDetailsViewModel: NoteDetailsViewModel?
-
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
 
   private var noteGroupId: String
@@ -42,11 +40,7 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
     id: String,
     _ source: NotesGridViewModel
   ) {
-    self.noteDetailsViewModel = self.resolver.resolve(
-      NoteDetailsViewModel.self,
-      argument: self.noteGroupId
-    )!
-    .setup(delegate: self)
+
   }
 
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel) {
@@ -62,13 +56,5 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
 extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator) {
     self.noteCreateCoordinator = nil
-  }
-}
-
-// MARK: NoteDetailsViewModelDelegate
-
-extension NoteGroupDetailsCoordinator: NoteDetailsViewModelDelegate {
-  func noteDetailsDidExit(_ source: NoteDetailsViewModel) {
-    self.noteDetailsViewModel = nil
   }
 }

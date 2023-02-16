@@ -67,6 +67,9 @@ public class NoteCreateViewModel: NSObject, ViewModel {
             self.content = result.result
           }
         }
+        else {
+          self.delegate?.noteCreateViewModelFailedToGenerate(self)
+        }
       })
       .store(in: &self.cancelBag)
   }
