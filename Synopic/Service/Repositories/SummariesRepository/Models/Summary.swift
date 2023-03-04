@@ -10,4 +10,5 @@ import Foundation
 struct Summary: Codable {
   let id: String
   let result: String
+  let created: Date
 }

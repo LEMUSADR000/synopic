@@ -63,6 +63,8 @@
 		1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E4829905B4E0052BD10 /* NotesGridViewModel.swift */; };
 		1ED88E4F29905FDF0052BD10 /* NoteGroupDetailsCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E4E29905FDF0052BD10 /* NoteGroupDetailsCoordinatorView.swift */; };
 		1ED88E5129905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E5029905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift */; };
+		1EF03621299DEB5700BC409C /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF03620299DEB5700BC409C /* Note.swift */; };
+		1EF03623299DECA000BC409C /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF03622299DECA000BC409C /* Group.swift */; };
 		1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -141,6 +143,8 @@
 		1ED88E4829905B4E0052BD10 /* NotesGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesGridViewModel.swift; sourceTree = "<group>"; };
 		1ED88E4E29905FDF0052BD10 /* NoteGroupDetailsCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGroupDetailsCoordinatorView.swift; sourceTree = "<group>"; };
 		1ED88E5029905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGroupDetailsCoordinator.swift; sourceTree = "<group>"; };
+		1EF03620299DEB5700BC409C /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		1EF03622299DECA000BC409C /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -345,6 +349,8 @@
 			isa = PBXGroup;
 			children = (
 				1EB301DA298F1B66000CA862 /* Summary.swift */,
+				1EF03620299DEB5700BC409C /* Note.swift */,
+				1EF03622299DECA000BC409C /* Group.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -708,6 +714,7 @@
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
 				1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */,
 				1EBFE5642999873100D326AC /* Usage.swift in Sources */,
+				1EF03623299DECA000BC409C /* Group.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
 				1ED88E45299053750052BD10 /* NotesGridView.swift in Sources */,
@@ -727,6 +734,7 @@
 				1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */,
 				1ED88E3C29901C310052BD10 /* Date+Extensions.swift in Sources */,
 				1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */,
+				1EF03621299DEB5700BC409C /* Note.swift in Sources */,
 				1E405ED929949129001753A4 /* ViewSection.swift in Sources */,
 				1EB301DB298F1B66000CA862 /* Summary.swift in Sources */,
 				1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */,

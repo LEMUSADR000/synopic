@@ -59,15 +59,15 @@ public class NoteCreateViewModel: NSObject, ViewModel {
       .subscribe(on: .global(qos: .userInitiated))
       .asyncSink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        if let result = try? await self.summariesRepository.requestSummary(
-          text: self.content,
-          type: self.processType
-        ) {
-          await MainActor.run {
-            self.content = result.result
-          }
+
+        do {
+          try await self.summariesRepository.createNote(
+            groupId: "",
+            text: self.content,
+            type: self.processType
+          )
         }
-        else {
+        catch {
           self.delegate?.noteCreateViewModelFailedToGenerate(self)
         }
       })

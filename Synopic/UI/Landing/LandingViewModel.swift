@@ -18,62 +18,12 @@ protocol LandingViewModelDelegate: AnyObject {
 }
 
 public class LandingViewModel: ViewModel {
-  private let ocrService: OCRService
+  private let summaries: SummariesRepository
   private weak var delegate: LandingViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService) {
-    self.ocrService = ocrService
-
-    let today = Date()
-    let data = [
-      today, Calendar.current.date(byAdding: .day, value: -1, to: today)!,
-      Calendar.current.date(byAdding: .day, value: -7, to: today)!,
-    ]
-
-    self.sections = [
-      ViewSection(
-        created: data[0],
-        items: [
-          NoteGroup(
-            created: data[0],
-            title: "Lion's King",
-            author: "Author 1"
-          ),
-          NoteGroup(
-            created: data[0].adding(hours: -2),
-            title: "Enders Game",
-            author: "Author 2"
-          ),
-          NoteGroup(
-            created: data[0].adding(hours: -4),
-            title: "Star Wars",
-            author: "Author 3"
-          ),
-        ]
-      ),
-      ViewSection(
-        created: data[1],
-        items: [
-          NoteGroup(
-            created: data[1],
-            title: "Lion's King",
-            author: "Author 1"
-          ),
-          NoteGroup(
-            created: data[1].adding(hours: -2),
-            title: "Enders Game",
-            author: "Author 2"
-          ),
-        ]
-      ),
-      ViewSection(
-        created: data[2],
-        items: [
-          NoteGroup(created: data[2], title: "Lion's King", author: "Author 1")
-        ]
-      ),
-    ]
+  init(summaries: SummariesRepository) {
+    self.summaries = summaries
   }
 
   func setup(delegate: LandingViewModelDelegate) -> Self {
@@ -82,10 +32,16 @@ public class LandingViewModel: ViewModel {
     return self
   }
 
+  func load() async {
+    await self.summaries.load()
+  }
+
   private func bind() {
     self.cancelBag = CancelBag()
+
     self.onCreateGroup()
     self.onViewGroup()
+    self.onNewGroup()
   }
 
   // MARK: STATE
@@ -112,5 +68,64 @@ public class LandingViewModel: ViewModel {
         self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: $0, self)
       })
       .store(in: &self.cancelBag)
+  }
+
+  private func onNewGroup() {
+    self.summaries.groups
+      .receive(on: .main)
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
+
+        var noteKeys: [String] = []
+        var noteGroups: [String: [NoteGroup]] = [:]
+        for group in $0.sorted(by: { $0.created > $1.created }) {
+          let key = group.created.title
+          let value = NoteGroup(
+            created: group.created,
+            title: group.title,
+            author: group.author
+          )
+
+          if var list = noteGroups[key] {
+            list.append(value)
+            noteGroups[key] = list
+          }
+          else {
+            noteGroups[key] = [value]
+            noteKeys.append(key)
+          }
+        }
+
+        var sections: [ViewSection] = []
+        for key in noteKeys {
+          sections.append(ViewSection(title: key, items: noteGroups[key]!))
+        }
+        self.sections = sections
+      })
+      .store(in: &self.cancelBag)
+  }
+}
+
+extension Date {
+  var title: String {
+    guard
+      let day = Calendar.current
+        .dateComponents([.day], from: self, to: .now).day
+    else { return "--" }
+
+    if day == 0 {
+      return "Today"
+    }
+    else if day > 0 && day < 1 {
+      return "Yesterday"
+    }
+    else if day < 7 {
+      return "Previous 7 Days"
+    }
+    else {
+      let formatter = DateFormatter()
+      formatter.dateFormat = "yyyy"
+      return formatter.string(from: self)
+    }
   }
 }

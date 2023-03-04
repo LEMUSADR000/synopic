@@ -22,25 +22,24 @@ class AppRootCoordinator: ViewModel {
     self.landingViewModel = self.resolver.resolve(LandingViewModel.self)!
       .setup(delegate: self)
   }
+
+  private func showDetails(id: String?) {
+    self.noteDetailsCoordinator = self.resolver.resolve(
+      NoteGroupDetailsCoordinator.self,
+      argument: id as String?
+    )!
+  }
 }
 
 // MARK: CameraViewModelDelegate
 
 extension AppRootCoordinator: LandingViewModelDelegate {
   func landingViewModelDidTapCreateGroup(_ source: LandingViewModel) {
-    self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self,
-      argument: nil as String?
-    )!
+    self.showDetails(id: nil)
   }
 
   func landingViewModelDidTapViewGroup(
     noteGroupId: String,
     _ source: LandingViewModel
-  ) {
-    self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self,
-      argument: noteGroupId as String?
-    )!
-  }
+  ) { self.showDetails(id: noteGroupId) }
 }

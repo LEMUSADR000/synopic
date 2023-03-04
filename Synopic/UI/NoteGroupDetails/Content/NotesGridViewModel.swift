@@ -21,10 +21,6 @@ public class NotesGridViewModel: ViewModel {
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  private let noteGroupId: String
-
-  init(noteGroupId: String) { self.noteGroupId = noteGroupId }
-
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
     self.delegate = delegate
     bind()

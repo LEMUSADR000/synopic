@@ -16,18 +16,14 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
 
-  private var noteGroupId: String
+  private var noteGroupId: String?
 
   init(resolver: Resolver, groupId: String?) {
     self.resolver = resolver
-
-    // TODO: Figure out how to better handle this so that if a user taps create we only generate a new NoteGroup object if they make changes to said group
-    let uuid = groupId ?? UUID().uuidString
-    self.noteGroupId = uuid
+    self.noteGroupId = groupId
 
     self.notesGridViewModel = self.resolver.resolve(
-      NotesGridViewModel.self,
-      argument: uuid
+      NotesGridViewModel.self
     )!
     .setup(delegate: self)
   }

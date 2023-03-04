@@ -27,6 +27,9 @@ struct LandingView: View {
         }
       }
     }
+    .task {
+      await self.viewModel.load()
+    }
   }
 }
 
