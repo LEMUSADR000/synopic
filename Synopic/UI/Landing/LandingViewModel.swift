@@ -32,10 +32,6 @@ public class LandingViewModel: ViewModel {
     return self
   }
 
-  func load() async {
-    await self.summaries.load()
-  }
-
   private func bind() {
     self.cancelBag = CancelBag()
 
@@ -71,16 +67,17 @@ public class LandingViewModel: ViewModel {
   }
 
   private func onNewGroup() {
-    self.summaries.groups
+    self.summaries.loadGroups()
       .receive(on: .main)
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
 
         var noteKeys: [String] = []
         var noteGroups: [String: [NoteGroup]] = [:]
-        for group in $0.sorted(by: { $0.created > $1.created }) {
+        for group in $0.values.sorted(by: { $0.created > $1.created }) {
           let key = group.created.title
           let value = NoteGroup(
+            id: group.id,
             created: group.created,
             title: group.title,
             author: group.author

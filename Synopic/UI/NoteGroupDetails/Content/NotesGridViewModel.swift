@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CombineExt
 import Foundation
 import UIKit
 
@@ -18,8 +19,15 @@ protocol NotesGridViewModelDelegate: AnyObject {
 }
 
 public class NotesGridViewModel: ViewModel {
+  private let summaries: SummariesRepository
+  private let groupId: String?
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
+
+  init(summariesRepository: SummariesRepository, groupId: String?) {
+    self.summaries = summariesRepository
+    self.groupId = groupId
+  }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
     self.delegate = delegate
@@ -34,11 +42,18 @@ public class NotesGridViewModel: ViewModel {
   }
 
   // MARK: STATE
-  @Published var title: String = .empty
+  var title: AnyPublisher<String, Never> {
+    self.summaries.groups
+      .map { value in
+        value[self.groupId!]?.title ?? ""
+      }
+      .eraseToAnyPublisher()
+  }
 
-  @Published var author: String = .empty
-
-  @Published var imageName: String? = nil
+  var author: AnyPublisher<String, Never> {
+    self.summaries.groups.map { value in value[self.groupId!]?.author ?? "" }
+      .eraseToAnyPublisher()
+  }
 
   @Published var notes: [Note] = []
 
@@ -63,13 +78,5 @@ public class NotesGridViewModel: ViewModel {
         self.delegate?.notesGridViewModelDidTapViewNote(id: $0, self)
       })
       .store(in: &self.cancelBag)
-  }
-}
-
-extension NotesGridViewModel {
-  struct Note: Identifiable {
-    let id: String
-    var content: String
-    var images: [CGImage]
   }
 }

@@ -9,21 +9,32 @@ import Foundation
 import SwiftUI
 
 struct NoteGroup: Identifiable {
-  let id: String = UUID().uuidString
+  let id: String
   let created: Date
   var title: String = .empty
   var author: String = .empty
   var imageName: String? = nil
 
-  init(created: Date) { self.created = created }
+  init(id: String, created: Date) {
+    self.id = id
+    self.created = created
+  }
 
-  init(created: Date, title: String, author: String) {
+  init(id: String, created: Date, title: String, author: String) {
+    self.id = id
     self.created = created
     self.title = title
     self.author = author
   }
 
-  init(created: Date, title: String, author: String, imageName: String?) {
+  init(
+    id: String,
+    created: Date,
+    title: String,
+    author: String,
+    imageName: String?
+  ) {
+    self.id = id
     self.created = created
     self.title = title
     self.author = author

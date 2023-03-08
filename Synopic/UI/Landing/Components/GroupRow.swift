@@ -9,13 +9,11 @@ import SwiftUI
 
 struct GroupRow: View {
   var item: NoteGroup
-  let onTap: (String) -> Void
+  let onTap: () -> Void
 
   var body: some View {
     Button(
-      action: {
-        self.onTap(item.id)
-      },
+      action: self.onTap,
       label: {
         HStack(alignment: .top) {
           GroupCoverImageView(image: item.image)
@@ -41,11 +39,12 @@ struct GroupRow: View {
 struct GroupRow_Previews: PreviewProvider {
   static let date = Date()
   static let group = NoteGroup(
+    id: UUID().uuidString,
     created: date,
     title: "Lion's King",
     author: "Jamal Lahoover",
     imageName: "lion_king_cover"
   )
 
-  static var previews: some View { GroupRow(item: group, onTap: { _ in }) }
+  static var previews: some View { GroupRow(item: group, onTap: {}) }
 }

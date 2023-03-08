@@ -61,7 +61,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
         guard let self = self else { return }
 
         do {
-          try await self.summariesRepository.createNote(
+          _ = try await self.summariesRepository.createNote(
             groupId: "",
             text: self.content,
             type: self.processType

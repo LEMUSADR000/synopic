@@ -23,7 +23,8 @@ public class NoteGroupDetailsCoordinator: ViewModel {
     self.noteGroupId = groupId
 
     self.notesGridViewModel = self.resolver.resolve(
-      NotesGridViewModel.self
+      NotesGridViewModel.self,
+      argument: groupId as String?
     )!
     .setup(delegate: self)
   }

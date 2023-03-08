@@ -23,8 +23,11 @@ class ViewModelAssembly: Assembly {
     }
     .inObjectScope(.transient)
 
-    container.register(NotesGridViewModel.self) { _ in
-      NotesGridViewModel()
+    container.register(NotesGridViewModel.self) { r, id in
+      NotesGridViewModel(
+        summariesRepository: r.resolve(SummariesRepository.self)!,
+        groupId: id
+      )
     }
     .inObjectScope(.transient)
   }

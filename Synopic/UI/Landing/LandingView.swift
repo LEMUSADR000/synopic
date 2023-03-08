@@ -17,8 +17,8 @@ struct LandingView: View {
           ForEach(section.items) { item in
             GroupRow(
               item: item,
-              onTap: { id in
-                self.viewModel.viewGroup.send(id)
+              onTap: {
+                self.viewModel.viewGroup.send(item.id)
               }
             )
           }
@@ -26,9 +26,6 @@ struct LandingView: View {
           Text(section.title)
         }
       }
-    }
-    .task {
-      await self.viewModel.load()
     }
   }
 }
