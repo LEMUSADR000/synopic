@@ -9,7 +9,7 @@ import Foundation
 
 struct Group {
   let id: String
-  let created: Date
+  var lastEdited: Date
   var title: String
   var author: String
   var imageName: String?

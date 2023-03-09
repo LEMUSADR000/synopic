@@ -11,9 +11,6 @@ import Swinject
 struct NotesGridView: View {
   @ObservedObject var notesGridViewModel: NotesGridViewModel
 
-  @State var title: String = .empty
-  @State var author: String = .empty
-
   // TODO: Make column stateful so we can toggle between grids, lists, etc. as a feature
   let columns = [
     GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()),
@@ -24,15 +21,15 @@ struct NotesGridView: View {
     VStack {
       VStack {
         TextField(
-          self.title,
-          text: self.$title,
+          self.notesGridViewModel.title,
+          text: self.$notesGridViewModel.title,
           prompt: Text("Title")
         )
         .font(.headline)
         Divider()
         TextField(
-          self.author,
-          text: self.$author,
+          self.notesGridViewModel.author,
+          text: self.$notesGridViewModel.author,
           prompt: Text("Author")
         )
         .font(.subheadline)
@@ -60,11 +57,14 @@ struct NotesGridView: View {
       Spacer()
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
-    .onReceive(self.notesGridViewModel.title) { title in
-      self.title = title
-    }
-    .onReceive(self.notesGridViewModel.author) { author in
-      self.author = author
+    //    .onReceive(self.notesGridViewModel.title) { title in
+    //      self.title = title
+    //    }
+    //    .onReceive(self.notesGridViewModel.author) { author in
+    //      self.author = author
+    //    }
+    .onDisappear {
+      self.notesGridViewModel.saveNote.send()
     }
   }
 

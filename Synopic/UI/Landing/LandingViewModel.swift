@@ -74,11 +74,11 @@ public class LandingViewModel: ViewModel {
 
         var noteKeys: [String] = []
         var noteGroups: [String: [NoteGroup]] = [:]
-        for group in $0.values.sorted(by: { $0.created > $1.created }) {
-          let key = group.created.title
+        for group in $0.values.sorted(by: { $0.lastEdited > $1.lastEdited }) {
+          let key = group.lastEdited.title
           let value = NoteGroup(
             id: group.id,
-            created: group.created,
+            created: group.lastEdited,
             title: group.title,
             author: group.author
           )
@@ -97,7 +97,9 @@ public class LandingViewModel: ViewModel {
         for key in noteKeys {
           sections.append(ViewSection(title: key, items: noteGroups[key]!))
         }
-        self.sections = sections
+        withAnimation {
+          self.sections = sections
+        }
       })
       .store(in: &self.cancelBag)
   }

@@ -21,16 +21,22 @@ protocol SummariesRepository {
   func loadGroups() -> AnyPublisher<[String: Group], Never>
   func loadNotes() -> AnyPublisher<[String: [Note]], Never>
 
-  func createNote(groupId: String, text: String, type: SummaryType)
+  @discardableResult func createNote(
+    groupId: String,
+    text: String,
+    type: SummaryType
+  )
     async throws -> String
 
-  // TODO: Should groupId be created at repository level?
-  func createGroup(title: String, author: String) async throws -> String
+  @discardableResult func updateGroup(
+    id: String?,
+    title: String,
+    author: String
+  ) async throws
+    -> Group?
 }
 
 class SummariesRepositoryImpl: SummariesRepository {
-  // TODO: Associate a loading function which fetches local storage
-
   private var cancelBag: CancelBag
   private let chatGptApiService: ChatGPTService
 
@@ -40,63 +46,68 @@ class SummariesRepositoryImpl: SummariesRepository {
   }
 
   nonisolated var notes: AnyPublisher<[String: [Note]], Never> {
-    notesSubject.eraseToAnyPublisher()
+    notesCache.publisher
   }
 
   nonisolated var groups: AnyPublisher<[String: Group], Never> {
-    groupsSubject.eraseToAnyPublisher()
+    groupsCache.publisher
   }
 
   func loadGroups() -> AnyPublisher<[String: Group], Never> {
-    Future<Any?, Error> { promise in
-      Task { [unowned self] in
-        do {
-          try await self.fetchGroups(self.groupsSubject)
-          promise(.success(nil))
-        }
-        catch {
-          promise(.failure(error))
-        }
-      }
+    Task { [unowned self] in
+      try? await self.fetchGroups()
     }
-    .sink()
-    .store(in: &cancelBag)
 
-    return self.groupsSubject.eraseToAnyPublisher()
+    return self.groupsCache.publisher
   }
 
 
   func loadNotes() -> AnyPublisher<[String: [Note]], Never> {
-    Future<Any?, Error> { promise in
-      Task { [unowned self] in
-        do {
-          try await self.fetchNotes(self.notesSubject)
-          promise(.success(nil))
-        }
-        catch {
-          promise(.failure(error))
-        }
-      }
+    Task { [unowned self] in
+      try? await self.fetchNotes()
     }
-    .sink()
-    .store(in: &cancelBag)
 
-    return self.notesSubject.eraseToAnyPublisher()
+    return self.notesCache.publisher
   }
 
-  func createGroup(title: String, author: String) async throws -> String {
-    let group = Group(
-      id: UUID().uuidString,
-      created: Date(),
-      title: title,
-      author: author
-    )
+  func updateGroup(id: String?, title: String, author: String) async throws
+    -> Group?
+  {
+    if let groupId = id {
+      if let currGroup = await self.groupsCache.getValue(forKey: groupId),
+        title == currGroup.title && author == currGroup.author
+      {
+        // No changes needed for group, we can just return early
+        return nil
+      }
 
-    // TODO: Call CoreData & persist create
+      if title == .empty && author == .empty,
+        (await self.notesCache.value[groupId] ?? []).isEmpty
+      {
+        // TODO: Delete from persistent storage!
+        return await self.groupsCache.removeValue(forKey: groupId)
+      }
+    }
+
+    var group: Group
+    if let groupId = id {
+      group = await self.groupsCache.value[groupId]!
+      group.title = title
+      group.author = author
+      group.lastEdited = Date()
+    }
+    else {
+      group = Group(
+        id: UUID().uuidString,
+        lastEdited: Date(),
+        title: title,
+        author: author
+      )
+    }
+
+    // TODO: Delete from persistent storage!
     await self.groupsCache.setValue(group, forKey: group.id)
-    self.groupsSubject.send(await self.groupsCache.value)
-
-    return group.id
+    return group
   }
 
   func createNote(groupId: String, text: String, type: SummaryType)
@@ -110,15 +121,16 @@ class SummariesRepositoryImpl: SummariesRepository {
       groupId: groupId
     )
 
+    let notes: [Note]
     if var notesForId = await self.notesCache.getValue(forKey: groupId) {
       notesForId.append(note)
-      await self.notesCache.setValue(notesForId, forKey: groupId)
+      notes = notesForId
     }
     else {
-      await self.notesCache.setValue([note], forKey: groupId)
+      notes = [note]
     }
 
-    self.notesSubject.send(await self.notesCache.value)
+    await self.notesCache.setValue(notes, forKey: groupId)
 
     return note.id
   }
@@ -128,17 +140,9 @@ class SummariesRepositoryImpl: SummariesRepository {
   private let groupsCache = Cache<String, Group>()
   private let notesCache = Cache<String, [Note]>()
 
-  private lazy var groupsSubject = CurrentValueSubject<[String: Group], Never>(
-    [:])
-  private lazy var notesSubject = CurrentValueSubject<[String: [Note]], Never>(
-    [:])
-
-  private func fetchGroups(
-    _ subject: CurrentValueSubject<[String: Group], Never>
-  ) async throws {
+  private func fetchGroups() async throws {
     let value = await _loadGroups()
     await self.groupsCache.addAll(value)
-    subject.send(await self.groupsCache.value)
   }
 
   private func _loadGroups() async -> [String: Group] {
@@ -163,22 +167,25 @@ class SummariesRepositoryImpl: SummariesRepository {
 
       let date = today.adding(days: -index)
 
-      g[id] = Group(id: id, created: date, title: names[0], author: names[1])
+      g[id] = Group(
+        id: id,
+        lastEdited: date,
+        title: names[0],
+        author: names[1]
+      )
     }
 
     return g
   }
 
-  private func fetchNotes(
-    _ subject: CurrentValueSubject<[String: [Note]], Never>
-  ) async throws {
+  private func fetchNotes() async throws {
     let value = await _loadNotes()
     await self.notesCache.addAll(value)
-    subject.send(await self.notesCache.value)
   }
 
   private func _loadNotes() async -> [String: [Note]] {
     var n: [String: [Note]] = [:]
+    return n
     for id in ["0", "1", "2", "3", "4", "5", "6", "7", "8"] {
       n[id] = [
         Note(
@@ -227,30 +234,4 @@ class SummariesRepositoryImpl: SummariesRepository {
 enum SummariesError: Error {
   case requestFailed(String)
   case createFailed(String)
-}
-
-extension SummariesRepositoryImpl {
-  actor Cache<Key: Hashable, Value> {
-    private var dictionary: [Key: Value] = [:]
-
-    func getValue(forKey key: Key) async -> Value? {
-      return dictionary[key]
-    }
-
-    func setValue(_ value: Value?, forKey key: Key) async {
-      dictionary[key] = value
-    }
-
-    func addAll(_ dict: [Key: Value]) async {
-      for (key, value) in dict {
-        dictionary[key] = value
-      }
-    }
-
-    var value: [Key: Value] {
-      get async {
-        return dictionary
-      }
-    }
-  }
 }

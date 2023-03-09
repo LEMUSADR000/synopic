@@ -39,28 +39,35 @@ public class NotesGridViewModel: ViewModel {
     self.cancelBag = CancelBag()
     self.onCreateNote()
     self.onViewNote()
+    self.onSaveNote()
+    self.loadNotes()
+
+    self.summaries.groups
+      .prefix(1)
+      .sink { [weak self] value in
+        var title: String = .empty
+        var author: String = .empty
+
+        if let id = self?.groupId, let group = value[id] {
+          title = group.title
+          author = group.author
+        }
+
+        self?.title = title
+        self?.author = author
+      }
+      .store(in: &self.cancelBag)
   }
 
   // MARK: STATE
-  var title: AnyPublisher<String, Never> {
-    self.summaries.groups
-      .map { value in
-        value[self.groupId!]?.title ?? ""
-      }
-      .eraseToAnyPublisher()
-  }
-
-  var author: AnyPublisher<String, Never> {
-    self.summaries.groups.map { value in value[self.groupId!]?.author ?? "" }
-      .eraseToAnyPublisher()
-  }
-
+  @Published var title: String = .empty
+  @Published var author: String = .empty
   @Published var notes: [Note] = []
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
-
   let viewNote: PassthroughSubject<String, Never> = PassthroughSubject()
+  let saveNote: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   private func onCreateNote() {
     self.createNote
@@ -77,6 +84,43 @@ public class NotesGridViewModel: ViewModel {
         guard let self = self else { return }
         self.delegate?.notesGridViewModelDidTapViewNote(id: $0, self)
       })
+      .store(in: &self.cancelBag)
+  }
+
+  private func onSaveNote() {
+    self.saveNote
+      .withLatestFrom(
+        self.$title,
+        self.$author
+      )
+      .setFailureType(to: Error.self)
+      .flatMapLatest { title, author -> AnyPublisher<Any?, Error> in
+        Future<Any?, Error> { promise in
+          Task { [weak self] in
+            do {
+              try await self!.summaries
+                .updateGroup(id: self!.groupId, title: title, author: author)
+              promise(.success(nil))
+            }
+            catch {
+              promise(.failure(error))
+            }
+          }
+        }
+        .eraseToAnyPublisher()
+      }
+      .sink()
+      .store(in: &self.cancelBag)
+  }
+
+  private func loadNotes() {
+    self.summaries.loadNotes()
+      .last()
+      .sink { [weak self] value in
+        if let id = self?.groupId, let notes = value[id] {
+          self?.notes = notes
+        }
+      }
       .store(in: &self.cancelBag)
   }
 }

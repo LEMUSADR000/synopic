@@ -21,6 +21,7 @@ struct LandingView: View {
                 self.viewModel.viewGroup.send(item.id)
               }
             )
+            .transition(.move(edge: .leading))
           }
         } header: {
           Text(section.title)
