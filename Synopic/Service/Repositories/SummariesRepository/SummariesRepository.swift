@@ -80,13 +80,14 @@ class SummariesRepositoryImpl: SummariesRepository {
         // No changes needed for group, we can just return early
         return nil
       }
-
-      if title == .empty && author == .empty,
-        (await self.notesCache.value[groupId] ?? []).isEmpty
-      {
+      if (await self.notesCache.value[groupId] ?? []).isEmpty {
         // TODO: Delete from persistent storage!
         return await self.groupsCache.removeValue(forKey: groupId)
       }
+    }
+
+    if title == .empty && author == .empty {
+      return nil
     }
 
     var group: Group
@@ -185,25 +186,24 @@ class SummariesRepositoryImpl: SummariesRepository {
 
   private func _loadNotes() async -> [String: [Note]] {
     var n: [String: [Note]] = [:]
-    return n
     for id in ["0", "1", "2", "3", "4", "5", "6", "7", "8"] {
       n[id] = [
         Note(
           id: UUID().uuidString,
           created: Date(),
-          summary: "note1",
+          summary: "\u{2022} point number one of this should be short",
           groupId: id
         ),
         Note(
           id: UUID().uuidString,
           created: Date(),
-          summary: "note2",
+          summary: "\u{2022} point number two of this should be short",
           groupId: id
         ),
         Note(
           id: UUID().uuidString,
           created: Date(),
-          summary: "note3",
+          summary: "\u{2022} point number three of this should be short",
           groupId: id
         ),
       ]

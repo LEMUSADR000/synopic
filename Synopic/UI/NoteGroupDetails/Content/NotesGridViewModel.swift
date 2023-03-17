@@ -97,9 +97,10 @@ public class NotesGridViewModel: ViewModel {
       .flatMapLatest { title, author -> AnyPublisher<Any?, Error> in
         Future<Any?, Error> { promise in
           Task { [weak self] in
+            guard let self = self else { return }
             do {
-              try await self!.summaries
-                .updateGroup(id: self!.groupId, title: title, author: author)
+              try await self.summaries
+                .updateGroup(id: self.groupId, title: title, author: author)
               promise(.success(nil))
             }
             catch {
@@ -115,12 +116,66 @@ public class NotesGridViewModel: ViewModel {
 
   private func loadNotes() {
     self.summaries.loadNotes()
-      .last()
-      .sink { [weak self] value in
-        if let id = self?.groupId, let notes = value[id] {
-          self?.notes = notes
-        }
-      }
+      .map { [weak self] in $0[self?.groupId ?? ""] ?? [] }
+      .receive(on: .main)
+      .sink(receiveValue: { [weak self] value in
+        self?.notes = value
+      })
       .store(in: &self.cancelBag)
+  }
+
+  static var notesGridViewModel_Preview: NotesGridViewModel {
+    let appAssembler = AppAssembler()
+    let summaries = appAssembler.resolve(SummariesRepository.self)!
+
+    var notesViewModel = NotesGridViewModel(
+      summariesRepository: summaries,
+      groupId: "test"
+    )
+
+    notesViewModel.notes = [
+      Note(
+        id: UUID().uuidString,
+        created: Date(),
+        summary:
+          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short\n\u{2022} point number four of this should be short\n\u{2022} point number five of this should be short\n\u{2022} point number six of this should be short",
+        groupId: "test"
+      ),
+      Note(
+        id: UUID().uuidString,
+        created: Date(),
+        summary:
+          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+        groupId: "test"
+      ),
+      Note(
+        id: UUID().uuidString,
+        created: Date(),
+        summary:
+          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+        groupId: "test"
+      ),
+      Note(
+        id: UUID().uuidString,
+        created: Date(),
+        summary:
+          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+        groupId: "test"
+      ),
+      Note(
+        id: UUID().uuidString,
+        created: Date(),
+        summary: "\u{2022} point number two of this should be short",
+        groupId: "test"
+      ),
+      Note(
+        id: UUID().uuidString,
+        created: Date(),
+        summary: "\u{2022} point number three of this should be short",
+        groupId: "test"
+      ),
+    ]
+
+    return notesViewModel
   }
 }

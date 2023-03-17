@@ -21,6 +21,8 @@
 		1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E63E7D7298781C500571DD3 /* NoteCardView.swift */; };
 		1E6661B729B98D0B004938FA /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6661B629B98D0B004938FA /* Cache.swift */; };
 		1E8549CF299CA4D300C1861E /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8549CE299CA4D300C1861E /* Router.swift */; };
+		1E865DAC29C412620002256E /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E865DAB29C412620002256E /* CoreDataService.swift */; };
+		1E865DB029C412CA0002256E /* core_data_pig.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1E865DAD29C412CA0002256E /* core_data_pig.xcdatamodeld */; };
 		1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E95FB34298A001400586331 /* View+OnReceive.swift */; };
 		1EA187212952BC590017B38B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187202952BC590017B38B /* ViewModel.swift */; };
 		1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */; };
@@ -101,6 +103,9 @@
 		1E63E7D7298781C500571DD3 /* NoteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCardView.swift; sourceTree = "<group>"; };
 		1E6661B629B98D0B004938FA /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		1E8549CE299CA4D300C1861E /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		1E865DAB29C412620002256E /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
+		1E865DAE29C412CA0002256E /* core_data_pig.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = core_data_pig.xcdatamodel; sourceTree = "<group>"; };
+		1E865DAF29C412CA0002256E /* core_data_pig.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = core_data_pig.entitlements; sourceTree = "<group>"; };
 		1E95FB34298A001400586331 /* View+OnReceive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+OnReceive.swift"; sourceTree = "<group>"; };
 		1EA187202952BC590017B38B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackProvider.swift; sourceTree = "<group>"; };
@@ -268,9 +273,12 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		1E8549C7299B39D000C1861E /* CoreData */ = {
+		1E865DAA29C412170002256E /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				1E865DAF29C412CA0002256E /* core_data_pig.entitlements */,
+				1E865DAD29C412CA0002256E /* core_data_pig.xcdatamodeld */,
+				1E865DAB29C412620002256E /* CoreDataService.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -474,7 +482,7 @@
 		1EC5D6BA294FD56B00A29BF0 /* Local */ = {
 			isa = PBXGroup;
 			children = (
-				1E8549C7299B39D000C1861E /* CoreData */,
+				1E865DAA29C412170002256E /* CoreData */,
 				1E12FBF0297CD5B50077F046 /* OCR */,
 			);
 			path = Local;
@@ -714,11 +722,13 @@
 				1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */,
 				1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */,
 				1E405ED7299490E8001753A4 /* NoteGroup.swift in Sources */,
+				1E865DAC29C412620002256E /* CoreDataService.swift in Sources */,
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
 				1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */,
 				1EBFE5642999873100D326AC /* Usage.swift in Sources */,
 				1EF03623299DECA000BC409C /* Group.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
+				1E865DB029C412CA0002256E /* core_data_pig.xcdatamodeld in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
 				1ED88E45299053750052BD10 /* NotesGridView.swift in Sources */,
 				1EA187272952BFDF0017B38B /* CoordinatorAssembly.swift in Sources */,
@@ -1119,6 +1129,19 @@
 			productName = CombineExt;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		1E865DAD29C412CA0002256E /* core_data_pig.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1E865DAE29C412CA0002256E /* core_data_pig.xcdatamodel */,
+			);
+			currentVersion = 1E865DAE29C412CA0002256E /* core_data_pig.xcdatamodel */;
+			path = core_data_pig.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 1EC0BFA0294BD72E00C7541B /* Project object */;
 }

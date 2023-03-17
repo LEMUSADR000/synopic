@@ -11,10 +11,7 @@ import Swinject
 struct NotesGridView: View {
   @ObservedObject var notesGridViewModel: NotesGridViewModel
 
-  // TODO: Make column stateful so we can toggle between grids, lists, etc. as a feature
-  let columns = [
-    GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()),
-  ]
+  let horizontalPadding: CGFloat = 10
 
   var body: some View {
     // TODO: Call view model.store on navigate back!
@@ -39,17 +36,34 @@ struct NotesGridView: View {
 
       Spacer().frame(height: 16)
       ScrollView {
-        LazyVGrid(columns: columns, spacing: 10) {
+        LazyVGrid(
+          columns: [GridItem](
+            repeating: GridItem(
+              .flexible()
+            ),
+            count: 3
+          )
+        ) {
           ForEach(notesGridViewModel.notes) { note in
-            Button(
-              action: { self.notesGridViewModel.viewNote.send(note.id) },
-              label: { NoteCardView { Text(note.summary) } }
-            )
+            NoteCardView {
+              VStack(alignment: .leading) {
+                Text(note.summary)
+                  .fontWeight(.light)
+                  .font(.system(size: 12))
+                  .multilineTextAlignment(.leading)
+                  .lineLimit(14)
+                  .minimumScaleFactor(0.5)
+                  .padding(.vertical, 5)
+                  .padding(.horizontal, 2.5)
+                Spacer()
+              }
+              .padding(5)
+            }
           }
           Button(
             action: { self.notesGridViewModel.createNote.send() },
             label: {
-              NoteCardView { Image(systemName: "plus") }
+              NoteCardView { Image(systemName: "plus").frame(idealHeight: 80) }
             }
           )
         }
@@ -57,12 +71,6 @@ struct NotesGridView: View {
       Spacer()
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
-    //    .onReceive(self.notesGridViewModel.title) { title in
-    //      self.title = title
-    //    }
-    //    .onReceive(self.notesGridViewModel.author) { author in
-    //      self.author = author
-    //    }
     .onDisappear {
       self.notesGridViewModel.saveNote.send()
     }
@@ -72,13 +80,9 @@ struct NotesGridView: View {
 }
 
 struct NotesGridView_Previews: PreviewProvider {
-  static let appAssembler = AppAssembler()
-  static let viewModel = appAssembler.resolve(
-    NotesGridViewModel.self,
-    argument: "id"
-  )!
-
   static var previews: some View {
-    NotesGridView(notesGridViewModel: viewModel)
+    NotesGridView(
+      notesGridViewModel: NotesGridViewModel.notesGridViewModel_Preview
+    )
   }
 }
