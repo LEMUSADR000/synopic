@@ -15,6 +15,7 @@ protocol NoteCreateCoordinatorDelegate: AnyObject {
 
 class NoteCreateCoordinator: ViewModel {
   private let resolver: Resolver
+//  private let groupId: String
 
   private weak var delegate: NoteCreateCoordinatorDelegate?
 
@@ -22,9 +23,10 @@ class NoteCreateCoordinator: ViewModel {
 
   @Published var toggleNavigation: Bool = false
 
-  init(resolver: Resolver) {
+  init(resolver: Resolver, groupId: String) {
     self.resolver = resolver
-    self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self)!
+//    self.groupId = groupId
+    self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self, argument: groupId)!
       .setup(delegate: self)
   }
 

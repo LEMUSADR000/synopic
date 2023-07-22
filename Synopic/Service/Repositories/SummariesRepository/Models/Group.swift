@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Group {
-  let id: String
-  var lastEdited: Date
-  var title: String
-  var author: String
-  var imageName: String?
-}
+//struct Group {
+//  let id: String
+//  var lastEdited: Date
+//  var title: String
+//  var author: String
+//  var imageName: String?
+//}

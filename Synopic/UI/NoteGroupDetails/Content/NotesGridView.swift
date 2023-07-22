@@ -72,7 +72,7 @@ struct NotesGridView: View {
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
-      self.notesGridViewModel.saveNote.send()
+      self.notesGridViewModel.saveChanges.send()
     }
   }
 
@@ -82,7 +82,7 @@ struct NotesGridView: View {
 struct NotesGridView_Previews: PreviewProvider {
   static var previews: some View {
     NotesGridView(
-      notesGridViewModel: NotesGridViewModel.notesGridViewModel_Preview
+      notesGridViewModel: NotesGridViewModel.notesGridViewModelPreview
     )
   }
 }

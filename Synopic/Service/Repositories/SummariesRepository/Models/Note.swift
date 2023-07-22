@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct Note: Identifiable {
-  let id: String
-  let created: Date
-  let summary: String
-  let groupId: String
-}
+//struct Note: Identifiable {
+//  let id: String
+//  let created: Date
+//  let summary: String
+//  let groupId: String
+//}

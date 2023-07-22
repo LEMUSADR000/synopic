@@ -20,11 +20,11 @@ protocol NotesGridViewModelDelegate: AnyObject {
 
 public class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private let groupId: String?
+  private let groupId: String
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(summariesRepository: SummariesRepository, groupId: String?) {
+  init(summariesRepository: SummariesRepository, groupId: String) {
     self.summaries = summariesRepository
     self.groupId = groupId
   }
@@ -67,7 +67,7 @@ public class NotesGridViewModel: ViewModel {
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<String, Never> = PassthroughSubject()
-  let saveNote: PassthroughSubject<Void, Never> = PassthroughSubject()
+  let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   private func onCreateNote() {
     self.createNote
@@ -88,7 +88,7 @@ public class NotesGridViewModel: ViewModel {
   }
 
   private func onSaveNote() {
-    self.saveNote
+    self.saveChanges
       .withLatestFrom(
         self.$title,
         self.$author
@@ -99,7 +99,7 @@ public class NotesGridViewModel: ViewModel {
           Task { [weak self] in
             guard let self = self else { return }
             do {
-              try await self.summaries
+              let updated = try await self.summaries
                 .updateGroup(id: self.groupId, title: title, author: author)
               promise(.success(nil))
             }
@@ -124,11 +124,11 @@ public class NotesGridViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  static var notesGridViewModel_Preview: NotesGridViewModel {
+  static var notesGridViewModelPreview: NotesGridViewModel {
     let appAssembler = AppAssembler()
     let summaries = appAssembler.resolve(SummariesRepository.self)!
 
-    var notesViewModel = NotesGridViewModel(
+    let notesViewModel = NotesGridViewModel(
       summariesRepository: summaries,
       groupId: "test"
     )

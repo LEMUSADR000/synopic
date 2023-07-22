@@ -27,9 +27,10 @@ actor Cache<Key: Hashable, Value> {
   }
 
   // Should we separate logic for set with value changed?
-  func setValue(_ value: Value, forKey key: Key) async {
+  @discardableResult func setValue(_ value: Value, forKey key: Key) async -> Value {
     self.cache[key] = value
     self.valueChanged.send(self.cache)
+    return self.cache[key]!
   }
 
   @discardableResult func removeValue(forKey key: Key) async -> Value? {

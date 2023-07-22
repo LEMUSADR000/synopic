@@ -16,15 +16,15 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
 
-  private var noteGroupId: String?
+  private var noteGroupId: String
 
-  init(resolver: Resolver, groupId: String?) {
+  init(resolver: Resolver, groupId: String) {
     self.resolver = resolver
     self.noteGroupId = groupId
 
     self.notesGridViewModel = self.resolver.resolve(
       NotesGridViewModel.self,
-      argument: groupId as String?
+      argument: groupId
     )!
     .setup(delegate: self)
   }
@@ -42,7 +42,8 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
 
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel) {
     self.noteCreateCoordinator = self.resolver.resolve(
-      NoteCreateCoordinator.self
+      NoteCreateCoordinator.self,
+      argument: self.noteGroupId
     )!
     .setup(delegate: self)
   }

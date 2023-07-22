@@ -15,10 +15,11 @@ class ViewModelAssembly: Assembly {
     }
     .inObjectScope(.transient)
 
-    container.register(NoteCreateViewModel.self) { r in
+    container.register(NoteCreateViewModel.self) { r, id in
       NoteCreateViewModel(
         ocrService: r.resolve(OCRService.self)!,
-        summariesRepository: r.resolve(SummariesRepository.self)!
+        summariesRepository: r.resolve(SummariesRepository.self)!,
+        groupId: id
       )
     }
     .inObjectScope(.transient)

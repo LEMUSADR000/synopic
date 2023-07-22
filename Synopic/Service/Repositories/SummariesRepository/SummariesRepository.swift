@@ -29,7 +29,7 @@ protocol SummariesRepository {
     async throws -> String
 
   @discardableResult func updateGroup(
-    id: String?,
+    id: String,
     title: String,
     author: String
   ) async throws
@@ -39,9 +39,11 @@ protocol SummariesRepository {
 class SummariesRepositoryImpl: SummariesRepository {
   private var cancelBag: CancelBag
   private let chatGptApiService: ChatGPTService
+  private let persistentStore: PersistentStore
 
-  init(chatGptApiService: ChatGPTService) {
+  init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
+    self.persistentStore = persistentStore
     self.cancelBag = CancelBag()
   }
 
@@ -70,44 +72,45 @@ class SummariesRepositoryImpl: SummariesRepository {
     return self.notesCache.publisher
   }
 
-  func updateGroup(id: String?, title: String, author: String) async throws
+  func updateGroup(id: String, title: String, author: String) async throws
     -> Group?
   {
-    if let groupId = id {
-      if let currGroup = await self.groupsCache.getValue(forKey: groupId),
-        title == currGroup.title && author == currGroup.author
-      {
-        // No changes needed for group, we can just return early
-        return nil
+    guard !title.isEmpty && !author.isEmpty else {
+      if await self.notesCache.value[id]?.isEmpty != true {
+        await self.groupsCache.removeValue(forKey: id)
+        // TODO: Delete from persistent storage
       }
-      if (await self.notesCache.value[groupId] ?? []).isEmpty {
-        // TODO: Delete from persistent storage!
-        return await self.groupsCache.removeValue(forKey: groupId)
-      }
-    }
-
-    if title == .empty && author == .empty {
+      
       return nil
     }
-
-    var group: Group
-    if let groupId = id {
-      group = await self.groupsCache.value[groupId]!
-      group.title = title
-      group.author = author
-      group.lastEdited = Date()
+    
+    var group: Group? = await self.groupsCache.value[id]
+    if group == nil {
+      group = persistentStore.create
     }
-    else {
+        
+    if await self.notesCache.value[id]?.isEmpty != false && title.isEmpty && author.isEmpty {
+      await self.groupsCache.removeValue(forKey: id)
+      return nil
+    }
+    
+    var group: Group? = nil
+    if let stored = await self.groupsCache.value[id] {
+      group = stored
+      group?.lastEdited = Date()
+      group?.title = title
+      group?.author = author
+    } else {
       group = Group(
-        id: UUID().uuidString,
+        id: id,
         lastEdited: Date(),
         title: title,
         author: author
       )
     }
-
-    // TODO: Delete from persistent storage!
-    await self.groupsCache.setValue(group, forKey: group.id)
+    
+    group = await self.groupsCache.setValue(group, forKey: group.id)
+    
     return group
   }
 

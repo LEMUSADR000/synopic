@@ -110,3 +110,4 @@ enum OCRError: Error {
   case noObservations
   case error(Error?)
 }
+                     

@@ -29,7 +29,7 @@ struct NoteGroupDetailsCoordinatorView_Previews: PreviewProvider {
   static let appAssembler = AppAssembler()
   static let coordinator = appAssembler.resolve(
     NoteGroupDetailsCoordinator.self,
-    argument: nil as String?
+    argument: ""
   )!
   static var previews: some View {
     NoteGroupDetailsCoordinatorView(coordinator: coordinator)
