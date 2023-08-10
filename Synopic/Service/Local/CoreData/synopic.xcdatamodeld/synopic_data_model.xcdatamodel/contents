@@ -3,19 +3,13 @@
     <entity name="Group" representedClassName="Group" syncable="YES">
         <attribute name="author" attributeType="String" defaultValueString=""/>
         <attribute name="imageName" optional="YES" attributeType="String"/>
-        <attribute name="lastEdited" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastEdited" attributeType="Date" defaultDateTimeInterval="-978278400" usesScalarValueType="NO"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
-        <relationship name="parent" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Note" inverseName="child" inverseEntity="Note"/>
+        <relationship name="child" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Note" inverseName="parent" inverseEntity="Note"/>
     </entity>
     <entity name="Note" representedClassName="Note" syncable="YES">
-        <attribute name="created" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="summary" optional="YES" attributeType="String"/>
-        <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="parent" inverseEntity="Group"/>
-        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Summary" inverseName="child" inverseEntity="Summary"/>
-    </entity>
-    <entity name="Summary" representedClassName="Summary" syncable="YES">
-        <attribute name="created" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="summary" optional="YES" attributeType="String"/>
-        <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Note" inverseName="parent" inverseEntity="Note"/>
+        <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978278400" usesScalarValueType="NO"/>
+        <attribute name="summary" attributeType="String" defaultValueString=""/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="child" inverseEntity="Group"/>
     </entity>
 </model>

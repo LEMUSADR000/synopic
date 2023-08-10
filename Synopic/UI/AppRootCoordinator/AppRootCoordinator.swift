@@ -35,7 +35,7 @@ class AppRootCoordinator: ViewModel {
 
 extension AppRootCoordinator: LandingViewModelDelegate {
   func landingViewModelDidTapViewGroup(
-    noteGroupId: String,
+    noteGroupId: ObjectIdentifier,
     _ source: LandingViewModel
   ) {
     self.noteDetailsCoordinator = self.resolver.resolve(

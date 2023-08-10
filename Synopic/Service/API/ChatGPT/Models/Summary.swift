@@ -7,8 +7,8 @@
 
 import Foundation
 
-//struct Summary: Codable {
-//  let id: String
-//  let result: String
-//  let created: Date
-//}
+struct SummaryResponse {
+  let id: String
+  let result: String
+  let created: Date
+}

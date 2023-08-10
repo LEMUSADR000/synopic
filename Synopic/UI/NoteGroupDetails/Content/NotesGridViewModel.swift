@@ -13,18 +13,18 @@ import UIKit
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
   func notesGridViewModelDidTapViewNote(
-    id: String,
+    id: ObjectIdentifier,
     _ source: NotesGridViewModel
   )
 }
 
 public class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private let groupId: String
+  private let groupId: ObjectIdentifier
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(summariesRepository: SummariesRepository, groupId: String) {
+  init(summariesRepository: SummariesRepository, groupId: ObjectIdentifier) {
     self.summaries = summariesRepository
     self.groupId = groupId
   }
@@ -66,7 +66,7 @@ public class NotesGridViewModel: ViewModel {
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let viewNote: PassthroughSubject<String, Never> = PassthroughSubject()
+  let viewNote: PassthroughSubject<ObjectIdentifier, Never> = PassthroughSubject()
   let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   private func onCreateNote() {
@@ -116,7 +116,13 @@ public class NotesGridViewModel: ViewModel {
 
   private func loadNotes() {
     self.summaries.loadNotes()
-      .map { [weak self] in $0[self?.groupId ?? ""] ?? [] }
+      .map { [weak self] in
+        if let groupId = self?.groupId {
+          return $0[groupId] ?? []
+        }
+        
+        return []
+      }
       .receive(on: .main)
       .sink(receiveValue: { [weak self] value in
         self?.notes = value
@@ -130,51 +136,51 @@ public class NotesGridViewModel: ViewModel {
 
     let notesViewModel = NotesGridViewModel(
       summariesRepository: summaries,
-      groupId: "test"
+      groupId: ObjectIdentifier(UUID.self)
     )
-
-    notesViewModel.notes = [
-      Note(
-        id: UUID().uuidString,
-        created: Date(),
-        summary:
-          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short\n\u{2022} point number four of this should be short\n\u{2022} point number five of this should be short\n\u{2022} point number six of this should be short",
-        groupId: "test"
-      ),
-      Note(
-        id: UUID().uuidString,
-        created: Date(),
-        summary:
-          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-        groupId: "test"
-      ),
-      Note(
-        id: UUID().uuidString,
-        created: Date(),
-        summary:
-          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-        groupId: "test"
-      ),
-      Note(
-        id: UUID().uuidString,
-        created: Date(),
-        summary:
-          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-        groupId: "test"
-      ),
-      Note(
-        id: UUID().uuidString,
-        created: Date(),
-        summary: "\u{2022} point number two of this should be short",
-        groupId: "test"
-      ),
-      Note(
-        id: UUID().uuidString,
-        created: Date(),
-        summary: "\u{2022} point number three of this should be short",
-        groupId: "test"
-      ),
-    ]
+//
+//    notesViewModel.notes = [
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short\n\u{2022} point number four of this should be short\n\u{2022} point number five of this should be short\n\u{2022} point number six of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary: "\u{2022} point number two of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary: "\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//    ]
 
     return notesViewModel
   }

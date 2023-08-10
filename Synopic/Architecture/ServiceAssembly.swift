@@ -13,11 +13,15 @@ class ServiceAssembly: Assembly {
     // MARK: Local
     container.register(OCRService.self) { _ in OCRServiceImpl() }
       .inObjectScope(.container)
+    
+    container.register(PersistentStore.self) { _ in CoreDataStack(version: CoreDataStack.Version.actual) }
+      .inObjectScope(.container)
 
     // MARK: Repositories
     container.register(SummariesRepository.self) { r in
       SummariesRepositoryImpl(
-        chatGptApiService: r.resolve(ChatGPTService.self)!
+        chatGptApiService: r.resolve(ChatGPTService.self)!,
+        persistentStore: r.resolve(PersistentStore.self)!
       )
     }
     .inObjectScope(.container)

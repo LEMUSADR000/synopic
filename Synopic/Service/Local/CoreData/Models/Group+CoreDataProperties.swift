@@ -2,7 +2,7 @@
 //  Group+CoreDataProperties.swift
 //  Synopic
 //
-//  Created by Adrian Lemus on 7/19/23.
+//  Created by Adrian Lemus on 8/9/23.
 //
 //
 
@@ -16,46 +16,46 @@ extension Group {
         return NSFetchRequest<Group>(entityName: "Group")
     }
 
-    @NSManaged public var lastEdited: Date?
-    @NSManaged public var title: String?
-    @NSManaged public var author: String?
-    @NSManaged public var imageName: String?
-    @NSManaged public var parent: NSOrderedSet?
+    @NSManaged public var author: String
+    @NSManaged public var imageName: String
+    @NSManaged public var lastEdited: Date
+    @NSManaged public var title: String
+    @NSManaged public var child: NSOrderedSet?
 
 }
 
-// MARK: Generated accessors for parent
+// MARK: Generated accessors for child
 extension Group {
 
-    @objc(insertObject:inParentAtIndex:)
-    @NSManaged public func insertIntoParent(_ value: Note, at idx: Int)
+    @objc(insertObject:inChildAtIndex:)
+    @NSManaged public func insertIntoChild(_ value: Note, at idx: Int)
 
-    @objc(removeObjectFromParentAtIndex:)
-    @NSManaged public func removeFromParent(at idx: Int)
+    @objc(removeObjectFromChildAtIndex:)
+    @NSManaged public func removeFromChild(at idx: Int)
 
-    @objc(insertParent:atIndexes:)
-    @NSManaged public func insertIntoParent(_ values: [Note], at indexes: NSIndexSet)
+    @objc(insertChild:atIndexes:)
+    @NSManaged public func insertIntoChild(_ values: [Note], at indexes: NSIndexSet)
 
-    @objc(removeParentAtIndexes:)
-    @NSManaged public func removeFromParent(at indexes: NSIndexSet)
+    @objc(removeChildAtIndexes:)
+    @NSManaged public func removeFromChild(at indexes: NSIndexSet)
 
-    @objc(replaceObjectInParentAtIndex:withObject:)
-    @NSManaged public func replaceParent(at idx: Int, with value: Note)
+    @objc(replaceObjectInChildAtIndex:withObject:)
+    @NSManaged public func replaceChild(at idx: Int, with value: Note)
 
-    @objc(replaceParentAtIndexes:withParent:)
-    @NSManaged public func replaceParent(at indexes: NSIndexSet, with values: [Note])
+    @objc(replaceChildAtIndexes:withChild:)
+    @NSManaged public func replaceChild(at indexes: NSIndexSet, with values: [Note])
 
-    @objc(addParentObject:)
-    @NSManaged public func addToParent(_ value: Note)
+    @objc(addChildObject:)
+    @NSManaged public func addToChild(_ value: Note)
 
-    @objc(removeParentObject:)
-    @NSManaged public func removeFromParent(_ value: Note)
+    @objc(removeChildObject:)
+    @NSManaged public func removeFromChild(_ value: Note)
 
-    @objc(addParent:)
-    @NSManaged public func addToParent(_ values: NSOrderedSet)
+    @objc(addChild:)
+    @NSManaged public func addToChild(_ values: NSOrderedSet)
 
-    @objc(removeParent:)
-    @NSManaged public func removeFromParent(_ values: NSOrderedSet)
+    @objc(removeChild:)
+    @NSManaged public func removeFromChild(_ values: NSOrderedSet)
 
 }
 

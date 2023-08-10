@@ -11,7 +11,7 @@ import SwiftUI
 
 protocol LandingViewModelDelegate: AnyObject {
   func landingViewModelDidTapViewGroup(
-    noteGroupId: String,
+    noteGroupId: ObjectIdentifier,
     _ source: LandingViewModel
   )
 }
@@ -45,14 +45,14 @@ public class LandingViewModel: ViewModel {
 
   // MARK: EVENT
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let viewGroup: PassthroughSubject<String, Never> = PassthroughSubject()
+  let viewGroup: PassthroughSubject<ObjectIdentifier, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
     self.createGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
         // TODO: Should we instead create this in the repo layer to keep key init consistent?
-        let tempId = UUID().uuidString
+        let tempId = ObjectIdentifier(UUID.self)
         self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: tempId, self)
       })
       .store(in: &self.cancelBag)

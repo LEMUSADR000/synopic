@@ -9,18 +9,18 @@ import Foundation
 import SwiftUI
 
 struct NoteGroup: Identifiable {
-  let id: String
+  let id: ObjectIdentifier
   let created: Date
   var title: String = .empty
   var author: String = .empty
   var imageName: String? = nil
 
-  init(id: String, created: Date) {
+  init(id: ObjectIdentifier, created: Date) {
     self.id = id
     self.created = created
   }
 
-  init(id: String, created: Date, title: String, author: String) {
+  init(id: ObjectIdentifier, created: Date, title: String, author: String) {
     self.id = id
     self.created = created
     self.title = title
@@ -28,7 +28,7 @@ struct NoteGroup: Identifiable {
   }
 
   init(
-    id: String,
+    id: ObjectIdentifier,
     created: Date,
     title: String,
     author: String,

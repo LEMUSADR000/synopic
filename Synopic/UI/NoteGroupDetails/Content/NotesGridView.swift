@@ -76,7 +76,7 @@ struct NotesGridView: View {
     }
   }
 
-  func onNoteSend(id: String) { self.notesGridViewModel.viewNote.send(id) }
+  func onNoteSend(id: ObjectIdentifier) { self.notesGridViewModel.viewNote.send(id) }
 }
 
 struct NotesGridView_Previews: PreviewProvider {

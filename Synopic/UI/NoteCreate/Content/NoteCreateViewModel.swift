@@ -23,12 +23,12 @@ protocol NoteCreateViewModelDelegate: AnyObject {
 public class NoteCreateViewModel: NSObject, ViewModel {
   private let ocrService: OCRService
   private let summariesRepository: SummariesRepository
-  private let groupId: String
+  private let groupId: ObjectIdentifier
   
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService, summariesRepository: SummariesRepository, groupId: String) {
+  init(ocrService: OCRService, summariesRepository: SummariesRepository, groupId: ObjectIdentifier) {
     self.ocrService = ocrService
     self.summariesRepository = summariesRepository
     self.groupId = groupId
@@ -65,7 +65,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
         do {
           _ = try await self.summariesRepository.createNote(
-            groupId: self.groupId,
+            parentId: self.groupId,
             text: self.content,
             type: self.processType
           )

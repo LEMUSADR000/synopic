@@ -2,7 +2,7 @@
 //  Note+CoreDataClass.swift
 //  Synopic
 //
-//  Created by Adrian Lemus on 7/19/23.
+//  Created by Adrian Lemus on 8/9/23.
 //
 //
 

@@ -39,7 +39,7 @@ struct GroupRow: View {
 struct GroupRow_Previews: PreviewProvider {
   static let date = Date()
   static let group = NoteGroup(
-    id: UUID().uuidString,
+    id: ObjectIdentifier(NoteGroup.self),
     created: date,
     title: "Lion's King",
     author: "Jamal Lahoover",

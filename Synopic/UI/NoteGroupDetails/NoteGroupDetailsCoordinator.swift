@@ -34,7 +34,7 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
   func notesGridViewModelDidTapViewNote(
-    id: String,
+    id: ObjectIdentifier,
     _ source: NotesGridViewModel
   ) {
 

@@ -15,21 +15,21 @@ enum SummaryType: String {
 }
 
 protocol SummariesRepository {
-  var groups: AnyPublisher<[String: Group], Never> { get }
-  var notes: AnyPublisher<[String: [Note]], Never> { get }
+  var groups: AnyPublisher<[ObjectIdentifier: Group], Never> { get }
+  var notes: AnyPublisher<[ObjectIdentifier: [Note]], Never> { get }
 
-  func loadGroups() -> AnyPublisher<[String: Group], Never>
-  func loadNotes() -> AnyPublisher<[String: [Note]], Never>
+  func loadGroups() -> AnyPublisher<[ObjectIdentifier: Group], Never>
+  func loadNotes() -> AnyPublisher<[ObjectIdentifier: [Note]], Never>
 
   @discardableResult func createNote(
-    groupId: String,
+    parentId: ObjectIdentifier,
     text: String,
     type: SummaryType
   )
-    async throws -> String
+    async throws -> ObjectIdentifier
 
   @discardableResult func updateGroup(
-    id: String,
+    id: ObjectIdentifier,
     title: String,
     author: String
   ) async throws
@@ -47,15 +47,15 @@ class SummariesRepositoryImpl: SummariesRepository {
     self.cancelBag = CancelBag()
   }
 
-  nonisolated var notes: AnyPublisher<[String: [Note]], Never> {
+  nonisolated var notes: AnyPublisher<[ObjectIdentifier: [Note]], Never> {
     notesCache.publisher
   }
 
-  nonisolated var groups: AnyPublisher<[String: Group], Never> {
+  nonisolated var groups: AnyPublisher<[ObjectIdentifier: Group], Never> {
     groupsCache.publisher
   }
 
-  func loadGroups() -> AnyPublisher<[String: Group], Never> {
+  func loadGroups() -> AnyPublisher<[ObjectIdentifier: Group], Never> {
     Task { [unowned self] in
       try? await self.fetchGroups()
     }
@@ -64,7 +64,7 @@ class SummariesRepositoryImpl: SummariesRepository {
   }
 
 
-  func loadNotes() -> AnyPublisher<[String: [Note]], Never> {
+  func loadNotes() -> AnyPublisher<[ObjectIdentifier: [Note]], Never> {
     Task { [unowned self] in
       try? await self.fetchNotes()
     }
@@ -72,7 +72,7 @@ class SummariesRepositoryImpl: SummariesRepository {
     return self.notesCache.publisher
   }
 
-  func updateGroup(id: String, title: String, author: String) async throws
+  func updateGroup(id: ObjectIdentifier, title: String, author: String) async throws
     -> Group?
   {
     guard !title.isEmpty && !author.isEmpty else {
@@ -86,47 +86,41 @@ class SummariesRepositoryImpl: SummariesRepository {
     
     var group: Group? = await self.groupsCache.value[id]
     if group == nil {
-      group = persistentStore.create
+      group = try! await persistentStore.update { context in
+        return Group(context: context)
+      }.async()
     }
         
-    if await self.notesCache.value[id]?.isEmpty != false && title.isEmpty && author.isEmpty {
-      await self.groupsCache.removeValue(forKey: id)
-      return nil
-    }
+    let updated: Group = try! await persistentStore.update { context in
+      group!.title = title
+      group!.author = title
+      group!.lastEdited = Date()
+      return group!
+    }.async()
     
-    var group: Group? = nil
-    if let stored = await self.groupsCache.value[id] {
-      group = stored
-      group?.lastEdited = Date()
-      group?.title = title
-      group?.author = author
-    } else {
-      group = Group(
-        id: id,
-        lastEdited: Date(),
-        title: title,
-        author: author
-      )
-    }
-    
-    group = await self.groupsCache.setValue(group, forKey: group.id)
+    group = await self.groupsCache.setValue(updated, forKey: updated.id)
     
     return group
   }
 
-  func createNote(groupId: String, text: String, type: SummaryType)
-    async throws -> String
+  func createNote(parentId: ObjectIdentifier, text: String, type: SummaryType)
+    async throws -> ObjectIdentifier
   {
     let summary = try await requestSummary(text: text, type: type)
-    let note = Note(
-      id: summary.id,
-      created: summary.created,
-      summary: summary.result,
-      groupId: groupId
-    )
+    
+    let parent = await self.groupsCache.getValue(forKey: parentId)
+    
+    let note: Note = try! await persistentStore.update { context in
+      let note = Note(context: context)
+      note.created = summary.created
+      note.summary = summary.result
+      note.parent = parent
+      
+      return note
+    }.async()
 
     let notes: [Note]
-    if var notesForId = await self.notesCache.getValue(forKey: groupId) {
+    if var notesForId = await self.notesCache.getValue(forKey: parentId) {
       notesForId.append(note)
       notes = notesForId
     }
@@ -134,52 +128,52 @@ class SummariesRepositoryImpl: SummariesRepository {
       notes = [note]
     }
 
-    await self.notesCache.setValue(notes, forKey: groupId)
+    await self.notesCache.setValue(notes, forKey: parentId)
 
     return note.id
   }
 
   // Mark: - Private API
 
-  private let groupsCache = Cache<String, Group>()
-  private let notesCache = Cache<String, [Note]>()
+  private let groupsCache = Cache<ObjectIdentifier, Group>()
+  private let notesCache = Cache<ObjectIdentifier, [Note]>()
 
   private func fetchGroups() async throws {
     let value = await _loadGroups()
     await self.groupsCache.addAll(value)
   }
 
-  private func _loadGroups() async -> [String: Group] {
+  private func _loadGroups() async -> [ObjectIdentifier: Group] {
     try? await Task.sleep(nanoseconds: 1_000_000_000)  // 1 second
 
-    let today = Date()
-    let gIds = [
-      ["Lion's King", "James"],
-      ["Enders Game", "Bernard"],
-      ["Star Wars", "Xander"],
-      ["Lion's Witch", "Gertrude"],
-      ["One Piece", "Clint"],
-      ["Ronaldo", "Ronaldo"],
-      ["Clintonail Pt 2", "Clint"],
-      ["Randall's Wine", "Dwinles"],
-      ["Great Reservation", "Chines"],
-    ]
+//    let today = Date()
+//    let gIds = [
+//      ["Lion's King", "James"],
+//      ["Enders Game", "Bernard"],
+//      ["Star Wars", "Xander"],
+//      ["Lion's Witch", "Gertrude"],
+//      ["One Piece", "Clint"],
+//      ["Ronaldo", "Ronaldo"],
+//      ["Clintonail Pt 2", "Clint"],
+//      ["Randall's Wine", "Dwinles"],
+//      ["Great Reservation", "Chines"],
+//    ]
+//
+//    var g: [String: Group] = [:]
+//    for (index, names) in gIds.enumerated() {
+//      let id = "\(index)"
+//
+//      let date = today.adding(days: -index)
+//
+//      g[id] = Group(
+//        id: id,
+//        lastEdited: date,
+//        title: names[0],
+//        author: names[1]
+//      )
+//    }
 
-    var g: [String: Group] = [:]
-    for (index, names) in gIds.enumerated() {
-      let id = "\(index)"
-
-      let date = today.adding(days: -index)
-
-      g[id] = Group(
-        id: id,
-        lastEdited: date,
-        title: names[0],
-        author: names[1]
-      )
-    }
-
-    return g
+    return [:]
   }
 
   private func fetchNotes() async throws {
@@ -187,36 +181,36 @@ class SummariesRepositoryImpl: SummariesRepository {
     await self.notesCache.addAll(value)
   }
 
-  private func _loadNotes() async -> [String: [Note]] {
-    var n: [String: [Note]] = [:]
-    for id in ["0", "1", "2", "3", "4", "5", "6", "7", "8"] {
-      n[id] = [
-        Note(
-          id: UUID().uuidString,
-          created: Date(),
-          summary: "\u{2022} point number one of this should be short",
-          groupId: id
-        ),
-        Note(
-          id: UUID().uuidString,
-          created: Date(),
-          summary: "\u{2022} point number two of this should be short",
-          groupId: id
-        ),
-        Note(
-          id: UUID().uuidString,
-          created: Date(),
-          summary: "\u{2022} point number three of this should be short",
-          groupId: id
-        ),
-      ]
-    }
+  private func _loadNotes() async -> [ObjectIdentifier: [Note]] {
+//    var n: [String: [Note]] = [:]
+//    for id in ["0", "1", "2", "3", "4", "5", "6", "7", "8"] {
+//      n[id] = [
+//        Note(
+//          id: UUID().uuidString,
+//          created: Date(),
+//          summary: "\u{2022} point number one of this should be short",
+//          groupId: id
+//        ),
+//        Note(
+//          id: UUID().uuidString,
+//          created: Date(),
+//          summary: "\u{2022} point number two of this should be short",
+//          groupId: id
+//        ),
+//        Note(
+//          id: UUID().uuidString,
+//          created: Date(),
+//          summary: "\u{2022} point number three of this should be short",
+//          groupId: id
+//        ),
+//      ]
+//    }
 
-    return n
+    return [:]
   }
 
   private func requestSummary(text: String, type: SummaryType) async throws
-    -> Summary
+    -> SummaryResponse
   {
     // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
     let prompt = type.rawValue
@@ -226,7 +220,7 @@ class SummariesRepositoryImpl: SummariesRepository {
       throw SummariesError.requestFailed("No choices found in result")
     }
 
-    return Summary(
+    return SummaryResponse(
       id: result.id,
       result: result.choices.first!.text,
       created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
