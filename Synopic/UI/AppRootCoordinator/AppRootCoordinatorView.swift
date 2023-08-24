@@ -13,17 +13,12 @@ struct AppRootCoordinatorView: View {
   init(coordinator: AppRootCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
-    ZStack(alignment: .bottom) {
-      TabView {
-        NavigationView {
-          LandingView(viewModel: self.coordinator.landingViewModel)
-            .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
-              NoteGroupDetailsCoordinatorView(coordinator: c)
-            }
-            .navigationTitle("Note Groups")
+    NavigationView {
+      LandingView(viewModel: self.coordinator.landingViewModel)
+        .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
+          NoteGroupDetailsCoordinatorView(coordinator: c)
         }
-      }
-      TabBarContent(viewModel: self.coordinator.landingViewModel)
+        .navigationTitle("Note Groups")
     }
   }
 }

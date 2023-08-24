@@ -11,22 +11,25 @@ struct LandingView: View {
   @ObservedObject var viewModel: LandingViewModel
 
   var body: some View {
-    List {
-      ForEach(self.viewModel.sections) { section in
-        Section {
-          ForEach(section.items) { item in
-            GroupRow(
-              item: item,
-              onTap: {
-                self.viewModel.viewGroup.send(item.id)
-              }
-            )
-            .transition(.move(edge: .leading))
+    ZStack(alignment: .bottom) {
+      List {
+        ForEach(self.viewModel.sections) { section in
+          Section {
+            ForEach(section.items) { item in
+              GroupRow(
+                item: item,
+                onTap: {
+                  self.viewModel.viewGroup.send(item.id)
+                }
+              )
+              .transition(.move(edge: .leading))
+            }
+          } header: {
+            Text(section.title)
           }
-        } header: {
-          Text(section.title)
         }
       }
+      TabBarContent(viewModel: self.viewModel)
     }
   }
 }

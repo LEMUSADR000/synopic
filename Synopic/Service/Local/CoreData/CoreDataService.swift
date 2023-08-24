@@ -139,7 +139,7 @@ extension CoreDataStack {
         }
         
         var modelName: String {
-            return "db_model_v1"
+            return "synopic"
         }
         
         func dbFileURL(_ directory: FileManager.SearchPathDirectory,

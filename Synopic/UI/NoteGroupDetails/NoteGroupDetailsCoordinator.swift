@@ -16,9 +16,9 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
 
-  private var noteGroupId: String
+  private var noteGroupId: ObjectIdentifier
 
-  init(resolver: Resolver, groupId: String) {
+  init(resolver: Resolver, groupId: ObjectIdentifier) {
     self.resolver = resolver
     self.noteGroupId = groupId
 

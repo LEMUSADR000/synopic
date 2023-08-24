@@ -21,7 +21,7 @@ class NoteCreateCoordinator: ViewModel {
 
   @Published var toggleNavigation: Bool = false
 
-  init(resolver: Resolver, groupId: String) {
+  init(resolver: Resolver, groupId: ObjectIdentifier) {
     self.resolver = resolver
     self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self, argument: groupId)!
       .setup(delegate: self)
