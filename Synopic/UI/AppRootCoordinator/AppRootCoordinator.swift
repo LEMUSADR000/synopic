@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 import Swinject
+import CoreData
 
 class AppRootCoordinator: ViewModel {
   private let resolver: Resolver
@@ -35,7 +36,7 @@ class AppRootCoordinator: ViewModel {
 
 extension AppRootCoordinator: LandingViewModelDelegate {
   func landingViewModelDidTapViewGroup(
-    noteGroupId: ObjectIdentifier,
+    noteGroupId: InternalObjectId,
     _ source: LandingViewModel
   ) {
     self.noteDetailsCoordinator = self.resolver.resolve(

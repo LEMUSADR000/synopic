@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import Vision
 import VisionKit
@@ -23,12 +24,12 @@ protocol NoteCreateViewModelDelegate: AnyObject {
 public class NoteCreateViewModel: NSObject, ViewModel {
   private let ocrService: OCRService
   private let summariesRepository: SummariesRepository
-  private let groupId: ObjectIdentifier
+  private let groupId: InternalObjectId
   
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService, summariesRepository: SummariesRepository, groupId: ObjectIdentifier) {
+  init(ocrService: OCRService, summariesRepository: SummariesRepository, groupId: InternalObjectId) {
     self.ocrService = ocrService
     self.summariesRepository = summariesRepository
     self.groupId = groupId

@@ -6,12 +6,15 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import SwiftUI
 
+private let defaultDate = Date(timeIntervalSince1970: 0.0)
+
 protocol LandingViewModelDelegate: AnyObject {
   func landingViewModelDidTapViewGroup(
-    noteGroupId: ObjectIdentifier,
+    noteGroupId: InternalObjectId,
     _ source: LandingViewModel
   )
 }
@@ -45,15 +48,17 @@ public class LandingViewModel: ViewModel {
 
   // MARK: EVENT
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let viewGroup: PassthroughSubject<ObjectIdentifier, Never> = PassthroughSubject()
+  let viewGroup: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
     self.createGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        // TODO: Should we instead create this in the repo layer to keep key init consistent?
-        let tempId = ObjectIdentifier(UUID.self)
-        self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: tempId, self)
+        
+        // TODO: MOVE THIS TO THE SERVICE LAYER
+        let scratchpadContext = NSManagedObjectContext(.mainQueue)
+        let temp = GroupEntityMO(context: scratchpadContext)
+        self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: temp.objectID, self)
       })
       .store(in: &self.cancelBag)
   }
@@ -74,15 +79,10 @@ public class LandingViewModel: ViewModel {
         guard let self = self else { return }
 
         var noteKeys: [String] = []
-        var noteGroups: [String: [NoteGroup]] = [:]
+        var noteGroups: [String: [Group]] = [:]
         for group in $0.values.sorted(by: { $0.lastEdited > $1.lastEdited }) {
           let key = group.lastEdited.title
-          let value = NoteGroup(
-            id: group.id,
-            created: group.lastEdited,
-            title: group.title,
-            author: group.author
-          )
+          let value = group
 
           if var list = noteGroups[key] {
             list.append(value)

@@ -5,6 +5,7 @@
 //  Created by Adrian Lemus on 2/5/23.
 //
 
+import CoreData
 import SwiftUI
 import Swinject
 
@@ -76,7 +77,7 @@ struct NotesGridView: View {
     }
   }
 
-  func onNoteSend(id: ObjectIdentifier) { self.notesGridViewModel.viewNote.send(id) }
+  func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
 }
 
 struct NotesGridView_Previews: PreviewProvider {

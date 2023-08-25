@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import Swinject
 
@@ -16,9 +17,9 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
 
-  private var noteGroupId: ObjectIdentifier
+  private var noteGroupId: InternalObjectId
 
-  init(resolver: Resolver, groupId: ObjectIdentifier) {
+  init(resolver: Resolver, groupId: InternalObjectId) {
     self.resolver = resolver
     self.noteGroupId = groupId
 
@@ -34,7 +35,7 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
   func notesGridViewModelDidTapViewNote(
-    id: ObjectIdentifier,
+    id: InternalObjectId,
     _ source: NotesGridViewModel
   ) {
 

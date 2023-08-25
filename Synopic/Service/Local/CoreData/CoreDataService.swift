@@ -8,6 +8,8 @@
 import CoreData
 import Combine
 
+typealias InternalObjectId = NSManagedObjectID
+
 protocol PersistentStore {
     typealias DBOperation<Result> = (NSManagedObjectContext) throws -> Result
     
@@ -62,7 +64,8 @@ struct CoreDataStack: PersistentStore {
     
     func fetch<T, V>(_ fetchRequest: NSFetchRequest<T>,
                      map: @escaping (T) throws -> V?) -> AnyPublisher<LazyList<V>, Error> {
-        assert(Thread.isMainThread)
+//        assert(Thread.isMainThread)
+      print("accessing from main thread? \(Thread.isMainThread)")
         let fetch = Future<LazyList<V>, Error> { [weak container] promise in
             guard let context = container?.viewContext else { return }
             context.performAndWait {

@@ -12,8 +12,7 @@ import Combine
 
 protocol ManagedEntity: NSFetchRequestResult { }
 
-extension ManagedEntity where Self: NSManagedObject {
-    
+extension NSManagedObject {
     static var entityName: String {
         let nameMO = String(describing: Self.self)
         let suffixIndex = nameMO.index(nameMO.endIndex, offsetBy: -2)
@@ -24,7 +23,9 @@ extension ManagedEntity where Self: NSManagedObject {
         return NSEntityDescription
             .insertNewObject(forEntityName: entityName, into: context) as? Self
     }
-    
+}
+
+extension ManagedEntity where Self: NSManagedObject {
     static func newFetchRequest() -> NSFetchRequest<Self> {
         return .init(entityName: entityName)
     }

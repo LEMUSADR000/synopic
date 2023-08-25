@@ -7,24 +7,25 @@
 
 import Combine
 import CombineExt
+import CoreData
 import Foundation
 import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
   func notesGridViewModelDidTapViewNote(
-    id: ObjectIdentifier,
+    id: InternalObjectId,
     _ source: NotesGridViewModel
   )
 }
 
 public class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private let groupId: ObjectIdentifier
+  private let groupId: InternalObjectId
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(summariesRepository: SummariesRepository, groupId: ObjectIdentifier) {
+  init(summariesRepository: SummariesRepository, groupId: InternalObjectId) {
     self.summaries = summariesRepository
     self.groupId = groupId
   }
@@ -66,7 +67,7 @@ public class NotesGridViewModel: ViewModel {
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let viewNote: PassthroughSubject<ObjectIdentifier, Never> = PassthroughSubject()
+  let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   private func onCreateNote() {
@@ -136,7 +137,7 @@ public class NotesGridViewModel: ViewModel {
 
     let notesViewModel = NotesGridViewModel(
       summariesRepository: summaries,
-      groupId: ObjectIdentifier(UUID.self)
+      groupId: GroupEntityMO(context: NSManagedObjectContext(.mainQueue)).objectID
     )
 //
 //    notesViewModel.notes = [

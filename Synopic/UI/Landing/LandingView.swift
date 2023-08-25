@@ -12,22 +12,24 @@ struct LandingView: View {
 
   var body: some View {
     ZStack(alignment: .bottom) {
-      List {
-        ForEach(self.viewModel.sections) { section in
-          Section {
-            ForEach(section.items) { item in
-              GroupRow(
-                item: item,
-                onTap: {
-                  self.viewModel.viewGroup.send(item.id)
-                }
-              )
-              .transition(.move(edge: .leading))
-            }
-          } header: {
-            Text(section.title)
+      TabView {
+        List {
+          ForEach(self.viewModel.sections) { section in
+            Section {
+              ForEach(section.items) { item in
+                GroupRow(
+                  item: item,
+                  onTap: {
+                    self.viewModel.viewGroup.send(item.id)
+                  }
+                )
+                .transition(.move(edge: .leading))
+              }
+            } header: {
+              Text(section.title)
+            }.listStyle(SidebarListStyle())
           }
-        }
+        }.listStyle(InsetGroupedListStyle())
       }
       TabBarContent(viewModel: self.viewModel)
     }

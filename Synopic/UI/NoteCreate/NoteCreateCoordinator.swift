@@ -5,6 +5,7 @@
 //  Created by Adrian Lemus on 2/5/23.
 //
 import Combine
+import CoreData
 import Foundation
 import Swinject
 import VisionKit
@@ -21,7 +22,7 @@ class NoteCreateCoordinator: ViewModel {
 
   @Published var toggleNavigation: Bool = false
 
-  init(resolver: Resolver, groupId: ObjectIdentifier) {
+  init(resolver: Resolver, groupId: InternalObjectId) {
     self.resolver = resolver
     self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self, argument: groupId)!
       .setup(delegate: self)

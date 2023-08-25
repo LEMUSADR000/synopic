@@ -12,10 +12,6 @@
 		1E2BC37E2955681500A4821A /* Publisher+DefinedScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */; };
 		1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37F29556AF700A4821A /* CancelBag.swift */; };
 		1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC3832957B9B100A4821A /* Button+Extensions.swift */; };
-		1E2E40472A848DB4008BE9EB /* Group+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2E40432A848DB4008BE9EB /* Group+CoreDataClass.swift */; };
-		1E2E40482A848DB4008BE9EB /* Group+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2E40442A848DB4008BE9EB /* Group+CoreDataProperties.swift */; };
-		1E2E40492A848DB4008BE9EB /* Note+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2E40452A848DB4008BE9EB /* Note+CoreDataClass.swift */; };
-		1E2E404A2A848DB4008BE9EB /* Note+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2E40462A848DB4008BE9EB /* Note+CoreDataProperties.swift */; };
 		1E405ED7299490E8001753A4 /* NoteGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E405ED6299490E8001753A4 /* NoteGroup.swift */; };
 		1E405ED929949129001753A4 /* ViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E405ED829949129001753A4 /* ViewSection.swift */; };
 		1E4B14CE2984D332002D1105 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4B14CD2984D332002D1105 /* String+Extensions.swift */; };
@@ -101,10 +97,6 @@
 		1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+DefinedScheduler.swift"; sourceTree = "<group>"; };
 		1E2BC37F29556AF700A4821A /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
 		1E2BC3832957B9B100A4821A /* Button+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Extensions.swift"; sourceTree = "<group>"; };
-		1E2E40432A848DB4008BE9EB /* Group+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataClass.swift"; sourceTree = "<group>"; };
-		1E2E40442A848DB4008BE9EB /* Group+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		1E2E40452A848DB4008BE9EB /* Note+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Note+CoreDataClass.swift"; sourceTree = "<group>"; };
-		1E2E40462A848DB4008BE9EB /* Note+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Note+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1E405ED6299490E8001753A4 /* NoteGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGroup.swift; sourceTree = "<group>"; };
 		1E405ED829949129001753A4 /* ViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSection.swift; sourceTree = "<group>"; };
 		1E4B14CD2984D332002D1105 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
@@ -270,10 +262,6 @@
 		1E4D54C92A68A83900CD524A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				1E2E40432A848DB4008BE9EB /* Group+CoreDataClass.swift */,
-				1E2E40442A848DB4008BE9EB /* Group+CoreDataProperties.swift */,
-				1E2E40452A848DB4008BE9EB /* Note+CoreDataClass.swift */,
-				1E2E40462A848DB4008BE9EB /* Note+CoreDataProperties.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -767,7 +755,6 @@
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
 				1E4D54C82A689E1200CD524A /* synopic.xcdatamodeld in Sources */,
-				1E2E40472A848DB4008BE9EB /* Group+CoreDataClass.swift in Sources */,
 				1ED88E45299053750052BD10 /* NotesGridView.swift in Sources */,
 				1EA187272952BFDF0017B38B /* CoordinatorAssembly.swift in Sources */,
 				1E4B14D52984DC5F002D1105 /* LandingViewModel.swift in Sources */,
@@ -780,19 +767,16 @@
 				1E4D54C52A687D5800CD524A /* LazyList.swift in Sources */,
 				1EBFE5602999861900D326AC /* Completions.swift in Sources */,
 				1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */,
-				1E2E40482A848DB4008BE9EB /* Group+CoreDataProperties.swift in Sources */,
 				1ED88E4329904D630052BD10 /* TabBarContent.swift in Sources */,
 				1EA187212952BC590017B38B /* ViewModel.swift in Sources */,
 				1ED88E2D298F3E5B0052BD10 /* SearchBar.swift in Sources */,
 				1E6661B729B98D0B004938FA /* Cache.swift in Sources */,
-				1E2E40492A848DB4008BE9EB /* Note+CoreDataClass.swift in Sources */,
 				1EAEDE942A6C7AFB0080B42A /* AnyPublisher+Extensions.swift in Sources */,
 				1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */,
 				1ED88E3C29901C310052BD10 /* Date+Extensions.swift in Sources */,
 				1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */,
 				1EF03621299DEB5700BC409C /* Note.swift in Sources */,
 				1E405ED929949129001753A4 /* ViewSection.swift in Sources */,
-				1E2E404A2A848DB4008BE9EB /* Note+CoreDataProperties.swift in Sources */,
 				1EB301DB298F1B66000CA862 /* Summary.swift in Sources */,
 				1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */,
 				1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */,

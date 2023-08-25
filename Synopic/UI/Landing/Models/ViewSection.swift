@@ -10,9 +10,9 @@ import Foundation
 class ViewSection: ViewModel {
   let title: String
 
-  @Published var items: [NoteGroup]
+  @Published var items: [Group]
 
-  init(title: String, items: [NoteGroup]) {
+  init(title: String, items: [Group]) {
     self.title = title
     self.items = items
   }

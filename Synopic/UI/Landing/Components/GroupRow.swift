@@ -5,10 +5,11 @@
 //  Created by Adrian Lemus on 2/5/23.
 //
 
+import CoreData
 import SwiftUI
 
 struct GroupRow: View {
-  var item: NoteGroup
+  var item: Group
   let onTap: () -> Void
 
   var body: some View {
@@ -38,9 +39,9 @@ struct GroupRow: View {
 
 struct GroupRow_Previews: PreviewProvider {
   static let date = Date()
-  static let group = NoteGroup(
-    id: ObjectIdentifier(NoteGroup.self),
-    created: date,
+  static let group = Group(
+    id: GroupEntityMO(context: NSManagedObjectContext(.mainQueue)).objectID,
+    lastEdited: date,
     title: "Lion's King",
     author: "Jamal Lahoover",
     imageName: "lion_king_cover"
