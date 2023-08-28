@@ -11,5 +11,16 @@ struct Note: Identifiable {
   let id: InternalObjectId
   let created: Date
   let summary: String
-  let groupId: String
+  
+  init(id: InternalObjectId) {
+    self.id = id
+    self.created = Date.init(timeIntervalSince1970: 0.0)
+    self.summary = ""
+  }
+  
+  init(from entity: NoteEntityMO) {
+    self.id = entity.objectID
+    self.created = entity.created ?? Date.init(timeIntervalSince1970: 0.0)
+    self.summary = entity.summary ?? ""
+  }
 }

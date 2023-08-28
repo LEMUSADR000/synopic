@@ -16,7 +16,10 @@ protocol PersistentStore {
     func count<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<Int, Error>
     func fetch<T, V>(_ fetchRequest: NSFetchRequest<T>,
                      map: @escaping (T) throws -> V?) -> AnyPublisher<LazyList<V>, Error>
+    func fetchObjectById<T, V>(for id: NSManagedObjectID,
+                     map: @escaping (T) throws -> V?) -> AnyPublisher<V, Error>
     func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error>
+    @discardableResult func delete(object: NSManagedObject) -> AnyPublisher<Void, Error>
 }
 
 struct CoreDataStack: PersistentStore {
@@ -91,6 +94,25 @@ struct CoreDataStack: PersistentStore {
             .flatMap { fetch }
             .eraseToAnyPublisher()
     }
+  
+    func fetchObjectById<T, V>(for id: NSManagedObjectID,
+                     map: @escaping (T) throws -> V?) -> AnyPublisher<V, Error> {
+      let fetch = Future<V, Error> { [weak container] promise in
+        guard let context = container?.viewContext else { return }
+        context.performAndWait {
+          do {
+            let managedObject = try context.existingObject(with: id)
+            let mapped = try map(managedObject as! T)
+            promise(.success(mapped!))
+          } catch {
+            promise(.failure(error))
+          }
+        }
+      }
+      return onStoreIsReady
+          .flatMap { fetch }
+          .eraseToAnyPublisher()
+    }
     
     func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error> {
         let update = Future<Result, Error> { [weak bgQueue, weak container] promise in
@@ -117,6 +139,32 @@ struct CoreDataStack: PersistentStore {
 //          .subscribe(on: bgQueue) // Does not work as stated in the docs. Using `bgQueue.async`
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
+    }
+  
+    func delete(object: NSManagedObject) -> AnyPublisher<Void, Error> {
+      let delete = Future<Void, Error> { [weak bgQueue, weak container] promise in
+        bgQueue?.async {
+          guard let context = container?.newBackgroundContext() else { return }
+          context.configureAsUpdateContext()
+          context.performAndWait {
+            do {
+              let result = try context.delete(object)
+              if context.hasChanges {
+                  try context.save()
+              }
+              context.reset()
+              promise(.success(result))
+            } catch {
+              context.reset()
+              promise(.failure(error))
+            }
+          }
+        }
+      }
+      return onStoreIsReady
+          .flatMap { delete }
+          .receive(on: DispatchQueue.main)
+          .eraseToAnyPublisher()
     }
     
     private var onStoreIsReady: AnyPublisher<Void, Error> {

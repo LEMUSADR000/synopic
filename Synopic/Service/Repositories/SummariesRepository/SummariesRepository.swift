@@ -16,11 +16,9 @@ enum SummaryType: String {
 }
 
 protocol SummariesRepository {
-  var groups: AnyPublisher<[InternalObjectId: Group], Never> { get }
-  var notes: AnyPublisher<[InternalObjectId: [Note]], Never> { get }
-
-  func loadGroups() -> AnyPublisher<[InternalObjectId: Group], Never>
-  func loadNotes() -> AnyPublisher<[InternalObjectId: [Note]], Never>
+  func groupForId(id: InternalObjectId) -> AnyPublisher<Group?, Never>
+  func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
+  func loadNotes(parent: InternalObjectId) -> AnyPublisher<LazyList<Note>, Error>
 
   @discardableResult func createNote(
     parentId: InternalObjectId,
@@ -38,73 +36,59 @@ protocol SummariesRepository {
 }
 
 class SummariesRepositoryImpl: SummariesRepository {
-  private var cancelBag: CancelBag
   private let chatGptApiService: ChatGPTService
   private let persistentStore: PersistentStore
 
   init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
     self.persistentStore = persistentStore
-    self.cancelBag = CancelBag()
   }
 
-  nonisolated var notes: AnyPublisher<[InternalObjectId: [Note]], Never> {
-    notesCache.publisher
+  func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
+    let request = GroupEntityMO.fetchRequest()
+    request.sortDescriptors = [
+      NSSortDescriptor(key: "lastEdited", ascending: true)
+    ]
+    return persistentStore.fetch(request) {
+      Group(from: $0)
+    }.eraseToAnyPublisher()
   }
 
-  nonisolated var groups: AnyPublisher<[InternalObjectId: Group], Never> {
-    groupsCache.publisher
+  func loadNotes(parent: InternalObjectId) -> AnyPublisher<LazyList<Note>, Error> {
+    let request = NoteEntityMO.fetchRequest()
+    request.predicate = NSPredicate(format: "parent = %@", parent)
+    
+    return persistentStore.fetch(request) {
+      Note(from: $0)
+    }.eraseToAnyPublisher()
   }
-
-  func loadGroups() -> AnyPublisher<[InternalObjectId: Group], Never> {
-    _ = Future(asyncFunc: {
-      try? await self.fetchGroups()
-    })
-
-    return self.groupsCache.publisher
-  }
-
-
-  func loadNotes() -> AnyPublisher<[InternalObjectId: [Note]], Never> {
-    Task { [unowned self] in
-      try? await self.fetchNotes()
+  
+  func groupForId(id: InternalObjectId) -> AnyPublisher<Group?, Never> {
+    return persistentStore.fetchObjectById(for: id) {
+      Group(from: $0)
     }
-
-    return self.notesCache.publisher
+    .replaceError(with: nil)
+    .eraseToAnyPublisher()
   }
 
   func updateGroup(id: InternalObjectId, title: String, author: String) async throws
     -> Group?
   {
-    guard !title.isEmpty || !author.isEmpty else {
-      if await self.notesCache.value[id]?.isEmpty != true {
-        await self.groupsCache.removeValue(forKey: id)
-        // TODO: Delete from persistent storage
-      }
-      
+    if (title.isEmpty && author.isEmpty), let entity: GroupEntityMO = try? await persistentStore.fetchObjectById(for: id, map: { $0 as GroupEntityMO }).async(), entity.child?.count == 0 {
+      persistentStore.delete(object: entity)
       return nil
     }
     
-    var group: Group? = await self.groupsCache.value[id] ?? Group(id: id)
-    
-    group!.title = title
-    group!.author = author
-    group!.lastEdited = Date()
-    
-    _ = persistentStore.update { context in
-      guard let object: GroupEntityMO = context.registeredObject(for: id) as? GroupEntityMO ?? GroupEntityMO.insertNew(in: context) else {
-        throw SummariesError.dbFailedToCreate("No choices found in result")
-      }
-      object.title = group!.title
-      object.author = group!.author
-      object.lastEdited = group!.lastEdited
-      object.imageName = group!.imageName
-      return object
-    }
-    
-    group = await self.groupsCache.setValue(group!, forKey: group!.id)
-    
-    return group
+    let entity: GroupEntityMO? = try? await persistentStore.fetchObjectById(for: id, map: { $0 as GroupEntityMO? }).async()
+    return try? await persistentStore.update { context in
+      let object = entity ?? GroupEntityMO(context: context)
+      object.title = title
+      object.author = author
+      object.lastEdited = Date()
+      object.imageName = nil
+      
+      return Group(from: object)
+    }.async()
   }
 
   func createNote(parentId: InternalObjectId, text: String, type: SummaryType)
@@ -140,61 +124,6 @@ class SummariesRepositoryImpl: SummariesRepository {
 
   // Mark: - Private API
 
-  private let groupsCache = Cache<InternalObjectId, Group>()
-  private let notesCache = Cache<InternalObjectId, [Note]>()
-
-  private func fetchGroups() async throws {
-    let value = await _loadGroups()
-    await self.groupsCache.addAll(value)
-  }
-
-  private func _loadGroups() async -> [InternalObjectId: Group] {
-    let request = GroupEntityMO.fetchRequest()
-    let groups: LazyList<Group> = try! await persistentStore.fetch(request) {
-      return Group(from: $0)
-    }.async()
-
-    // TODO: Consider returning lazy collection instead of mapping
-    let converted = groups.reduce(into: [InternalObjectId: Group]()) { dict, item in
-      dict[item.id] = item
-    }
-
-    return converted
-  }
-
-  private func fetchNotes() async throws {
-    let value = await _loadNotes()
-    await self.notesCache.addAll(value)
-  }
-
-  private func _loadNotes() async -> [InternalObjectId: [Note]] {
-//    var n: [String: [Note]] = [:]
-//    for id in ["0", "1", "2", "3", "4", "5", "6", "7", "8"] {
-//      n[id] = [
-//        Note(
-//          id: UUID().uuidString,
-//          created: Date(),
-//          summary: "\u{2022} point number one of this should be short",
-//          groupId: id
-//        ),
-//        Note(
-//          id: UUID().uuidString,
-//          created: Date(),
-//          summary: "\u{2022} point number two of this should be short",
-//          groupId: id
-//        ),
-//        Note(
-//          id: UUID().uuidString,
-//          created: Date(),
-//          summary: "\u{2022} point number three of this should be short",
-//          groupId: id
-//        ),
-//      ]
-//    }
-
-    return [:]
-  }
-
   private func requestSummary(text: String, type: SummaryType) async throws
     -> SummaryResponse
   {
@@ -220,26 +149,13 @@ enum SummariesError: Error {
   case createFailed(String)
 }
 
-extension Group {
-  static func byId(id: InternalObjectId) -> NSFetchRequest<GroupEntityMO> {
-    let request = GroupEntityMO.fetchRequest()
-    request.predicate = NSPredicate(format: "country.alpha3code == %@", id as CVarArg)
-    request.fetchLimit = 1
-    return request
+// MARK: - Extensions
+extension GroupEntityMO {
+  public override var description : String {
+    return "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "")"
   }
 }
 
-extension Future where Failure == Error {
-    convenience init(asyncFunc: @escaping () async throws -> Output) {
-        self.init { promise in
-            Task {
-                do {
-                    let result = try await asyncFunc()
-                    promise(.success(result))
-                } catch {
-                    promise(.failure(error))
-                }
-            }
-        }
-    }
-}
+// MARK: - Fetch Requests
+
+

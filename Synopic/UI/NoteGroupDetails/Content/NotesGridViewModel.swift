@@ -40,30 +40,25 @@ public class NotesGridViewModel: ViewModel {
     self.cancelBag = CancelBag()
     self.onCreateNote()
     self.onViewNote()
-    self.onSaveNote()
+    self.onSaveGroup()
     self.loadNotes()
 
-    self.summaries.groups
-      .prefix(1)
-      .sink { [weak self] value in
-        var title: String = .empty
-        var author: String = .empty
-
-        if let id = self?.groupId, let group = value[id] {
-          title = group.title
-          author = group.author
-        }
-
-        self?.title = title
-        self?.author = author
+    self.summaries.groupForId(id: self.groupId)
+      .tryMap { [weak self] value in
+        self?.title = value?.title ?? .empty
+        self?.author = value?.author ?? .empty
       }
+      .sink(
+        receiveCompletion: { print("completion: \($0)") },
+        receiveValue: { print("received value: \($0)") }
+      )
       .store(in: &self.cancelBag)
   }
 
   // MARK: STATE
   @Published var title: String = .empty
   @Published var author: String = .empty
-  @Published var notes: [Note] = []
+  @Published var notes: LazyList<Note> = LazyList.empty
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
@@ -88,7 +83,7 @@ public class NotesGridViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  private func onSaveNote() {
+  private func onSaveGroup() {
     self.saveChanges
       .withLatestFrom(
         self.$title,
@@ -116,18 +111,12 @@ public class NotesGridViewModel: ViewModel {
   }
 
   private func loadNotes() {
-    self.summaries.loadNotes()
-      .map { [weak self] in
-        if let groupId = self?.groupId {
-          return $0[groupId] ?? []
-        }
-        
-        return []
-      }
+    self.summaries.loadNotes(parent: groupId)
       .receive(on: .main)
-      .sink(receiveValue: { [weak self] value in
-        self?.notes = value
-      })
+      .tryMap { [weak self] result in
+        self?.notes = result
+      }
+      .sink()
       .store(in: &self.cancelBag)
   }
 
