@@ -25,11 +25,11 @@ struct TabBarContent: View {
         label: {
           Image(systemName: "rectangle.and.pencil.and.ellipsis")
             .foregroundColor(Color(UIColor.systemGray))
+            .padding()
         }
       )
       .frame(maxWidth: .infinity, alignment: .trailing)
     }
-    .padding()
   }
 }
 

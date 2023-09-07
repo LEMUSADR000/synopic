@@ -16,23 +16,15 @@ enum SummaryType: String {
 }
 
 protocol SummariesRepository {
-  func groupForId(id: InternalObjectId) -> AnyPublisher<Group?, Never>
+  
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
-  func loadNotes(parent: InternalObjectId) -> AnyPublisher<LazyList<Note>, Error>
-
-  @discardableResult func createNote(
-    parentId: InternalObjectId,
-    text: String,
-    type: SummaryType
-  )
-    async throws -> InternalObjectId
-
-  @discardableResult func updateGroup(
-    id: InternalObjectId,
-    title: String,
-    author: String
-  ) async throws
-    -> Group?
+  
+  func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
+  
+  @discardableResult func updateGroup(group: Group, notes: [Note]) async throws -> Group?
+  
+  func requestSummary(text: String, type: SummaryType) async throws
+    -> SummaryResponse
 }
 
 class SummariesRepositoryImpl: SummariesRepository {
@@ -54,77 +46,66 @@ class SummariesRepositoryImpl: SummariesRepository {
     }.eraseToAnyPublisher()
   }
 
-  func loadNotes(parent: InternalObjectId) -> AnyPublisher<LazyList<Note>, Error> {
+  func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
     let request = NoteEntityMO.fetchRequest()
     request.predicate = NSPredicate(format: "parent = %@", parent)
     
     return persistentStore.fetch(request) {
       Note(from: $0)
-    }.eraseToAnyPublisher()
+    }
+    .map {
+      var notes = [Note]()
+      for note in $0 {
+        notes.append(note)
+      }
+      return notes
+    }
+    .eraseToAnyPublisher()
   }
   
-  func groupForId(id: InternalObjectId) -> AnyPublisher<Group?, Never> {
+  func groupForId(id: InternalObjectId) -> AnyPublisher<Group, Error> {
     return persistentStore.fetchObjectById(for: id) {
       Group(from: $0)
     }
-    .replaceError(with: nil)
     .eraseToAnyPublisher()
   }
 
-  func updateGroup(id: InternalObjectId, title: String, author: String) async throws
-    -> Group?
-  {
-    if (title.isEmpty && author.isEmpty), let entity: GroupEntityMO = try? await persistentStore.fetchObjectById(for: id, map: { $0 as GroupEntityMO }).async(), entity.child?.count == 0 {
-      persistentStore.delete(object: entity)
-      return nil
-    }
-    
-    let entity: GroupEntityMO? = try? await persistentStore.fetchObjectById(for: id, map: { $0 as GroupEntityMO? }).async()
-    return try? await persistentStore.update { context in
-      let object = entity ?? GroupEntityMO(context: context)
-      object.title = title
-      object.author = author
-      object.lastEdited = Date()
-      object.imageName = nil
+  func updateGroup(group: Group, notes: [Note]) async throws -> Group? {
+    return try? await persistentStore.update { [group, notes] context in
+      var toUpdate: GroupEntityMO
+      if let id = group.id, let cached = try? context.existingObject(with: id) as? GroupEntityMO {
+        toUpdate = cached
+      } else {
+        toUpdate = GroupEntityMO(context: context)
+      }
+  
+      if notes.count == 0 && group.author.isEmpty && group.title.isEmpty {
+        context.delete(toUpdate)
+        return nil
+      }
       
-      return Group(from: object)
+      toUpdate.title = group.title
+      toUpdate.author = group.author
+      toUpdate.lastEdited = Date()
+      toUpdate.imageName = nil
+      
+      for note: Note in notes {
+        if note.id == nil {
+          let newNote = NoteEntityMO(context: context)
+          newNote.created = note.created
+          newNote.summary = note.summary
+          newNote.parent = toUpdate
+          toUpdate.addToChild(newNote)
+        }
+      }
+      
+      // TODO: Figure out how to remove items that are no longer part of current children in set
+
+      return Group(from: toUpdate)
     }.async()
   }
 
-  func createNote(parentId: InternalObjectId, text: String, type: SummaryType)
-    async throws -> InternalObjectId
-  {
-    return parentId
-//    let summary = try await requestSummary(text: text, type: type)
-//
-//    let parent = await self.groupsCache.getValue(forKey: parentId)
-//
-//    let note: Note = try! await persistentStore.update { context in
-//      let note = Note(context: context)
-//      note.created = summary.created
-//      note.summary = summary.result
-//      note.parent = parent
-//
-//      return note
-//    }.async()
-//
-//    let notes: [Note]
-//    if var notesForId = await self.notesCache.getValue(forKey: parentId) {
-//      notesForId.append(note)
-//      notes = notesForId
-//    }
-//    else {
-//      notes = [note]
-//    }
-//
-//    await self.notesCache.setValue(notes, forKey: parentId)
-//
-//    return note.objectID
-  }
-
-  // Mark: - Private API
-
-  private func requestSummary(text: String, type: SummaryType) async throws
+  func requestSummary(text: String, type: SummaryType) async throws
     -> SummaryResponse
   {
     // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`

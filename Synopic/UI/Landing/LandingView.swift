@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LandingView: View {
+  static let path = "/"
   @ObservedObject var viewModel: LandingViewModel
 
   var body: some View {
@@ -20,7 +21,7 @@ struct LandingView: View {
                 GroupRow(
                   item: item,
                   onTap: {
-                    self.viewModel.viewGroup.send(item.id)
+                    self.viewModel.viewGroup.send(item)
                   }
                 )
                 .transition(.move(edge: .leading))

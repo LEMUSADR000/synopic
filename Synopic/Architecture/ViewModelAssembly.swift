@@ -13,23 +13,22 @@ class ViewModelAssembly: Assembly {
     container.register(LandingViewModel.self) { r in
       LandingViewModel(summaries: r.resolve(SummariesRepository.self)!)
     }
-    .inObjectScope(.transient)
+    .inObjectScope(.weak)
 
-    container.register(NoteCreateViewModel.self) { r, id in
+    container.register(NoteCreateViewModel.self) { r in
       NoteCreateViewModel(
         ocrService: r.resolve(OCRService.self)!,
-        summariesRepository: r.resolve(SummariesRepository.self)!,
-        groupId: id
+        summariesRepository: r.resolve(SummariesRepository.self)!
       )
     }
-    .inObjectScope(.transient)
+    .inObjectScope(.weak)
 
-    container.register(NotesGridViewModel.self) { r, id in
+    container.register(NotesGridViewModel.self) { r, group in
       NotesGridViewModel(
         summariesRepository: r.resolve(SummariesRepository.self)!,
-        groupId: id
+        group: group
       )
     }
-    .inObjectScope(.transient)
+    .inObjectScope(.weak)
   }
 }

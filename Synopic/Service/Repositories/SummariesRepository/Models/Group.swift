@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 
 struct Group: Identifiable {
-  let id: InternalObjectId
+  let id: InternalObjectId?
   var lastEdited: Date
   var title: String
   var author: String
   var imageName: String?
   
-  init(id: InternalObjectId) {
-    self.id = id
+  init() {
+    self.id = nil
     self.lastEdited = Date.init(timeIntervalSince1970: 0.0)
     self.title = ""
     self.author = ""

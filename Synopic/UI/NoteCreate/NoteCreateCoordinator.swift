@@ -12,6 +12,7 @@ import VisionKit
 
 protocol NoteCreateCoordinatorDelegate: AnyObject {
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator)
+  func noteCreateCoordinatorDidCompleteWithNote(note: Note, _ source: NoteCreateCoordinator)
 }
 
 class NoteCreateCoordinator: ViewModel {
@@ -22,9 +23,9 @@ class NoteCreateCoordinator: ViewModel {
 
   @Published var toggleNavigation: Bool = false
 
-  init(resolver: Resolver, groupId: InternalObjectId) {
+  init(resolver: Resolver) {
     self.resolver = resolver
-    self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self, argument: groupId)!
+    self.noteCreateViewModel = resolver.resolve(NoteCreateViewModel.self)!
       .setup(delegate: self)
   }
 
@@ -51,9 +52,9 @@ extension NoteCreateCoordinator: NoteCreateViewModelDelegate {
   }
 
   func noteCreateViewModelGenerated(
-    newNoteId: String,
+    note: Note,
     _ source: NoteCreateViewModel
   ) {
-    self.delegate?.noteCreateCoordinatorDidComplete(self)
+    self.delegate?.noteCreateCoordinatorDidCompleteWithNote(note: note, self)
   }
 }

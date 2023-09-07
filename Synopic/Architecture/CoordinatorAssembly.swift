@@ -15,13 +15,13 @@ class CoordinatorAssembly: Assembly {
     }
     .inObjectScope(.container)
 
-    container.register(NoteCreateCoordinator.self) { r, id in
-      NoteCreateCoordinator(resolver: r, groupId: id)
+    container.register(NoteCreateCoordinator.self) { r in
+      NoteCreateCoordinator(resolver: r)
     }
     .inObjectScope(.transient)
 
-    container.register(NoteGroupDetailsCoordinator.self) { r, id in
-      NoteGroupDetailsCoordinator(resolver: r, groupId: id)
+    container.register(NoteGroupDetailsCoordinator.self) { r, group in
+      NoteGroupDetailsCoordinator(resolver: r, group: group)
     }
     .inObjectScope(.transient)
   }

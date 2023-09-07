@@ -21,13 +21,15 @@ protocol NotesGridViewModelDelegate: AnyObject {
 
 public class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private let groupId: InternalObjectId
+  private var group: Group
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(summariesRepository: SummariesRepository, groupId: InternalObjectId) {
+  init(summariesRepository: SummariesRepository, group: Group?) {
     self.summaries = summariesRepository
-    self.groupId = groupId
+    self.group = group ?? Group()
+    self.title = self.group.title
+    self.author = self.group.author
   }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
@@ -42,23 +44,12 @@ public class NotesGridViewModel: ViewModel {
     self.onViewNote()
     self.onSaveGroup()
     self.loadNotes()
-
-    self.summaries.groupForId(id: self.groupId)
-      .tryMap { [weak self] value in
-        self?.title = value?.title ?? .empty
-        self?.author = value?.author ?? .empty
-      }
-      .sink(
-        receiveCompletion: { print("completion: \($0)") },
-        receiveValue: { print("received value: \($0)") }
-      )
-      .store(in: &self.cancelBag)
   }
 
   // MARK: STATE
   @Published var title: String = .empty
   @Published var author: String = .empty
-  @Published var notes: LazyList<Note> = LazyList.empty
+  @Published var notes: [Note] = []
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
@@ -95,8 +86,13 @@ public class NotesGridViewModel: ViewModel {
           Task { [weak self] in
             guard let self = self else { return }
             do {
-              let updated = try await self.summaries
-                .updateGroup(id: self.groupId, title: title, author: author)
+              var new: [Note] = []
+              for note in self.notes {
+                new.append(note)
+              }
+              self.group.title = self.title
+              self.group.author = self.author
+              let _ = try await self.summaries.updateGroup(group: self.group, notes: new)
               promise(.success(nil))
             }
             catch {
@@ -111,13 +107,15 @@ public class NotesGridViewModel: ViewModel {
   }
 
   private func loadNotes() {
-    self.summaries.loadNotes(parent: groupId)
-      .receive(on: .main)
-      .tryMap { [weak self] result in
-        self?.notes = result
-      }
-      .sink()
-      .store(in: &self.cancelBag)
+    if let groupId = self.group.id {
+      self.summaries.loadNotes(parent: groupId)
+        .receive(on: .main)
+        .tryMap { [weak self] result in
+          self?.notes = result
+        }
+        .sink()
+        .store(in: &self.cancelBag)
+    }
   }
 
   static var notesGridViewModelPreview: NotesGridViewModel {
@@ -126,7 +124,7 @@ public class NotesGridViewModel: ViewModel {
 
     let notesViewModel = NotesGridViewModel(
       summariesRepository: summaries,
-      groupId: GroupEntityMO(context: NSManagedObjectContext(.mainQueue)).objectID
+      group: Group()
     )
 //
 //    notesViewModel.notes = [

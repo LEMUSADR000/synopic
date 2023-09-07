@@ -14,7 +14,7 @@ private let defaultDate = Date(timeIntervalSince1970: 0.0)
 
 protocol LandingViewModelDelegate: AnyObject {
   func landingViewModelDidTapViewGroup(
-    noteGroupId: InternalObjectId,
+    group: Group?,
     _ source: LandingViewModel
   )
 }
@@ -41,6 +41,8 @@ public class LandingViewModel: ViewModel {
     self.onViewGroup()
     self.onNewGroup()
   }
+  
+  var lastTap = Date()
 
   // MARK: STATE
   @Published var searchText: String = .empty
@@ -48,17 +50,27 @@ public class LandingViewModel: ViewModel {
 
   // MARK: EVENT
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let viewGroup: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
+  let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
     self.createGroup
+    // TODO: Figure out if we need to drop events for multiple button taps
+//      .drop(while: {
+//        [weak self] in
+//         guard let self = self else { return true }
+//
+//         let now = Date()
+//         if self.lastTap.distance(to: now) < 0.5 {
+//           print("tap recieved too recently. skipping")
+//           return true
+//         }
+//
+//         self.lastTap = now
+//         return false
+//      })
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        
-        // TODO: MOVE THIS TO THE SERVICE LAYER
-        let scratchpadContext = NSManagedObjectContext(.mainQueue)
-        let temp = GroupEntityMO(context: scratchpadContext)
-        self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: temp.objectID, self)
+        self.delegate?.landingViewModelDidTapViewGroup(group: nil, self)
       })
       .store(in: &self.cancelBag)
   }
@@ -67,7 +79,7 @@ public class LandingViewModel: ViewModel {
     self.viewGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: $0, self)
+        self.delegate?.landingViewModelDidTapViewGroup(group: $0, self)
       })
       .store(in: &self.cancelBag)
   }

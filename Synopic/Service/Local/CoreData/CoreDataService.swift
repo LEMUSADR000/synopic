@@ -113,32 +113,33 @@ struct CoreDataStack: PersistentStore {
           .flatMap { fetch }
           .eraseToAnyPublisher()
     }
-    
-    func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error> {
-        let update = Future<Result, Error> { [weak bgQueue, weak container] promise in
-            bgQueue?.async {
-                guard let context = container?.newBackgroundContext() else { return }
-                context.configureAsUpdateContext()
-                context.performAndWait {
-                    do {
-                        let result = try operation(context)
-                        if context.hasChanges {
-                            try context.save()
-                        }
-                        context.reset()
-                        promise(.success(result))
-                    } catch {
-                        context.reset()
-                        promise(.failure(error))
-                    }
-                }
+  
+  func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error> {
+      let update = Future<Result, Error> { [weak bgQueue, weak container] promise in
+        bgQueue?.async {
+          guard let context = container?.newBackgroundContext() else { return }
+          context.configureAsUpdateContext()
+
+          context.performAndWait {
+            do {
+              let result = try operation(context)
+              if context.hasChanges {
+                try context.save()
+              }
+              context.reset()
+              promise(.success(result))
+            } catch {
+              context.reset()
+              promise(.failure(error))
             }
+          }
         }
-        return onStoreIsReady
-            .flatMap { update }
+      }
+      return onStoreIsReady
+          .flatMap { update }
 //          .subscribe(on: bgQueue) // Does not work as stated in the docs. Using `bgQueue.async`
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
+          .receive(on: DispatchQueue.main)
+          .eraseToAnyPublisher()
     }
   
     func delete(object: NSManagedObject) -> AnyPublisher<Void, Error> {
@@ -148,12 +149,12 @@ struct CoreDataStack: PersistentStore {
           context.configureAsUpdateContext()
           context.performAndWait {
             do {
-              let result = try context.delete(object)
+              context.delete(object)
               if context.hasChanges {
                   try context.save()
               }
               context.reset()
-              promise(.success(result))
+              promise(.success(()))
             } catch {
               context.reset()
               promise(.failure(error))

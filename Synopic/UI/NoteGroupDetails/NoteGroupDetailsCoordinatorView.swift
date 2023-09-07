@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct NoteGroupDetailsCoordinatorView: View {
+  static let path = "NoteGroupDetailsCoordinatorView"
+  
   @ObservedObject var coordinator: NoteGroupDetailsCoordinator
   init(coordinator: NoteGroupDetailsCoordinator) {
     self.coordinator = coordinator

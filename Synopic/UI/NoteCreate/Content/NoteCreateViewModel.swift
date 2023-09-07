@@ -16,7 +16,7 @@ protocol NoteCreateViewModelDelegate: AnyObject {
   func noteCreateViewModelDidProcessScan(_ source: NoteCreateViewModel)
   func noteCreateViewModelFailedToGenerate(_ source: NoteCreateViewModel)
   func noteCreateViewModelGenerated(
-    newNoteId: String,
+    note: Note,
     _ source: NoteCreateViewModel
   )
 }
@@ -24,15 +24,13 @@ protocol NoteCreateViewModelDelegate: AnyObject {
 public class NoteCreateViewModel: NSObject, ViewModel {
   private let ocrService: OCRService
   private let summariesRepository: SummariesRepository
-  private let groupId: InternalObjectId
   
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService, summariesRepository: SummariesRepository, groupId: InternalObjectId) {
+  init(ocrService: OCRService, summariesRepository: SummariesRepository) {
     self.ocrService = ocrService
     self.summariesRepository = summariesRepository
-    self.groupId = groupId
   }
 
   func setup(delegate: NoteCreateViewModelDelegate) -> Self {
@@ -65,11 +63,9 @@ public class NoteCreateViewModel: NSObject, ViewModel {
         guard let self = self else { return }
 
         do {
-          _ = try await self.summariesRepository.createNote(
-            parentId: self.groupId,
-            text: self.content,
-            type: self.processType
-          )
+          let summary = try await self.summariesRepository.requestSummary(text: self.content, type: self.processType)
+          let note = Note(id: nil, created: summary.created, summary: summary.result)
+          self.delegate?.noteCreateViewModelGenerated(note: note, self)
         }
         catch {
           self.delegate?.noteCreateViewModelFailedToGenerate(self)
@@ -85,7 +81,6 @@ public class NoteCreateViewModel: NSObject, ViewModel {
         guard let self = self else { return }
         do {
           self.content = try self.ocrService.processDocumentScan($0)
-
           self.delegate?.noteCreateViewModelDidProcessScan(self)
         }
         catch {
@@ -106,7 +101,6 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   // MARK: STATE
   @Published var content: String = .empty
-
   @Published var processType: SummaryType = .singleSentence
 }
 

@@ -25,6 +25,8 @@
 		1E6661B729B98D0B004938FA /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6661B629B98D0B004938FA /* Cache.swift */; };
 		1E8549CF299CA4D300C1861E /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8549CE299CA4D300C1861E /* Router.swift */; };
 		1E865DAC29C412620002256E /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E865DAB29C412620002256E /* CoreDataService.swift */; };
+		1E8B32D42AA2BBA4004709B9 /* NavigationBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8B32D32AA2BBA4004709B9 /* NavigationBundle.swift */; };
+		1E8B32D82AA2BDBF004709B9 /* CustomBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */; };
 		1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E95FB34298A001400586331 /* View+OnReceive.swift */; };
 		1EA187212952BC590017B38B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187202952BC590017B38B /* ViewModel.swift */; };
 		1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */; };
@@ -111,6 +113,8 @@
 		1E8549CE299CA4D300C1861E /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		1E865DAB29C412620002256E /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		1E865DAF29C412CA0002256E /* synopic.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = synopic.entitlements; sourceTree = "<group>"; };
+		1E8B32D32AA2BBA4004709B9 /* NavigationBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBundle.swift; sourceTree = "<group>"; };
+		1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBack.swift; sourceTree = "<group>"; };
 		1E95FB34298A001400586331 /* View+OnReceive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+OnReceive.swift"; sourceTree = "<group>"; };
 		1EA187202952BC590017B38B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		1EA187222952BCCF0017B38B /* HapticFeedbackProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackProvider.swift; sourceTree = "<group>"; };
@@ -255,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				1E4D54C42A687D5800CD524A /* LazyList.swift */,
+				1E8B32D32AA2BBA4004709B9 /* NavigationBundle.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 				1E63E7D7298781C500571DD3 /* NoteCardView.swift */,
 				1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */,
 				1ED88E4229904D630052BD10 /* TabBarContent.swift */,
+				1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -744,6 +750,7 @@
 				1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */,
 				1EA37A1929984E530073E686 /* MultilineText.swift in Sources */,
 				1EBFE5622999872800D326AC /* Choice.swift in Sources */,
+				1E8B32D42AA2BBA4004709B9 /* NavigationBundle.swift in Sources */,
 				1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */,
 				1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */,
 				1E405ED7299490E8001753A4 /* NoteGroup.swift in Sources */,
@@ -753,6 +760,7 @@
 				1EBFE5642999873100D326AC /* Usage.swift in Sources */,
 				1EF03623299DECA000BC409C /* Group.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
+				1E8B32D82AA2BDBF004709B9 /* CustomBack.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,
 				1E4D54C82A689E1200CD524A /* synopic.xcdatamodeld in Sources */,
 				1ED88E45299053750052BD10 /* NotesGridView.swift in Sources */,
@@ -957,7 +965,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -992,7 +1000,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

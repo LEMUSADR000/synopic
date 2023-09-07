@@ -12,10 +12,10 @@ import CoreData
 
 class AppRootCoordinator: ViewModel {
   private let resolver: Resolver
-
+  
   @Published private(set) var landingViewModel: LandingViewModel!
-
-  @Published var noteDetailsCoordinator: NoteGroupDetailsCoordinator?
+  
+  @Published var path: [PathBundle] = []
 
   init(resolver: Resolver) {
     self.resolver = resolver
@@ -23,25 +23,23 @@ class AppRootCoordinator: ViewModel {
     self.landingViewModel = self.resolver.resolve(LandingViewModel.self)!
       .setup(delegate: self)
   }
-
-  private func showDetails(id: String) {
-    self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self,
-      argument: id
-    )!
-  }
 }
 
 // MARK: CameraViewModelDelegate
 
 extension AppRootCoordinator: LandingViewModelDelegate {
   func landingViewModelDidTapViewGroup(
-    noteGroupId: InternalObjectId,
+    group: Group?,
     _ source: LandingViewModel
   ) {
-    self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self,
-      argument: noteGroupId
-    )!
+    self.path.append(
+      PathBundle(
+        path: NoteGroupDetailsCoordinatorView.path,
+        model: self.resolver.resolve(
+          NoteGroupDetailsCoordinator.self,
+          argument: group
+        )!
+      )
+    )
   }
 }
