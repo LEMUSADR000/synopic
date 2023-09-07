@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import Swinject
 
@@ -16,18 +17,15 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
 
-  private var noteGroupId: String
+  private var group: Group?
 
-  init(resolver: Resolver, groupId: String?) {
+  init(resolver: Resolver, group: Group?) {
     self.resolver = resolver
-
-    // TODO: Figure out how to better handle this so that if a user taps create we only generate a new NoteGroup object if they make changes to said group
-    let uuid = groupId ?? UUID().uuidString
-    self.noteGroupId = uuid
+    self.group = group
 
     self.notesGridViewModel = self.resolver.resolve(
       NotesGridViewModel.self,
-      argument: uuid
+      argument: group
     )!
     .setup(delegate: self)
   }
@@ -37,7 +35,7 @@ public class NoteGroupDetailsCoordinator: ViewModel {
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
   func notesGridViewModelDidTapViewNote(
-    id: String,
+    id: InternalObjectId,
     _ source: NotesGridViewModel
   ) {
 
@@ -46,14 +44,18 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel) {
     self.noteCreateCoordinator = self.resolver.resolve(
       NoteCreateCoordinator.self
-    )!
-    .setup(delegate: self)
+    )!.setup(delegate: self)
   }
 }
 
 // MARK: NoteCreateCoordinatorDelegate
 
 extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
+  func noteCreateCoordinatorDidCompleteWithNote(note: Note, _ source: NoteCreateCoordinator) {
+    self.notesGridViewModel.notes.append(note)
+    self.noteCreateCoordinator = nil
+  }
+  
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator) {
     self.noteCreateCoordinator = nil
   }

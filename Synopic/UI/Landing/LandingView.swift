@@ -8,24 +8,31 @@
 import SwiftUI
 
 struct LandingView: View {
+  static let path = "/"
   @ObservedObject var viewModel: LandingViewModel
 
   var body: some View {
-    List {
-      ForEach(self.viewModel.sections) { section in
-        Section {
-          ForEach(section.items) { item in
-            GroupRow(
-              item: item,
-              onTap: { id in
-                self.viewModel.viewGroup.send(id)
+    ZStack(alignment: .bottom) {
+      TabView {
+        List {
+          ForEach(self.viewModel.sections) { section in
+            Section {
+              ForEach(section.items) { item in
+                GroupRow(
+                  item: item,
+                  onTap: {
+                    self.viewModel.viewGroup.send(item)
+                  }
+                )
+                .transition(.move(edge: .leading))
               }
-            )
+            } header: {
+              Text(section.title)
+            }.listStyle(SidebarListStyle())
           }
-        } header: {
-          Text(section.title)
-        }
+        }.listStyle(InsetGroupedListStyle())
       }
+      TabBarContent(viewModel: self.viewModel)
     }
   }
 }

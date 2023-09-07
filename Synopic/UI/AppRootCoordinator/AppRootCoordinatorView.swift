@@ -13,17 +13,23 @@ struct AppRootCoordinatorView: View {
   init(coordinator: AppRootCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
-    ZStack(alignment: .bottom) {
-      TabView {
-        NavigationView {
-          LandingView(viewModel: self.coordinator.landingViewModel)
-            .navigation(item: self.$coordinator.noteDetailsCoordinator) { c in
-              NoteGroupDetailsCoordinatorView(coordinator: c)
-            }
-            .navigationTitle("Note Groups")
+    NavigationStack(path: self.$coordinator.path) {
+      LandingView(viewModel: self.coordinator.landingViewModel)
+        .navigationTitle("Note Groups")
+        .navigationDestination(for: PathBundle.self) { bundle in
+          switch(bundle.path) {
+          case NoteGroupDetailsCoordinatorView.path:
+            NoteGroupDetailsCoordinatorView(coordinator: bundle.model as! NoteGroupDetailsCoordinator)
+              .navigationBarBackButtonHidden(true)
+              .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                  CustomBack(action: {_ = self.coordinator.path.popLast()})
+                }
+              }
+          default:
+            Text("Unhandled path \(bundle.path)")
+          }
         }
-      }
-      TabBarContent(viewModel: self.coordinator.landingViewModel)
     }
   }
 }

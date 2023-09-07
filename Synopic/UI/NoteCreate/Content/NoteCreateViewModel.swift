@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import Vision
 import VisionKit
@@ -15,7 +16,7 @@ protocol NoteCreateViewModelDelegate: AnyObject {
   func noteCreateViewModelDidProcessScan(_ source: NoteCreateViewModel)
   func noteCreateViewModelFailedToGenerate(_ source: NoteCreateViewModel)
   func noteCreateViewModelGenerated(
-    newNoteId: String,
+    note: Note,
     _ source: NoteCreateViewModel
   )
 }
@@ -23,6 +24,7 @@ protocol NoteCreateViewModelDelegate: AnyObject {
 public class NoteCreateViewModel: NSObject, ViewModel {
   private let ocrService: OCRService
   private let summariesRepository: SummariesRepository
+  
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
@@ -59,15 +61,13 @@ public class NoteCreateViewModel: NSObject, ViewModel {
       .subscribe(on: .global(qos: .userInitiated))
       .asyncSink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        if let result = try? await self.summariesRepository.requestSummary(
-          text: self.content,
-          type: self.processType
-        ) {
-          await MainActor.run {
-            self.content = result.result
-          }
+
+        do {
+          let summary = try await self.summariesRepository.requestSummary(text: self.content, type: self.processType)
+          let note = Note(id: nil, created: summary.created, summary: summary.result)
+          self.delegate?.noteCreateViewModelGenerated(note: note, self)
         }
-        else {
+        catch {
           self.delegate?.noteCreateViewModelFailedToGenerate(self)
         }
       })
@@ -81,7 +81,6 @@ public class NoteCreateViewModel: NSObject, ViewModel {
         guard let self = self else { return }
         do {
           self.content = try self.ocrService.processDocumentScan($0)
-
           self.delegate?.noteCreateViewModelDidProcessScan(self)
         }
         catch {
@@ -102,7 +101,6 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   // MARK: STATE
   @Published var content: String = .empty
-
   @Published var processType: SummaryType = .singleSentence
 }
 

@@ -8,13 +8,14 @@
 import Combine
 import Foundation
 import Swinject
+import CoreData
 
 class AppRootCoordinator: ViewModel {
   private let resolver: Resolver
-
+  
   @Published private(set) var landingViewModel: LandingViewModel!
-
-  @Published var noteDetailsCoordinator: NoteGroupDetailsCoordinator?
+  
+  @Published var path: [PathBundle] = []
 
   init(resolver: Resolver) {
     self.resolver = resolver
@@ -27,20 +28,18 @@ class AppRootCoordinator: ViewModel {
 // MARK: CameraViewModelDelegate
 
 extension AppRootCoordinator: LandingViewModelDelegate {
-  func landingViewModelDidTapCreateGroup(_ source: LandingViewModel) {
-    self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self,
-      argument: nil as String?
-    )!
-  }
-
   func landingViewModelDidTapViewGroup(
-    noteGroupId: String,
+    group: Group?,
     _ source: LandingViewModel
   ) {
-    self.noteDetailsCoordinator = self.resolver.resolve(
-      NoteGroupDetailsCoordinator.self,
-      argument: noteGroupId as String?
-    )!
+    self.path.append(
+      PathBundle(
+        path: NoteGroupDetailsCoordinatorView.path,
+        model: self.resolver.resolve(
+          NoteGroupDetailsCoordinator.self,
+          argument: group
+        )!
+      )
+    )
   }
 }

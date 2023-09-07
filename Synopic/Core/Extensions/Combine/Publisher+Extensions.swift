@@ -182,3 +182,7 @@ extension Publisher {
       .map(\.0).eraseToAnyPublisher()
   }
 }
+
+enum AsyncError: Error {
+  case finishedWithoutValue
+}

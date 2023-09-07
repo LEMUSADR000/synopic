@@ -5,17 +5,18 @@
 //  Created by Adrian Lemus on 2/5/23.
 //
 import Combine
+import CoreData
 import Foundation
 import Swinject
 import VisionKit
 
 protocol NoteCreateCoordinatorDelegate: AnyObject {
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator)
+  func noteCreateCoordinatorDidCompleteWithNote(note: Note, _ source: NoteCreateCoordinator)
 }
 
 class NoteCreateCoordinator: ViewModel {
   private let resolver: Resolver
-
   private weak var delegate: NoteCreateCoordinatorDelegate?
 
   @Published private(set) var noteCreateViewModel: NoteCreateViewModel!
@@ -51,9 +52,9 @@ extension NoteCreateCoordinator: NoteCreateViewModelDelegate {
   }
 
   func noteCreateViewModelGenerated(
-    newNoteId: String,
+    note: Note,
     _ source: NoteCreateViewModel
   ) {
-    self.delegate?.noteCreateCoordinatorDidComplete(self)
+    self.delegate?.noteCreateCoordinatorDidCompleteWithNote(note: note, self)
   }
 }

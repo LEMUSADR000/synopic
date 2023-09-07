@@ -11,9 +11,9 @@ import Swinject
 class ViewModelAssembly: Assembly {
   func assemble(container: Container) {
     container.register(LandingViewModel.self) { r in
-      LandingViewModel(ocrService: r.resolve(OCRService.self)!)
+      LandingViewModel(summaries: r.resolve(SummariesRepository.self)!)
     }
-    .inObjectScope(.transient)
+    .inObjectScope(.weak)
 
     container.register(NoteCreateViewModel.self) { r in
       NoteCreateViewModel(
@@ -21,11 +21,14 @@ class ViewModelAssembly: Assembly {
         summariesRepository: r.resolve(SummariesRepository.self)!
       )
     }
-    .inObjectScope(.transient)
+    .inObjectScope(.weak)
 
-    container.register(NotesGridViewModel.self) { _, id in
-      NotesGridViewModel(noteGroupId: id)
+    container.register(NotesGridViewModel.self) { r, group in
+      NotesGridViewModel(
+        summariesRepository: r.resolve(SummariesRepository.self)!,
+        group: group
+      )
     }
-    .inObjectScope(.transient)
+    .inObjectScope(.weak)
   }
 }

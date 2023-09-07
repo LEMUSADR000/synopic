@@ -6,24 +6,31 @@
 //
 
 import Combine
+import CombineExt
+import CoreData
 import Foundation
 import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
   func notesGridViewModelDidTapViewNote(
-    id: String,
+    id: InternalObjectId,
     _ source: NotesGridViewModel
   )
 }
 
 public class NotesGridViewModel: ViewModel {
+  private let summaries: SummariesRepository
+  private var group: Group
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  private let noteGroupId: String
-
-  init(noteGroupId: String) { self.noteGroupId = noteGroupId }
+  init(summariesRepository: SummariesRepository, group: Group?) {
+    self.summaries = summariesRepository
+    self.group = group ?? Group()
+    self.title = self.group.title
+    self.author = self.group.author
+  }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
     self.delegate = delegate
@@ -35,21 +42,19 @@ public class NotesGridViewModel: ViewModel {
     self.cancelBag = CancelBag()
     self.onCreateNote()
     self.onViewNote()
+    self.onSaveGroup()
+    self.loadNotes()
   }
 
   // MARK: STATE
   @Published var title: String = .empty
-
   @Published var author: String = .empty
-
-  @Published var imageName: String? = nil
-
   @Published var notes: [Note] = []
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
-
-  let viewNote: PassthroughSubject<String, Never> = PassthroughSubject()
+  let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
+  let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   private func onCreateNote() {
     self.createNote
@@ -68,12 +73,103 @@ public class NotesGridViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-}
 
-extension NotesGridViewModel {
-  struct Note: Identifiable {
-    let id: String
-    var content: String
-    var images: [CGImage]
+  private func onSaveGroup() {
+    self.saveChanges
+      .withLatestFrom(
+        self.$title,
+        self.$author
+      )
+      .setFailureType(to: Error.self)
+      .flatMapLatest { title, author -> AnyPublisher<Any?, Error> in
+        Future<Any?, Error> { promise in
+          Task { [weak self] in
+            guard let self = self else { return }
+            do {
+              var new: [Note] = []
+              for note in self.notes {
+                new.append(note)
+              }
+              self.group.title = self.title
+              self.group.author = self.author
+              let _ = try await self.summaries.updateGroup(group: self.group, notes: new)
+              promise(.success(nil))
+            }
+            catch {
+              promise(.failure(error))
+            }
+          }
+        }
+        .eraseToAnyPublisher()
+      }
+      .sink()
+      .store(in: &self.cancelBag)
+  }
+
+  private func loadNotes() {
+    if let groupId = self.group.id {
+      self.summaries.loadNotes(parent: groupId)
+        .receive(on: .main)
+        .tryMap { [weak self] result in
+          self?.notes = result
+        }
+        .sink()
+        .store(in: &self.cancelBag)
+    }
+  }
+
+  static var notesGridViewModelPreview: NotesGridViewModel {
+    let appAssembler = AppAssembler()
+    let summaries = appAssembler.resolve(SummariesRepository.self)!
+
+    let notesViewModel = NotesGridViewModel(
+      summariesRepository: summaries,
+      group: Group()
+    )
+//
+//    notesViewModel.notes = [
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short\n\u{2022} point number four of this should be short\n\u{2022} point number five of this should be short\n\u{2022} point number six of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary:
+//          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary: "\u{2022} point number two of this should be short",
+//        groupId: "test"
+//      ),
+//      Note(
+//        id: UUID().uuidString,
+//        created: Date(),
+//        summary: "\u{2022} point number three of this should be short",
+//        groupId: "test"
+//      ),
+//    ]
+
+    return notesViewModel
   }
 }

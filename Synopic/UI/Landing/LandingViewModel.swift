@@ -6,74 +6,26 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import SwiftUI
 
+private let defaultDate = Date(timeIntervalSince1970: 0.0)
+
 protocol LandingViewModelDelegate: AnyObject {
-  func landingViewModelDidTapCreateGroup(_ source: LandingViewModel)
   func landingViewModelDidTapViewGroup(
-    noteGroupId: String,
+    group: Group?,
     _ source: LandingViewModel
   )
 }
 
 public class LandingViewModel: ViewModel {
-  private let ocrService: OCRService
+  private let summaries: SummariesRepository
   private weak var delegate: LandingViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(ocrService: OCRService) {
-    self.ocrService = ocrService
-
-    let today = Date()
-    let data = [
-      today, Calendar.current.date(byAdding: .day, value: -1, to: today)!,
-      Calendar.current.date(byAdding: .day, value: -7, to: today)!,
-    ]
-
-    self.sections = [
-      ViewSection(
-        created: data[0],
-        items: [
-          NoteGroup(
-            created: data[0],
-            title: "Lion's King",
-            author: "Author 1"
-          ),
-          NoteGroup(
-            created: data[0].adding(hours: -2),
-            title: "Enders Game",
-            author: "Author 2"
-          ),
-          NoteGroup(
-            created: data[0].adding(hours: -4),
-            title: "Star Wars",
-            author: "Author 3"
-          ),
-        ]
-      ),
-      ViewSection(
-        created: data[1],
-        items: [
-          NoteGroup(
-            created: data[1],
-            title: "Lion's King",
-            author: "Author 1"
-          ),
-          NoteGroup(
-            created: data[1].adding(hours: -2),
-            title: "Enders Game",
-            author: "Author 2"
-          ),
-        ]
-      ),
-      ViewSection(
-        created: data[2],
-        items: [
-          NoteGroup(created: data[2], title: "Lion's King", author: "Author 1")
-        ]
-      ),
-    ]
+  init(summaries: SummariesRepository) {
+    self.summaries = summaries
   }
 
   func setup(delegate: LandingViewModelDelegate) -> Self {
@@ -84,9 +36,13 @@ public class LandingViewModel: ViewModel {
 
   private func bind() {
     self.cancelBag = CancelBag()
+
     self.onCreateGroup()
     self.onViewGroup()
+    self.onNewGroup()
   }
+  
+  var lastTap = Date()
 
   // MARK: STATE
   @Published var searchText: String = .empty
@@ -94,13 +50,27 @@ public class LandingViewModel: ViewModel {
 
   // MARK: EVENT
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let viewGroup: PassthroughSubject<String, Never> = PassthroughSubject()
+  let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
     self.createGroup
+    // TODO: Figure out if we need to drop events for multiple button taps
+//      .drop(while: {
+//        [weak self] in
+//         guard let self = self else { return true }
+//
+//         let now = Date()
+//         if self.lastTap.distance(to: now) < 0.5 {
+//           print("tap recieved too recently. skipping")
+//           return true
+//         }
+//
+//         self.lastTap = now
+//         return false
+//      })
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        self.delegate?.landingViewModelDidTapCreateGroup(self)
+        self.delegate?.landingViewModelDidTapViewGroup(group: nil, self)
       })
       .store(in: &self.cancelBag)
   }
@@ -109,8 +79,66 @@ public class LandingViewModel: ViewModel {
     self.viewGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        self.delegate?.landingViewModelDidTapViewGroup(noteGroupId: $0, self)
+        self.delegate?.landingViewModelDidTapViewGroup(group: $0, self)
       })
       .store(in: &self.cancelBag)
+  }
+
+  private func onNewGroup() {
+    self.summaries.loadGroups()
+      .receive(on: .main)
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
+
+        var noteKeys: [String] = []
+        var noteGroups: [String: [Group]] = [:]
+        
+        for group in $0 {
+          let key = group.lastEdited.title
+          let value = group
+
+          if var list = noteGroups[key] {
+            list.append(value)
+            noteGroups[key] = list
+          }
+          else {
+            noteGroups[key] = [value]
+            noteKeys.append(key)
+          }
+        }
+
+        var sections: [ViewSection] = []
+        for key in noteKeys {
+          sections.append(ViewSection(title: key, items: noteGroups[key]!))
+        }
+        withAnimation {
+          self.sections = sections
+        }
+      })
+      .store(in: &self.cancelBag)
+  }
+}
+
+extension Date {
+  var title: String {
+    guard
+      let day = Calendar.current
+        .dateComponents([.day], from: self, to: .now).day
+    else { return "--" }
+
+    if day == 0 {
+      return "Today"
+    }
+    else if day > 0 && day < 1 {
+      return "Yesterday"
+    }
+    else if day < 7 {
+      return "Previous 7 Days"
+    }
+    else {
+      let formatter = DateFormatter()
+      formatter.dateFormat = "yyyy"
+      return formatter.string(from: self)
+    }
   }
 }

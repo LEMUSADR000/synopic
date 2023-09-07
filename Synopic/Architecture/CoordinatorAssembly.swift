@@ -20,8 +20,8 @@ class CoordinatorAssembly: Assembly {
     }
     .inObjectScope(.transient)
 
-    container.register(NoteGroupDetailsCoordinator.self) { r, id in
-      NoteGroupDetailsCoordinator(resolver: r, groupId: id)
+    container.register(NoteGroupDetailsCoordinator.self) { r, group in
+      NoteGroupDetailsCoordinator(resolver: r, group: group)
     }
     .inObjectScope(.transient)
   }
