@@ -12,13 +12,13 @@ import CoreData
 
 class AppRootCoordinator: ViewModel {
   private let resolver: Resolver
+  let navigator: Navigator
   
   @Published private(set) var landingViewModel: LandingViewModel!
-  
-  @Published var path: [PathBundle] = []
 
   init(resolver: Resolver) {
     self.resolver = resolver
+    self.navigator = self.resolver.resolve(Navigator.self)!
 
     self.landingViewModel = self.resolver.resolve(LandingViewModel.self)!
       .setup(delegate: self)
@@ -32,14 +32,8 @@ extension AppRootCoordinator: LandingViewModelDelegate {
     group: Group?,
     _ source: LandingViewModel
   ) {
-    self.path.append(
-      PathBundle(
-        path: NoteGroupDetailsCoordinatorView.path,
-        model: self.resolver.resolve(
-          NoteGroupDetailsCoordinator.self,
-          argument: group
-        )!
-      )
+    self.navigator.append(
+      self.resolver.resolve(NoteGroupDetailsCoordinator.self, argument: group)!
     )
   }
 }

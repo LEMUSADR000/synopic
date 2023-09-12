@@ -8,7 +8,17 @@
 import Foundation
 
 typealias ViewModelDefinition = (
-  ObservableObject & Identifiable & HapticFeedbackProvider
+  ObservableObject & Identifiable & Hashable & HapticFeedbackProvider
 )
 
 protocol ViewModel: ViewModelDefinition {}
+
+extension ViewModel {
+  public static func ==(lhs: Self, rhs: Self) -> Bool {
+    lhs === rhs
+  }
+  
+  public func hash(into hasher: inout Hasher) {
+    hasher.combine(self.id)
+  }
+}

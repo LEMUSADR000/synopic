@@ -13,9 +13,10 @@ struct NoteCreateCoordinatorView: View {
     ScanDocumentsView(
       noteCreateViewModel: self.coordinator.noteCreateViewModel
     )
-    .navigation(isActive: self.$coordinator.toggleNavigation) {
-      ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
-    }
+    // TODO: Plug scans modal navigation back in!
+    //    .navigation(isActive: self.$coordinator.toggleNavigation) {
+    //      ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
+    //    }
   }
 }
 struct NoteCreateCoordinatorView_Previews: PreviewProvider {

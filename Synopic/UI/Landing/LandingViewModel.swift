@@ -28,7 +28,7 @@ public class LandingViewModel: ViewModel {
     self.summaries = summaries
   }
 
-  func setup(delegate: LandingViewModelDelegate) -> Self {
+  @discardableResult func setup(delegate: LandingViewModelDelegate) -> Self {
     self.delegate = delegate
     bind()
     return self

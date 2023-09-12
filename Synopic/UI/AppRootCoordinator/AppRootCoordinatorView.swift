@@ -13,22 +13,11 @@ struct AppRootCoordinatorView: View {
   init(coordinator: AppRootCoordinator) { self.coordinator = coordinator }
 
   var body: some View {
-    NavigationStack(path: self.$coordinator.path) {
+    ObjectNavigationStack(path: self.coordinator.navigator) {
       LandingView(viewModel: self.coordinator.landingViewModel)
-        .navigationTitle("Note Groups")
-        .navigationDestination(for: PathBundle.self) { bundle in
-          switch(bundle.path) {
-          case NoteGroupDetailsCoordinatorView.path:
-            NoteGroupDetailsCoordinatorView(coordinator: bundle.model as! NoteGroupDetailsCoordinator)
-              .navigationBarBackButtonHidden(true)
-              .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                  CustomBack(action: {_ = self.coordinator.path.popLast()})
-                }
-              }
-          default:
-            Text("Unhandled path \(bundle.path)")
-          }
+        .navigationTitle("Books")
+        .navigationDestination(for: NoteGroupDetailsCoordinator.self) {
+          NoteGroupDetailsCoordinatorView(coordinator: $0)
         }
     }
   }
