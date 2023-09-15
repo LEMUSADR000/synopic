@@ -42,7 +42,6 @@ public class NotesGridViewModel: ViewModel {
     self.cancelBag = CancelBag()
     self.onCreateNote()
     self.onViewNote()
-    self.onSaveGroup()
     self.loadNotes()
   }
 
@@ -54,7 +53,7 @@ public class NotesGridViewModel: ViewModel {
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
-  let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
+//  let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   private func onCreateNote() {
     self.createNote
@@ -74,36 +73,10 @@ public class NotesGridViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  private func onSaveGroup() {
-    self.saveChanges
-      .withLatestFrom(
-        self.$title,
-        self.$author
-      )
-      .setFailureType(to: Error.self)
-      .flatMapLatest { title, author -> AnyPublisher<Any?, Error> in
-        Future<Any?, Error> { promise in
-          Task { [weak self] in
-            guard let self = self else { return }
-            do {
-              var new: [Note] = []
-              for note in self.notes {
-                new.append(note)
-              }
-              self.group.title = self.title
-              self.group.author = self.author
-              let _ = try await self.summaries.updateGroup(group: self.group, notes: new)
-              promise(.success(nil))
-            }
-            catch {
-              promise(.failure(error))
-            }
-          }
-        }
-        .eraseToAnyPublisher()
-      }
-      .sink()
-      .store(in: &self.cancelBag)
+  func saveGroup() async {
+    self.group.author = self.author
+    self.group.title = self.title
+    _ = try? await self.summaries.updateGroup(group: self.group, notes: self.notes)
   }
 
   private func loadNotes() {

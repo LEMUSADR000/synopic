@@ -40,18 +40,6 @@ extension View {
       )
     )
   }
-  func navigation<Destination: View>(
-    router: Router,
-    @ViewBuilder destination: (_ bundle: NavigationBundle) -> Destination
-  ) -> some View {
-    let isActive = Binding(
-      get: { router.bundle != nil },
-      set: { value in if !value { router.consumeNavigation() } }
-    )
-    return navigation(isActive: isActive) {
-      destination(router.bundle!)
-    }
-  }
 }
 extension NavigationLink {
   init<T: Identifiable, D: View>(

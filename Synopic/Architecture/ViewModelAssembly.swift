@@ -13,7 +13,7 @@ class ViewModelAssembly: Assembly {
     container.register(LandingViewModel.self) { r in
       LandingViewModel(summaries: r.resolve(SummariesRepository.self)!)
     }
-    .inObjectScope(.weak)
+    .inObjectScope(.transient)
 
     container.register(NoteCreateViewModel.self) { r in
       NoteCreateViewModel(
@@ -21,7 +21,7 @@ class ViewModelAssembly: Assembly {
         summariesRepository: r.resolve(SummariesRepository.self)!
       )
     }
-    .inObjectScope(.weak)
+    .inObjectScope(.transient)
 
     container.register(NotesGridViewModel.self) { r, group in
       NotesGridViewModel(
@@ -29,6 +29,6 @@ class ViewModelAssembly: Assembly {
         group: group
       )
     }
-    .inObjectScope(.weak)
+    .inObjectScope(.transient)
   }
 }

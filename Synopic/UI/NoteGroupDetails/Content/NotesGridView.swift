@@ -10,7 +10,7 @@ import SwiftUI
 import Swinject
 
 struct NotesGridView: View {
-  @ObservedObject var notesGridViewModel: NotesGridViewModel
+  @StateObject var notesGridViewModel: NotesGridViewModel
 
   let horizontalPadding: CGFloat = 10
 
@@ -73,7 +73,9 @@ struct NotesGridView: View {
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
-      self.notesGridViewModel.saveChanges.send()
+      Task {
+        await self.notesGridViewModel.saveGroup()
+      }
     }
   }
 
