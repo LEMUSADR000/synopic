@@ -39,7 +39,7 @@ public class LandingViewModel: ViewModel {
 
     self.onCreateGroup()
     self.onViewGroup()
-    self.onNewGroup()
+    self.onGroupUpdate()
   }
   
   var lastTap = Date()
@@ -74,6 +74,12 @@ public class LandingViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
+  
+  func loadGroups() {
+    Task { [weak self] in
+      self?.summaries.loadGroups()
+    }
+  }
 
   private func onViewGroup() {
     self.viewGroup
@@ -84,8 +90,8 @@ public class LandingViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  private func onNewGroup() {
-    self.summaries.loadGroups()
+  private func onGroupUpdate() {
+    self.summaries.groups
       .receive(on: .main)
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }

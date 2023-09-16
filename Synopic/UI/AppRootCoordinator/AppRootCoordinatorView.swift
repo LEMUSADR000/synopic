@@ -19,6 +19,8 @@ struct AppRootCoordinatorView: View {
         .navigation(item: self.$coordinator.noteGroupDetailsCoordinator) { c in
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
+    }.task {
+      self.coordinator.landingViewModel.loadGroups()
     }
   }
 }

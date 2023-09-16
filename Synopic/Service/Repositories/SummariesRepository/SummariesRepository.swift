@@ -16,8 +16,9 @@ enum SummaryType: String {
 }
 
 protocol SummariesRepository {
+  var groups: AnyPublisher<LazyList<Group>, Never> { get }
   
-  func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
+  func loadGroups()
   
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
   
@@ -30,20 +31,29 @@ protocol SummariesRepository {
 class SummariesRepositoryImpl: SummariesRepository {
   private let chatGptApiService: ChatGPTService
   private let persistentStore: PersistentStore
+  private let _groups: CurrentValueSubject<LazyList<Group>, Never>
+  private var cancelBag = CancelBag()
 
   init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
     self.persistentStore = persistentStore
+    self._groups = CurrentValueSubject(LazyList.empty)
   }
+  
+  var groups: AnyPublisher<LazyList<Group>, Never> { _groups.eraseToAnyPublisher() }
 
-  func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
+  func loadGroups() {
     let request = GroupEntityMO.fetchRequest()
     request.sortDescriptors = [
       NSSortDescriptor(key: "lastEdited", ascending: true)
     ]
-    return persistentStore.fetch(request) {
+    
+    persistentStore.fetch(request) {
       Group(from: $0)
-    }.eraseToAnyPublisher()
+    }.sink(receiveValue: { [weak self] result in
+      guard let self = self else { return }
+      self._groups.send(result)
+    }).store(in: &cancelBag)
   }
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
@@ -71,7 +81,7 @@ class SummariesRepositoryImpl: SummariesRepository {
   }
 
   func updateGroup(group: Group, notes: [Note]) async throws -> Group? {
-    return try? await persistentStore.update { [group, notes] context in
+    let new: Group? = try? await persistentStore.update { [group, notes] context in
       var toUpdate: GroupEntityMO
       if let id = group.id, let cached = try? context.existingObject(with: id) as? GroupEntityMO {
         toUpdate = cached
@@ -103,6 +113,12 @@ class SummariesRepositoryImpl: SummariesRepository {
 
       return Group(from: toUpdate)
     }.async()
+    
+    if new != nil {
+      loadGroups()
+    }
+    
+    return new
   }
 
   func requestSummary(text: String, type: SummaryType) async throws
