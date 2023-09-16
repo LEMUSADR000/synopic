@@ -20,7 +20,7 @@ struct AppRootCoordinatorView: View {
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
     }.task {
-      self.coordinator.landingViewModel.loadGroups()
+      await self.coordinator.landingViewModel.loadGroups()
     }
   }
 }

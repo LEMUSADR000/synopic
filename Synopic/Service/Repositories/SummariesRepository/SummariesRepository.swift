@@ -18,7 +18,7 @@ enum SummaryType: String {
 protocol SummariesRepository {
   var groups: AnyPublisher<LazyList<Group>, Never> { get }
   
-  func loadGroups()
+  func loadGroups() async
   
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
   
@@ -32,7 +32,6 @@ class SummariesRepositoryImpl: SummariesRepository {
   private let chatGptApiService: ChatGPTService
   private let persistentStore: PersistentStore
   private let _groups: CurrentValueSubject<LazyList<Group>, Never>
-  private var cancelBag = CancelBag()
 
   init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
@@ -42,18 +41,15 @@ class SummariesRepositoryImpl: SummariesRepository {
   
   var groups: AnyPublisher<LazyList<Group>, Never> { _groups.eraseToAnyPublisher() }
 
-  func loadGroups() {
+  func loadGroups() async {
     let request = GroupEntityMO.fetchRequest()
     request.sortDescriptors = [
       NSSortDescriptor(key: "lastEdited", ascending: true)
     ]
     
-    persistentStore.fetch(request) {
-      Group(from: $0)
-    }.sink(receiveValue: { [weak self] result in
-      guard let self = self else { return }
-      self._groups.send(result)
-    }).store(in: &cancelBag)
+    if let loaded: LazyList<Group> = try? await persistentStore.fetch(request, map: { Group(from: $0) }).async() {
+      self._groups.send(loaded)
+    }
   }
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
@@ -115,7 +111,9 @@ class SummariesRepositoryImpl: SummariesRepository {
     }.async()
     
     if new != nil {
-      loadGroups()
+      Task { [weak self] in
+        await self?.loadGroups()
+      }
     }
     
     return new

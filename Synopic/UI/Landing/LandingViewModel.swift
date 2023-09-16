@@ -75,10 +75,8 @@ public class LandingViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
   
-  func loadGroups() {
-    Task { [weak self] in
-      self?.summaries.loadGroups()
-    }
+  func loadGroups() async {
+    await self.summaries.loadGroups()
   }
 
   private func onViewGroup() {
