@@ -52,8 +52,10 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
 
 extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
   func noteCreateCoordinatorDidCompleteWithNote(note: Note, _ source: NoteCreateCoordinator) {
-    self.notesGridViewModel.notes.append(note)
-    self.noteCreateCoordinator = nil
+    Task { @MainActor [weak self] in
+      self?.notesGridViewModel.noteCreated.send(note)
+      self?.noteCreateCoordinator = nil
+    }
   }
   
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator) {

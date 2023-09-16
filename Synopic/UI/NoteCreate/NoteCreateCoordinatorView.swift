@@ -10,11 +10,15 @@ struct NoteCreateCoordinatorView: View {
   @ObservedObject var coordinator: NoteCreateCoordinator
   init(coordinator: NoteCreateCoordinator) { self.coordinator = coordinator }
   var body: some View {
-    ScanDocumentsView(
-      noteCreateViewModel: self.coordinator.noteCreateViewModel
-    )
-    .navigation(isActive: self.$coordinator.toggleNavigation) {
-      ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
+    NavigationView {
+      ScanDocumentsView(
+        noteCreateViewModel: self.coordinator.noteCreateViewModel
+      )
+      .edgesIgnoringSafeArea(.top)
+      .edgesIgnoringSafeArea(.bottom)
+      .navigation(isActive: self.$coordinator.toggleNavigation) {
+        ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
+      }
     }
   }
 }

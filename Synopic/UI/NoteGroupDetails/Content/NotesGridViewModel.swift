@@ -43,6 +43,7 @@ public class NotesGridViewModel: ViewModel {
     self.onCreateNote()
     self.onViewNote()
     self.loadNotes()
+    self.onNoteCreated()
   }
 
   // MARK: STATE
@@ -53,7 +54,16 @@ public class NotesGridViewModel: ViewModel {
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
-//  let saveChanges: PassthroughSubject<Void, Never> = PassthroughSubject()
+  let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
+  
+  private func onNoteCreated() {
+    self.noteCreated
+      .sink(receiveValue: { [weak self] note in
+        guard let self = self else { return }
+        self.notes.append(note)
+      })
+      .store(in: &self.cancelBag)
+  }
 
   private func onCreateNote() {
     self.createNote
