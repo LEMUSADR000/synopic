@@ -85,9 +85,9 @@ class SummariesRepositoryImpl: SummariesRepository {
         toUpdate = GroupEntityMO(context: context)
       }
   
-      if notes.isEmpty && group.author.isEmpty && group.title.isEmpty {
+      if notes.isEmpty && group.author.isEmpty && group.title.isEmpty && group.id != nil {
         context.delete(toUpdate)
-        return nil
+        return group
       } else if toUpdate.title == group.title && toUpdate.author == group.author {
         return nil
       }
