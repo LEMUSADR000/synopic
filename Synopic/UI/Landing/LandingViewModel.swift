@@ -97,7 +97,7 @@ public class LandingViewModel: ViewModel {
         var noteKeys: [String] = []
         var noteGroups: [String: [Group]] = [:]
         
-        for group in $0 {
+        for group in $0.sorted(by: { $0.lastEdited > $1.lastEdited }) {
           let key = group.lastEdited.title
           let value = group
 
