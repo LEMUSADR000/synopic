@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Note: Identifiable {
+struct Note {
   let id: InternalObjectId?
   let created: Date
   let summary: String

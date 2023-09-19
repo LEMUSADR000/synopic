@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 protocol ChatGPTService {
-  func makeRequest(prompt: String) async throws -> Completions
+  func makeRequest(prompt: String) async throws -> SummaryResponse
 }
 
 class ChatGPTServiceImpl: ChatGPTService {
@@ -17,8 +17,8 @@ class ChatGPTServiceImpl: ChatGPTService {
 
   init(token: String) { self.token = token }
 
-  func makeRequest(prompt: String) async throws -> Completions {
-    guard let endpoint = URL(string: "https://api.openai.com/v1/completions")
+  func makeRequest(prompt: String) async throws -> SummaryResponse {
+    guard let endpoint = URL(string: "https://api.openai.com/v1/chat/completions")
     else { throw ApiError.invalidURL }
 
     var request = URLRequest(url: endpoint)
@@ -27,9 +27,18 @@ class ChatGPTServiceImpl: ChatGPTService {
     request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
     let body: [String: Any] = [
-      "model": "text-davinci-003", "prompt": "\(prompt)", "temperature": 0.7,
-      "max_tokens": 256, "top_p": 1, "frequency_penalty": 0,
-      "presence_penalty": 1,
+      "model": "gpt-3.5-turbo",
+      "messages": [
+        [
+          "role": "system",
+          "content": prompt
+        ]
+      ],
+      "temperature": 0,
+      "max_tokens": 256,
+      "top_p": 1,
+      "frequency_penalty": 2,
+      "presence_penalty": 0,
     ]
     let jsonData = try JSONSerialization.data(withJSONObject: body)
 
@@ -40,6 +49,6 @@ class ChatGPTServiceImpl: ChatGPTService {
     guard (response as? HTTPURLResponse)?.statusCode == 200 else {
       throw ApiError.failedResponse("Invalid status code \(response)")
     }
-    return try JSONDecoder().decode(Completions.self, from: data)
+    return try JSONDecoder().decode(SummaryResponse.self, from: data)
   }
 }

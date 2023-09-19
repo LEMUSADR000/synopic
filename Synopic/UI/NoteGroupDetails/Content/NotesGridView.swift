@@ -43,12 +43,13 @@ struct NotesGridView: View {
               .flexible()
             ),
             count: 3
-          )
+          ),
+          spacing: 10
         ) {
-          ForEach(notesGridViewModel.notes) { note in
+          ForEach(0..<notesGridViewModel.notes.count, id: \.self) { i in
             NoteCardView {
               VStack(alignment: .leading) {
-                Text(note.summary)
+                Text(notesGridViewModel.notes[i].summary)
                   .fontWeight(.light)
                   .font(.system(size: 12))
                   .multilineTextAlignment(.leading)

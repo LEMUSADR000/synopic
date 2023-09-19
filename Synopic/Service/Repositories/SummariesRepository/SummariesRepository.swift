@@ -11,8 +11,8 @@ import Foundation
 import CoreData
 
 enum SummaryType: String {
-  case singleSentence = "Summarize the following into a sentence"
-  case threePoints = "Summarize the following into three points"
+  case singleSentence = "Summarize the following into the shortest sentence while still capturing most meaning:"
+  case threePoints = "Summarize the following into the shortest three points while still capturing most meaning: "
 }
 
 protocol SummariesRepository {
@@ -25,7 +25,7 @@ protocol SummariesRepository {
   @discardableResult func updateGroup(group: Group, notes: [Note]) async throws -> Group?
   
   func requestSummary(text: String, type: SummaryType) async throws
-    -> SummaryResponse
+    -> Summary
 }
 
 class SummariesRepositoryImpl: SummariesRepository {
@@ -85,9 +85,15 @@ class SummariesRepositoryImpl: SummariesRepository {
         toUpdate = GroupEntityMO(context: context)
       }
   
-      if notes.count == 0 && group.author.isEmpty && group.title.isEmpty {
-        context.delete(toUpdate)
-        return nil
+      if notes.count == 0 {
+        if group.author.isEmpty && group.title.isEmpty {
+          context.delete(toUpdate)
+          return nil
+        }
+        
+        if toUpdate.title == group.title && toUpdate.author == group.author {
+          return nil
+        }
       }
       
       toUpdate.title = group.title
@@ -120,19 +126,19 @@ class SummariesRepositoryImpl: SummariesRepository {
   }
 
   func requestSummary(text: String, type: SummaryType) async throws
-    -> SummaryResponse
+    -> Summary
   {
     // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
     let prompt = type.rawValue
 
-    let result = try await chatGptApiService.makeRequest(prompt: prompt)
+    let result = try await chatGptApiService.makeRequest(prompt: "\(prompt) \(text)")
     guard !result.choices.isEmpty else {
       throw SummariesError.requestFailed("No choices found in result")
     }
 
-    return SummaryResponse(
+    return Summary(
       id: result.id,
-      result: result.choices.first!.text,
+      result: result.choices.first?.message.content ?? "#ERROR",
       created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
     )
   }
@@ -150,7 +156,3 @@ extension GroupEntityMO {
     return "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "")"
   }
 }
-
-// MARK: - Fetch Requests
-
-

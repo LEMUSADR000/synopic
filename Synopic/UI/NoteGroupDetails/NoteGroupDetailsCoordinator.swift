@@ -59,6 +59,8 @@ extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
   }
   
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator) {
-    self.noteCreateCoordinator = nil
+    Task { @MainActor [weak self] in
+      self?.noteCreateCoordinator = nil
+    }
   }
 }
