@@ -54,20 +54,6 @@ public class LandingViewModel: ViewModel {
 
   private func onCreateGroup() {
     self.createGroup
-    // TODO: Figure out if we need to drop events for multiple button taps
-//      .drop(while: {
-//        [weak self] in
-//         guard let self = self else { return true }
-//
-//         let now = Date()
-//         if self.lastTap.distance(to: now) < 0.5 {
-//           print("tap recieved too recently. skipping")
-//           return true
-//         }
-//
-//         self.lastTap = now
-//         return false
-//      })
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
         self.delegate?.landingViewModelDidTapViewGroup(group: nil, self)
