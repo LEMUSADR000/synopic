@@ -14,7 +14,7 @@ import VisionKit
 protocol NoteCreateViewModelDelegate: AnyObject {
   func noteCreateViewModelDidCancel(_ source: NoteCreateViewModel)
   func noteCreateViewModelDidProcessScan(_ source: NoteCreateViewModel)
-  func noteCreateViewModelFailedToGenerate(_ source: NoteCreateViewModel)
+  func noteCreateViewModelFailedToGenerate(error: Error, _ source: NoteCreateViewModel)
   func noteCreateViewModelGenerated(
     note: Note,
     _ source: NoteCreateViewModel
@@ -57,19 +57,29 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   private func onProcessText() {
     self.processText
+      .receive(on: .global(qos: .userInitiated))
+      .withLatestFrom(self.$content, self.$processType)
+      .setFailureType(to: Error.self)
+      .flatMapLatest { [weak self] content, processType -> AnyPublisher<Summary?, Error> in
+        guard let self = self else {
+          return Just<Summary?>(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+        
+        return self.summariesRepository.requestSummary(text: content, type: processType)
+          .map(Optional.some)
+          .eraseToAnyPublisher()
+      }
       .receive(on: .main)
-      .subscribe(on: .global(qos: .userInitiated))
-      .asyncSink(receiveValue: { [weak self] in
+      .sink(receiveValue: { [weak self] summary in
+        guard let self = self, let summary = summary else { return }
+        let note = Note(id: nil, created: summary.created, summary: summary.result)
+        self.delegate?.noteCreateViewModelGenerated(note: note, self)
+      },
+      failure: { [weak self] error in
         guard let self = self else { return }
-
-        do {
-          let summary = try await self.summariesRepository.requestSummary(text: self.content, type: self.processType)
-          let note = Note(id: nil, created: summary.created, summary: summary.result)
-          self.delegate?.noteCreateViewModelGenerated(note: note, self)
-        }
-        catch {
-          self.delegate?.noteCreateViewModelFailedToGenerate(self)
-        }
+        self.delegate?.noteCreateViewModelFailedToGenerate(error: error, self)
       })
       .store(in: &self.cancelBag)
   }
@@ -77,16 +87,31 @@ public class NoteCreateViewModel: NSObject, ViewModel {
   private func onScanReceived() {
     // TODO: Consider running this work in a background thread
     self.scanReceived
-      .sink(receiveValue: { [weak self] in
-        guard let self = self else { return }
-        do {
-          self.content = try self.ocrService.processDocumentScan($0)
+      .setFailureType(to: Error.self)
+      .receive(on: .global(qos: .userInitiated))
+      .flatMap { [weak self] scan -> AnyPublisher<String, Error> in
+        Future<String, Error> { [weak self] promise in
+          do {
+            let processed = try self!.ocrService.processDocumentScan(scan)
+            promise(.success(processed))
+          }
+          catch {
+            promise(.failure(error))
+          }
+        }.eraseToAnyPublisher()
+      }
+      .receive(on: .main)
+      .sink(
+        receiveValue: { [weak self] summary in
+          guard let self = self else { return }
+          self.content = summary
           self.delegate?.noteCreateViewModelDidProcessScan(self)
+        },
+        failure: { [weak self] error in
+          guard let self = self else { return }
+          self.delegate?.noteCreateViewModelFailedToGenerate(error: error, self)
         }
-        catch {
-          self.delegate?.noteCreateViewModelFailedToGenerate(self)
-        }
-      })
+      )
       .store(in: &self.cancelBag)
   }
 

@@ -84,13 +84,11 @@ public class LandingViewModel: ViewModel {
   
   private func onLoadGroup() {
     self.loadGroup
-      .receive(on: .global(qos: .userInitiated))
-      .flatMap { self.summaries.loadGroups() }
       .receive(on: .main)
+      .flatMap { self.summaries.loadGroups() }
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        print("LandingViewModel " + Thread.current.description)
-
+        
         var noteKeys: [String] = []
         var noteGroups: [String: [Group]] = [:]
         

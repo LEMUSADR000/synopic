@@ -24,8 +24,7 @@ protocol SummariesRepository {
   
   func deleteGroup(group: Group) -> AnyPublisher<Group, Error>
   
-  func requestSummary(text: String, type: SummaryType) async throws
-    -> Summary
+  func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error>
 }
 
 class SummariesRepositoryImpl: SummariesRepository {
@@ -38,11 +37,8 @@ class SummariesRepositoryImpl: SummariesRepository {
     self.persistentStore = persistentStore
     self._groups = CurrentValueSubject(LazyList.empty)
   }
-  
-//  var groups: AnyPublisher<LazyList<Group>, Never> { _groups.eraseToAnyPublisher() }
 
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
-    print("SummariesRepository " + Thread.current.description)
     let request = GroupEntityMO.fetchRequest()
     request.sortDescriptors = [
       NSSortDescriptor(key: "lastEdited", ascending: true)
@@ -84,19 +80,7 @@ class SummariesRepositoryImpl: SummariesRepository {
       } else {
         toUpdate = GroupEntityMO(context: context)
       }
-//
-//      if notes.isEmpty && group.author.isEmpty && group.title.isEmpty {
-//        context.delete(toUpdate)
-//
-//        if group.id == nil {
-//          return nil
-//        } else {
-//          return group
-//        }
-//      } else if toUpdate.title == group.title && toUpdate.author == group.author {
-//        return nil
-//      }
-      
+
       toUpdate.title = group.title
       toUpdate.author = group.author
       toUpdate.lastEdited = Date()
@@ -114,17 +98,6 @@ class SummariesRepositoryImpl: SummariesRepository {
       
       return Group(from: toUpdate)
     }
-    // TODO: Should we move this into the view model layer?
-//    .flatMap { [weak self] (updated: Group?) in
-//      guard let self = self, updated != nil else {
-//        return Just(LazyList<Group>.empty)
-//          .setFailureType(to: Error.self)
-//          .eraseToAnyPublisher()
-//      }
-//
-//      return self.loadGroups()
-//    }
-//    .eraseToAnyPublisher()
   }
   
   func deleteGroup(group: Group) -> AnyPublisher<Group, Error> {
@@ -136,22 +109,29 @@ class SummariesRepositoryImpl: SummariesRepository {
   }
 
   // Should this be in ChatGPTService since it doesn't touch data repositories?
-  func requestSummary(text: String, type: SummaryType) async throws
-    -> Summary
-  {
-    // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
-    let prompt = type.rawValue
+  func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error> {
+    return Future<Summary, Error> { promise in
+      Task { [weak self] in
+        do {
+          // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
+          let prompt = type.rawValue
 
-    let result = try await chatGptApiService.makeRequest(prompt: "\(prompt) \(text)")
-    guard !result.choices.isEmpty else {
-      throw SummariesError.requestFailed("No choices found in result")
-    }
+          let result = try await self!.chatGptApiService.makeRequest(prompt: "\(prompt) \(text)")
+          guard !result.choices.isEmpty else {
+            throw SummariesError.requestFailed("No choices found in result")
+          }
 
-    return Summary(
-      id: result.id,
-      result: result.choices.first?.message.content ?? "#ERROR",
-      created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
-    )
+          promise(.success(Summary(
+            id: result.id,
+            result: result.choices.first?.message.content ?? "#ERROR",
+            created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
+          )))
+        }
+        catch {
+          promise(.failure(error))
+        }
+      }
+    }.eraseToAnyPublisher()
   }
 }
 

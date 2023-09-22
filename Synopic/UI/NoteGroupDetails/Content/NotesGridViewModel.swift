@@ -128,13 +128,13 @@ public class NotesGridViewModel: ViewModel {
   }
 
   private func loadNotes() {
-    if let groupId = self.group.id {
-      self.summaries.loadNotes(parent: groupId)
-        .sink(receiveValue: { [weak self] result in
-          self?.notes = result
-        })
-        .store(in: &self.cancelBag)
-    }
+    Just<Int>(1)
+      .compactMap { _ in self.group.id }
+      .flatMap { self.summaries.loadNotes(parent: $0) }
+      .sink(receiveValue: { [weak self] result in
+        self?.notes = result
+      })
+      .store(in: &self.cancelBag)
   }
 
   static var notesGridViewModelPreview: NotesGridViewModel {
