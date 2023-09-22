@@ -41,6 +41,6 @@ extension AppRootCoordinator: LandingViewModelDelegate {
 
 extension AppRootCoordinator: NoteGroupDetailsCoordinatorDelegate {
   func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator) {
-    self.landingViewModel.loadGroups()
+    self.landingViewModel.loadGroup.send()
   }
 }

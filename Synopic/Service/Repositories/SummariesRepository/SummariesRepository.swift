@@ -16,8 +16,6 @@ enum SummaryType: String {
 }
 
 protocol SummariesRepository {
-//  var groups: AnyPublisher<LazyList<Group>, Never> { get }
-  
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
   
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
@@ -44,6 +42,7 @@ class SummariesRepositoryImpl: SummariesRepository {
 //  var groups: AnyPublisher<LazyList<Group>, Never> { _groups.eraseToAnyPublisher() }
 
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
+    print("SummariesRepository " + Thread.current.description)
     let request = GroupEntityMO.fetchRequest()
     request.sortDescriptors = [
       NSSortDescriptor(key: "lastEdited", ascending: true)

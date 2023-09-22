@@ -37,6 +37,7 @@ public class LandingViewModel: ViewModel {
   private func bind() {
     self.cancelBag = CancelBag()
 
+    self.onLoadGroup()
     self.onCreateGroup()
     self.onDeleteGroup()
     self.onViewGroup()
@@ -49,6 +50,7 @@ public class LandingViewModel: ViewModel {
   @Published var sections: [ViewSection] = []
 
   // MARK: EVENT
+  let loadGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let deleteGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
   let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
@@ -66,7 +68,7 @@ public class LandingViewModel: ViewModel {
     self.deleteGroup
       .flatMap { self.summaries.deleteGroup(group: $0 ) }
       .sink(receiveValue: { [weak self] _ in
-        self?.loadGroups()
+        self?.loadGroup.send()
       })
       .store(in: &self.cancelBag)
   }
@@ -79,12 +81,15 @@ public class LandingViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-
-  func loadGroups() {
-    self.summaries.loadGroups()
+  
+  private func onLoadGroup() {
+    self.loadGroup
+      .receive(on: .global(qos: .userInitiated))
+      .flatMap { self.summaries.loadGroups() }
       .receive(on: .main)
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
+        print("LandingViewModel " + Thread.current.description)
 
         var noteKeys: [String] = []
         var noteGroups: [String: [Group]] = [:]
