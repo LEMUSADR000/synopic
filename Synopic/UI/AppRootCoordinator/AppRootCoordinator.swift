@@ -35,6 +35,12 @@ extension AppRootCoordinator: LandingViewModelDelegate {
     self.noteGroupDetailsCoordinator = self.resolver.resolve(
       NoteGroupDetailsCoordinator.self,
       argument: group
-    )!
+    )!.setup(delegate: self)
+  }
+}
+
+extension AppRootCoordinator: NoteGroupDetailsCoordinatorDelegate {
+  func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator) {
+    self.landingViewModel.loadGroups()
   }
 }

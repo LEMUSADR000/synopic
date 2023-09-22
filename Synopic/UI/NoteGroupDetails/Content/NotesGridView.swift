@@ -15,7 +15,6 @@ struct NotesGridView: View {
   let horizontalPadding: CGFloat = 10
 
   var body: some View {
-    // TODO: Call view model.store on navigate back!
     VStack {
       VStack {
         TextField(
@@ -74,9 +73,7 @@ struct NotesGridView: View {
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
-      Task {
-        await self.notesGridViewModel.saveGroup()
-      }
+      self.notesGridViewModel.saveGroup()
     }
   }
 

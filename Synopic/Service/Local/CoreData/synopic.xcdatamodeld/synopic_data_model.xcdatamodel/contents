@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22F82" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22G91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="GroupEntity" representedClassName="GroupEntityMO" syncable="YES" codeGenerationType="class">
         <attribute name="author" attributeType="String" defaultValueString=""/>
         <attribute name="imageName" optional="YES" attributeType="String"/>
         <attribute name="lastEdited" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" attributeType="String" defaultValueString=""/>
-        <relationship name="child" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="NoteEntity" inverseName="parent" inverseEntity="NoteEntity"/>
+        <relationship name="child" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="NoteEntity" inverseName="parent" inverseEntity="NoteEntity"/>
     </entity>
     <entity name="NoteEntity" representedClassName="NoteEntityMO" syncable="YES" codeGenerationType="class">
         <attribute name="created" attributeType="Date" defaultDateTimeInterval="-978278400" usesScalarValueType="NO"/>

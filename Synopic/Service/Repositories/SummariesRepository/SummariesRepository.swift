@@ -16,13 +16,15 @@ enum SummaryType: String {
 }
 
 protocol SummariesRepository {
-  var groups: AnyPublisher<LazyList<Group>, Never> { get }
+//  var groups: AnyPublisher<LazyList<Group>, Never> { get }
   
-  func loadGroups() async
+  func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
   
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
   
-  @discardableResult func updateGroup(group: Group, notes: [Note]) async throws -> Group?
+  @discardableResult func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error>
+  
+  func deleteGroup(group: Group) -> AnyPublisher<Group, Error>
   
   func requestSummary(text: String, type: SummaryType) async throws
     -> Summary
@@ -39,17 +41,15 @@ class SummariesRepositoryImpl: SummariesRepository {
     self._groups = CurrentValueSubject(LazyList.empty)
   }
   
-  var groups: AnyPublisher<LazyList<Group>, Never> { _groups.eraseToAnyPublisher() }
+//  var groups: AnyPublisher<LazyList<Group>, Never> { _groups.eraseToAnyPublisher() }
 
-  func loadGroups() async {
+  func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
     let request = GroupEntityMO.fetchRequest()
     request.sortDescriptors = [
       NSSortDescriptor(key: "lastEdited", ascending: true)
     ]
     
-    if let loaded: LazyList<Group> = try? await persistentStore.fetch(request, map: { Group(from: $0) }).async() {
-      self._groups.send(loaded)
-    }
+    return persistentStore.fetch(request, map: { Group(from: $0) })
   }
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
@@ -76,26 +76,27 @@ class SummariesRepositoryImpl: SummariesRepository {
     .eraseToAnyPublisher()
   }
 
-  func updateGroup(group: Group, notes: [Note]) async throws -> Group? {
-    let new: Group? = try? await persistentStore.update { [group, notes] context in
+  func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error> {
+    return persistentStore.update { [group, notes] context in
+      
       var toUpdate: GroupEntityMO
       if let id = group.id, let cached = try? context.existingObject(with: id) as? GroupEntityMO {
         toUpdate = cached
       } else {
         toUpdate = GroupEntityMO(context: context)
       }
-  
-      if notes.isEmpty && group.author.isEmpty && group.title.isEmpty {
-        context.delete(toUpdate)
-        
-        if group.id == nil {
-          return nil
-        } else {
-          return group
-        }
-      } else if toUpdate.title == group.title && toUpdate.author == group.author {
-        return nil
-      }
+//
+//      if notes.isEmpty && group.author.isEmpty && group.title.isEmpty {
+//        context.delete(toUpdate)
+//
+//        if group.id == nil {
+//          return nil
+//        } else {
+//          return group
+//        }
+//      } else if toUpdate.title == group.title && toUpdate.author == group.author {
+//        return nil
+//      }
       
       toUpdate.title = group.title
       toUpdate.author = group.author
@@ -112,20 +113,30 @@ class SummariesRepositoryImpl: SummariesRepository {
         }
       }
       
-      // TODO: Figure out how to remove items that are no longer part of current children in set
-
       return Group(from: toUpdate)
-    }.async()
-    
-    if new != nil {
-      Task { [weak self] in
-        await self?.loadGroups()
-      }
     }
-    
-    return new
+    // TODO: Should we move this into the view model layer?
+//    .flatMap { [weak self] (updated: Group?) in
+//      guard let self = self, updated != nil else {
+//        return Just(LazyList<Group>.empty)
+//          .setFailureType(to: Error.self)
+//          .eraseToAnyPublisher()
+//      }
+//
+//      return self.loadGroups()
+//    }
+//    .eraseToAnyPublisher()
+  }
+  
+  func deleteGroup(group: Group) -> AnyPublisher<Group, Error> {
+    return Just(group.id)
+      .compactMap { $0 }
+      .flatMap { self.persistentStore.delete(for: $0) }
+      .map { group }
+      .eraseToAnyPublisher()
   }
 
+  // Should this be in ChatGPTService since it doesn't touch data repositories?
   func requestSummary(text: String, type: SummaryType) async throws
     -> Summary
   {

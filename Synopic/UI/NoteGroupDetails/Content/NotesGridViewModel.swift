@@ -13,10 +13,13 @@ import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
+  
   func notesGridViewModelDidTapViewNote(
     id: InternalObjectId,
     _ source: NotesGridViewModel
   )
+  
+  func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel)
 }
 
 public class NotesGridViewModel: ViewModel {
@@ -56,6 +59,47 @@ public class NotesGridViewModel: ViewModel {
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
   
+  func saveGroup() {
+    Just(1)
+      .withLatestFrom(self.$title, self.$author, self.$notes)
+      .setFailureType(to: Error.self)
+      .flatMapLatest { [weak self] title, author, notes -> AnyPublisher<Group?, Error> in
+        guard let self = self else {
+          return Just<Group?>(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+
+        if title.isEmpty && author.isEmpty && notes.isEmpty && self.group.id != nil {
+          return self.summaries.deleteGroup(group: self.group)
+            .map(Optional.some)
+            .eraseToAnyPublisher()
+        }
+        
+        var toUpdate = self.group
+        if toUpdate.title == title && toUpdate.author == author && toUpdate.childCount == notes.count {
+          return Just<Group?>(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+        
+        toUpdate.title = title
+        toUpdate.author = author
+        
+        return self.summaries.updateGroup(group: toUpdate, notes: notes)
+          .map(Optional.some)
+          .eraseToAnyPublisher()
+      }
+      .sink(receiveValue: { [weak self] group in
+        guard let self = self else { return }
+        
+        if group != nil {
+          self.delegate?.notesGridViewModelDidRequireGroupCreation(self)
+        }
+      })
+      .store(in: &self.cancelBag)
+  }
+  
   private func onNoteCreated() {
     self.noteCreated
       .sink(receiveValue: { [weak self] note in
@@ -83,20 +127,12 @@ public class NotesGridViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  func saveGroup() async {
-    self.group.author = self.author
-    self.group.title = self.title
-    _ = try? await self.summaries.updateGroup(group: self.group, notes: self.notes)
-  }
-
   private func loadNotes() {
     if let groupId = self.group.id {
       self.summaries.loadNotes(parent: groupId)
-        .receive(on: .main)
-        .tryMap { [weak self] result in
+        .sink(receiveValue: { [weak self] result in
           self?.notes = result
-        }
-        .sink()
+        })
         .store(in: &self.cancelBag)
     }
   }

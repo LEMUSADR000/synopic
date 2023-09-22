@@ -38,8 +38,8 @@ public class LandingViewModel: ViewModel {
     self.cancelBag = CancelBag()
 
     self.onCreateGroup()
+    self.onDeleteGroup()
     self.onViewGroup()
-    self.onGroupUpdate()
   }
   
   var lastTap = Date()
@@ -50,6 +50,7 @@ public class LandingViewModel: ViewModel {
 
   // MARK: EVENT
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
+  let deleteGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
   let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
@@ -61,8 +62,13 @@ public class LandingViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
   
-  func loadGroups() async {
-    await self.summaries.loadGroups()
+  private func onDeleteGroup() {
+    self.deleteGroup
+      .flatMap { self.summaries.deleteGroup(group: $0 ) }
+      .sink(receiveValue: { [weak self] _ in
+        self?.loadGroups()
+      })
+      .store(in: &self.cancelBag)
   }
 
   private func onViewGroup() {
@@ -74,8 +80,8 @@ public class LandingViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  private func onGroupUpdate() {
-    self.summaries.groups
+  func loadGroups() {
+    self.summaries.loadGroups()
       .receive(on: .main)
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }

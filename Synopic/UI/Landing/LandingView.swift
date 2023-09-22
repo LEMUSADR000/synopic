@@ -26,6 +26,7 @@ struct LandingView: View {
                 )
                 .transition(.move(edge: .leading))
               }
+              .onDelete(perform: delete)
             } header: {
               Text(section.title)
             }.listStyle(SidebarListStyle())
@@ -34,6 +35,10 @@ struct LandingView: View {
       }
       TabBarContent(viewModel: self.viewModel)
     }
+  }
+  
+  private func delete(at offsets: IndexSet) {
+    print(offsets)
   }
 }
 
