@@ -83,8 +83,12 @@ public class LandingViewModel: ViewModel {
       .sink(
         receiveValue: { [weak self] path in
           guard let self = self, let path = path else { return }
-          let removed = self.sections[path.section].items.remove(at: path.row)
-          print("deleted \(removed)")
+          self.sections[path.section].items.remove(at: path.row)
+          if self.sections[path.section].items.count == 0 {
+            _ = withAnimation(.easeOut) {
+              self.sections.remove(at: path.section)
+            }
+          }
         },
         failure: { error in
           print("failed to delete \(error.localizedDescription)")
