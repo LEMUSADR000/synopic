@@ -15,7 +15,7 @@ class AppRootCoordinator: ViewModel {
   
   @Published private(set) var landingViewModel: LandingViewModel!
   
-  @Published var path: [PathBundle] = []
+  @Published var noteGroupDetailsCoordinator: NoteGroupDetailsCoordinator?
 
   init(resolver: Resolver) {
     self.resolver = resolver
@@ -32,14 +32,15 @@ extension AppRootCoordinator: LandingViewModelDelegate {
     group: Group?,
     _ source: LandingViewModel
   ) {
-    self.path.append(
-      PathBundle(
-        path: NoteGroupDetailsCoordinatorView.path,
-        model: self.resolver.resolve(
-          NoteGroupDetailsCoordinator.self,
-          argument: group
-        )!
-      )
-    )
+    self.noteGroupDetailsCoordinator = self.resolver.resolve(
+      NoteGroupDetailsCoordinator.self,
+      argument: group
+    )!.setup(delegate: self)
+  }
+}
+
+extension AppRootCoordinator: NoteGroupDetailsCoordinatorDelegate {
+  func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator) {
+    self.landingViewModel.loadGroup.send()
   }
 }

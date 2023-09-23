@@ -44,6 +44,7 @@ struct GroupRow_Previews: PreviewProvider {
     lastEdited: date,
     title: "Lion's King",
     author: "Jamal Lahoover",
+    childCount: 0,
     imageName: "lion_king_cover"
   )
 

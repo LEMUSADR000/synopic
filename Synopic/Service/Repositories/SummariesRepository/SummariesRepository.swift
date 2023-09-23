@@ -11,29 +11,31 @@ import Foundation
 import CoreData
 
 enum SummaryType: String {
-  case singleSentence = "Summarize the following into a sentence"
-  case threePoints = "Summarize the following into three points"
+  case singleSentence = "Summarize the following into the shortest sentence while still capturing most meaning:"
+  case threePoints = "Summarize the following into the shortest three points while still capturing most meaning: "
 }
 
 protocol SummariesRepository {
-  
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
   
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
   
-  @discardableResult func updateGroup(group: Group, notes: [Note]) async throws -> Group?
+  @discardableResult func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error>
   
-  func requestSummary(text: String, type: SummaryType) async throws
-    -> SummaryResponse
+  func deleteGroup(group: Group) -> AnyPublisher<Group, Error>
+  
+  func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error>
 }
 
 class SummariesRepositoryImpl: SummariesRepository {
   private let chatGptApiService: ChatGPTService
   private let persistentStore: PersistentStore
+  private let _groups: CurrentValueSubject<LazyList<Group>, Never>
 
   init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
     self.persistentStore = persistentStore
+    self._groups = CurrentValueSubject(LazyList.empty)
   }
 
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
@@ -41,9 +43,8 @@ class SummariesRepositoryImpl: SummariesRepository {
     request.sortDescriptors = [
       NSSortDescriptor(key: "lastEdited", ascending: true)
     ]
-    return persistentStore.fetch(request) {
-      Group(from: $0)
-    }.eraseToAnyPublisher()
+    
+    return persistentStore.fetch(request, map: { Group(from: $0) })
   }
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
@@ -70,20 +71,16 @@ class SummariesRepositoryImpl: SummariesRepository {
     .eraseToAnyPublisher()
   }
 
-  func updateGroup(group: Group, notes: [Note]) async throws -> Group? {
-    return try? await persistentStore.update { [group, notes] context in
+  func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error> {
+    return persistentStore.update { [group, notes] context in
+      
       var toUpdate: GroupEntityMO
       if let id = group.id, let cached = try? context.existingObject(with: id) as? GroupEntityMO {
         toUpdate = cached
       } else {
         toUpdate = GroupEntityMO(context: context)
       }
-  
-      if notes.count == 0 && group.author.isEmpty && group.title.isEmpty {
-        context.delete(toUpdate)
-        return nil
-      }
-      
+
       toUpdate.title = group.title
       toUpdate.author = group.author
       toUpdate.lastEdited = Date()
@@ -99,28 +96,42 @@ class SummariesRepositoryImpl: SummariesRepository {
         }
       }
       
-      // TODO: Figure out how to remove items that are no longer part of current children in set
-
       return Group(from: toUpdate)
-    }.async()
+    }
+  }
+  
+  func deleteGroup(group: Group) -> AnyPublisher<Group, Error> {
+    return Just(group.id)
+      .compactMap { $0 }
+      .flatMap { self.persistentStore.delete(for: $0) }
+      .map { group }
+      .eraseToAnyPublisher()
   }
 
-  func requestSummary(text: String, type: SummaryType) async throws
-    -> SummaryResponse
-  {
-    // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
-    let prompt = type.rawValue
+  // Should this be in ChatGPTService since it doesn't touch data repositories?
+  func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error> {
+    return Future<Summary, Error> { promise in
+      Task { [weak self] in
+        do {
+          // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
+          let prompt = type.rawValue
 
-    let result = try await chatGptApiService.makeRequest(prompt: prompt)
-    guard !result.choices.isEmpty else {
-      throw SummariesError.requestFailed("No choices found in result")
-    }
+          let result = try await self!.chatGptApiService.makeRequest(prompt: "\(prompt) \(text)")
+          guard !result.choices.isEmpty else {
+            throw SummariesError.requestFailed("No choices found in result")
+          }
 
-    return SummaryResponse(
-      id: result.id,
-      result: result.choices.first!.text,
-      created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
-    )
+          promise(.success(Summary(
+            id: result.id,
+            result: result.choices.first?.message.content ?? "#ERROR",
+            created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
+          )))
+        }
+        catch {
+          promise(.failure(error))
+        }
+      }
+    }.eraseToAnyPublisher()
   }
 }
 
@@ -136,7 +147,3 @@ extension GroupEntityMO {
     return "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "")"
   }
 }
-
-// MARK: - Fetch Requests
-
-

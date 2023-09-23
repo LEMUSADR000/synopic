@@ -10,12 +10,11 @@ import SwiftUI
 import Swinject
 
 struct NotesGridView: View {
-  @ObservedObject var notesGridViewModel: NotesGridViewModel
+  @StateObject var notesGridViewModel: NotesGridViewModel
 
   let horizontalPadding: CGFloat = 10
 
   var body: some View {
-    // TODO: Call view model.store on navigate back!
     VStack {
       VStack {
         TextField(
@@ -43,12 +42,13 @@ struct NotesGridView: View {
               .flexible()
             ),
             count: 3
-          )
+          ),
+          spacing: 10
         ) {
-          ForEach(notesGridViewModel.notes) { note in
+          ForEach(0..<notesGridViewModel.notes.count, id: \.self) { i in
             NoteCardView {
               VStack(alignment: .leading) {
-                Text(note.summary)
+                Text(notesGridViewModel.notes[i].summary)
                   .fontWeight(.light)
                   .font(.system(size: 12))
                   .multilineTextAlignment(.leading)
@@ -73,7 +73,7 @@ struct NotesGridView: View {
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
-      self.notesGridViewModel.saveChanges.send()
+      self.notesGridViewModel.saveGroup()
     }
   }
 

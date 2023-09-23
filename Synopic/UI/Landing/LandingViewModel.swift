@@ -37,9 +37,10 @@ public class LandingViewModel: ViewModel {
   private func bind() {
     self.cancelBag = CancelBag()
 
+    self.onLoadGroup()
     self.onCreateGroup()
+    self.onDeleteGroup()
     self.onViewGroup()
-    self.onNewGroup()
   }
   
   var lastTap = Date()
@@ -49,29 +50,46 @@ public class LandingViewModel: ViewModel {
   @Published var sections: [ViewSection] = []
 
   // MARK: EVENT
+  let loadGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
+  let deleteGroup: PassthroughSubject<IndexPath, Never> = PassthroughSubject()
   let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
     self.createGroup
-    // TODO: Figure out if we need to drop events for multiple button taps
-//      .drop(while: {
-//        [weak self] in
-//         guard let self = self else { return true }
-//
-//         let now = Date()
-//         if self.lastTap.distance(to: now) < 0.5 {
-//           print("tap recieved too recently. skipping")
-//           return true
-//         }
-//
-//         self.lastTap = now
-//         return false
-//      })
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
         self.delegate?.landingViewModelDidTapViewGroup(group: nil, self)
       })
+      .store(in: &self.cancelBag)
+  }
+  
+  private func onDeleteGroup() {
+    self.deleteGroup
+      .receive(on: .main)
+      .flatMap { [weak self] path in
+        guard let self = self else {
+          return Just<IndexPath?>(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+        
+        let group = self.sections[path.section].items[path.row]
+        return self.summaries.deleteGroup(group: group )
+          .map { _ in path }
+          .map (Optional.some)
+          .eraseToAnyPublisher()
+      }
+      .sink(
+        receiveValue: { [weak self] path in
+          guard let self = self, let path = path else { return }
+          let removed = self.sections[path.section].items.remove(at: path.row)
+          print("deleted \(removed)")
+        },
+        failure: { error in
+          print("failed to delete \(error.localizedDescription)")
+        }
+      )
       .store(in: &self.cancelBag)
   }
 
@@ -83,17 +101,18 @@ public class LandingViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-
-  private func onNewGroup() {
-    self.summaries.loadGroups()
+  
+  private func onLoadGroup() {
+    self.loadGroup
       .receive(on: .main)
+      .flatMap { self.summaries.loadGroups() }
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-
+        
         var noteKeys: [String] = []
         var noteGroups: [String: [Group]] = [:]
         
-        for group in $0 {
+        for group in $0.sorted(by: { $0.lastEdited > $1.lastEdited }) {
           let key = group.lastEdited.title
           let value = group
 

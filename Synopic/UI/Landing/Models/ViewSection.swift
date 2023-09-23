@@ -7,8 +7,10 @@
 
 import Foundation
 
-class ViewSection: ViewModel {
+class ViewSection: ObservableObject, Identifiable {
   let title: String
+  
+  var id: String { title }
 
   @Published var items: [Group]
 

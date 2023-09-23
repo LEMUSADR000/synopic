@@ -20,6 +20,7 @@ protocol PersistentStore {
                      map: @escaping (T) throws -> V?) -> AnyPublisher<V, Error>
     func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error>
     @discardableResult func delete(object: NSManagedObject) -> AnyPublisher<Void, Error>
+    @discardableResult func delete(for id: NSManagedObjectID) -> AnyPublisher<Void, Error>
 }
 
 struct CoreDataStack: PersistentStore {
@@ -67,7 +68,7 @@ struct CoreDataStack: PersistentStore {
     
     func fetch<T, V>(_ fetchRequest: NSFetchRequest<T>,
                      map: @escaping (T) throws -> V?) -> AnyPublisher<LazyList<V>, Error> {
-//        assert(Thread.isMainThread)
+      assert(Thread.isMainThread)
       print("accessing from main thread? \(Thread.isMainThread)")
         let fetch = Future<LazyList<V>, Error> { [weak container] promise in
             guard let context = container?.viewContext else { return }
@@ -150,6 +151,33 @@ struct CoreDataStack: PersistentStore {
           context.performAndWait {
             do {
               context.delete(object)
+              if context.hasChanges {
+                  try context.save()
+              }
+              context.reset()
+              promise(.success(()))
+            } catch {
+              context.reset()
+              promise(.failure(error))
+            }
+          }
+        }
+      }
+      return onStoreIsReady
+          .flatMap { delete }
+          .receive(on: DispatchQueue.main)
+          .eraseToAnyPublisher()
+    }
+  
+    func delete(for id: NSManagedObjectID) -> AnyPublisher<Void, Error> {
+      let delete = Future<Void, Error> { [weak bgQueue, weak container] promise in
+        bgQueue?.async {
+          guard let context = container?.newBackgroundContext() else { return }
+          context.configureAsUpdateContext()
+          context.performAndWait {
+            do {
+              let managedObject = try context.existingObject(with: id)
+              context.delete(managedObject)
               if context.hasChanges {
                   try context.save()
               }

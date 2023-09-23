@@ -46,8 +46,8 @@ extension NoteCreateCoordinator: NoteCreateViewModelDelegate {
     self.toggleNavigation = !self.toggleNavigation
   }
 
-  func noteCreateViewModelFailedToGenerate(_ source: NoteCreateViewModel) {
-    // TODO: Should we do anything else here?
+  func noteCreateViewModelFailedToGenerate(error: Error, _ source: NoteCreateViewModel) {
+    // TODO: Should we do anything with error here?
     self.delegate?.noteCreateCoordinatorDidComplete(self)
   }
 

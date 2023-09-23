@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct SummaryResponse {
+struct Summary {
   let id: String
   let result: String
   let created: Date
 }
+

@@ -10,12 +10,18 @@ import CoreData
 import Foundation
 import Swinject
 
+protocol NoteGroupDetailsCoordinatorDelegate: AnyObject {
+  func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator)
+}
+
 public class NoteGroupDetailsCoordinator: ViewModel {
   private let resolver: Resolver
 
   @Published private(set) var notesGridViewModel: NotesGridViewModel!
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
+  
+  private weak var delegate: NoteGroupDetailsCoordinatorDelegate?
 
   private var group: Group?
 
@@ -29,17 +35,24 @@ public class NoteGroupDetailsCoordinator: ViewModel {
     )!
     .setup(delegate: self)
   }
+  
+  func setup(delegate: NoteGroupDetailsCoordinatorDelegate) -> Self {
+    self.delegate = delegate
+    return self
+  }
 }
 
 // MARK: NotesGridViewModelDelegate
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
+  func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel) {
+    self.delegate?.noteGroupDetailsCoordinatorDidCreateGroup(self)
+  }
+  
   func notesGridViewModelDidTapViewNote(
     id: InternalObjectId,
     _ source: NotesGridViewModel
-  ) {
-
-  }
+  ) {}
 
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel) {
     self.noteCreateCoordinator = self.resolver.resolve(
@@ -52,7 +65,7 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
 
 extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
   func noteCreateCoordinatorDidCompleteWithNote(note: Note, _ source: NoteCreateCoordinator) {
-    self.notesGridViewModel.notes.append(note)
+    self.notesGridViewModel.noteCreated.send(note)
     self.noteCreateCoordinator = nil
   }
   
