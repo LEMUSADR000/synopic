@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import CombineExt
 
-extension AnyPublisher {
+extension AnyPublisher {  
   func async() async throws -> Output {
     try await withCheckedThrowingContinuation { continuation in
       var cancellable: AnyCancellable?

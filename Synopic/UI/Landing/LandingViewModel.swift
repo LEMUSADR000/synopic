@@ -52,7 +52,7 @@ public class LandingViewModel: ViewModel {
   // MARK: EVENT
   let loadGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let deleteGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
+  let deleteGroup: PassthroughSubject<IndexPath, Never> = PassthroughSubject()
   let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
 
   private func onCreateGroup() {
@@ -66,10 +66,30 @@ public class LandingViewModel: ViewModel {
   
   private func onDeleteGroup() {
     self.deleteGroup
-      .flatMap { self.summaries.deleteGroup(group: $0 ) }
-      .sink(receiveValue: { [weak self] _ in
-        self?.loadGroup.send()
-      })
+      .receive(on: .main)
+      .flatMap { [weak self] path in
+        guard let self = self else {
+          return Just<IndexPath?>(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+        
+        let group = self.sections[path.section].items[path.row]
+        return self.summaries.deleteGroup(group: group )
+          .map { _ in path }
+          .map (Optional.some)
+          .eraseToAnyPublisher()
+      }
+      .sink(
+        receiveValue: { [weak self] path in
+          guard let self = self, let path = path else { return }
+          let removed = self.sections[path.section].items.remove(at: path.row)
+          print("deleted \(removed)")
+        },
+        failure: { error in
+          print("failed to delete \(error.localizedDescription)")
+        }
+      )
       .store(in: &self.cancelBag)
   }
 

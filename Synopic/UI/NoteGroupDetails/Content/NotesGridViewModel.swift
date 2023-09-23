@@ -24,15 +24,15 @@ protocol NotesGridViewModelDelegate: AnyObject {
 
 public class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private var group: Group
+  private var group: Group?
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
   init(summariesRepository: SummariesRepository, group: Group?) {
     self.summaries = summariesRepository
-    self.group = group ?? Group()
-    self.title = self.group.title
-    self.author = self.group.author
+    self.group = group
+    self.title = self.group?.title ?? .empty
+    self.author = self.group?.author ?? .empty
   }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
@@ -70,13 +70,13 @@ public class NotesGridViewModel: ViewModel {
             .eraseToAnyPublisher()
         }
 
-        if title.isEmpty && author.isEmpty && notes.isEmpty && self.group.id != nil {
-          return self.summaries.deleteGroup(group: self.group)
+        if title.isEmpty && author.isEmpty && notes.isEmpty, let unwrapped = self.group {
+          return self.summaries.deleteGroup(group: unwrapped)
             .map(Optional.some)
             .eraseToAnyPublisher()
         }
         
-        var toUpdate = self.group
+        var toUpdate = self.group ?? Group()
         if toUpdate.title == title && toUpdate.author == author && toUpdate.childCount == notes.count {
           return Just<Group?>(nil)
             .setFailureType(to: Error.self)
@@ -129,7 +129,7 @@ public class NotesGridViewModel: ViewModel {
 
   private func loadNotes() {
     Just<Int>(1)
-      .compactMap { _ in self.group.id }
+      .compactMap { _ in self.group?.id }
       .flatMap { self.summaries.loadNotes(parent: $0) }
       .sink(receiveValue: { [weak self] result in
         self?.notes = result

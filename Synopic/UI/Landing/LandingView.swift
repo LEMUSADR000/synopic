@@ -15,7 +15,7 @@ struct LandingView: View {
     ZStack(alignment: .bottom) {
       TabView {
         List {
-          ForEach(self.viewModel.sections) { section in
+          ForEach(Array(self.viewModel.sections.enumerated()), id: \.0) { index, section in
             Section {
               ForEach(section.items) { item in
                 GroupRow(
@@ -26,7 +26,10 @@ struct LandingView: View {
                 )
                 .transition(.move(edge: .leading))
               }
-              .onDelete(perform: delete)
+              // TODO: Finish wiring up delete so that data source gets properly updated when new swipe is performed
+              .onDelete { indexSet in
+                delete(sectionIndex: index, at: indexSet)
+              }
             } header: {
               Text(section.title)
             }.listStyle(SidebarListStyle())
@@ -37,8 +40,9 @@ struct LandingView: View {
     }
   }
   
-  private func delete(at offsets: IndexSet) {
-    print(offsets)
+  private func delete(sectionIndex: Int, at offsets: IndexSet) {
+    let row = offsets.map({ $0 }).first!
+    self.viewModel.deleteGroup.send(IndexPath(row: row, section: sectionIndex))
   }
 }
 
