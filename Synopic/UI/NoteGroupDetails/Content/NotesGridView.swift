@@ -39,15 +39,16 @@ struct NotesGridView: View {
         LazyVGrid(
           columns: [GridItem](
             repeating: GridItem(
-              .flexible()
+              .flexible(),
+              spacing: 10,
+              alignment: .top
             ),
             count: 3
-          ),
-          spacing: 10
+          )
         ) {
           ForEach(0..<notesGridViewModel.notes.count, id: \.self) { i in
             NoteCardView {
-              VStack(alignment: .leading) {
+              VStack {
                 Text(notesGridViewModel.notes[i].summary)
                   .fontWeight(.light)
                   .font(.system(size: 12))
@@ -58,7 +59,6 @@ struct NotesGridView: View {
                   .padding(.horizontal, 2.5)
                 Spacer()
               }
-              .padding(5)
             }
           }
           Button(
