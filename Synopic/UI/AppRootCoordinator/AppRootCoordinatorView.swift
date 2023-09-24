@@ -19,8 +19,6 @@ struct AppRootCoordinatorView: View {
         .navigation(item: self.$coordinator.noteGroupDetailsCoordinator) { c in
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
-    }.onAppear {
-      self.coordinator.landingViewModel.loadGroup.send()
     }
   }
 }

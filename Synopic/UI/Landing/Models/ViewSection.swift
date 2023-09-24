@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ViewSection: ObservableObject, Identifiable {
+class ViewSection: ViewModel {
   let title: String
   
   var id: String { title }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LandingView: View {
   static let path = "/"
-  @ObservedObject var viewModel: LandingViewModel
+  @StateObject var viewModel: LandingViewModel
 
   var body: some View {
     ZStack(alignment: .bottom) {

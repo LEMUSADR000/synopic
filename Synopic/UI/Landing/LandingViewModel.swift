@@ -19,7 +19,7 @@ protocol LandingViewModelDelegate: AnyObject {
   )
 }
 
-public class LandingViewModel: ViewModel {
+class LandingViewModel: ViewModel {
   private let summaries: SummariesRepository
   private weak var delegate: LandingViewModelDelegate?
   private var cancelBag: CancelBag!
@@ -41,6 +41,8 @@ public class LandingViewModel: ViewModel {
     self.onCreateGroup()
     self.onDeleteGroup()
     self.onViewGroup()
+    
+    self.loadGroup.send()
   }
   
   var lastTap = Date()
@@ -76,6 +78,7 @@ public class LandingViewModel: ViewModel {
         
         let group = self.sections[path.section].items[path.row]
         return self.summaries.deleteGroup(group: group )
+          .flatMap { _ in self.summaries.loadGroups() }
           .map { _ in path }
           .map (Optional.some)
           .eraseToAnyPublisher()
@@ -117,7 +120,7 @@ public class LandingViewModel: ViewModel {
         var noteGroups: [String: [Group]] = [:]
         
         // TODO: Sort these on fetch from DB
-        for group in $0.sorted(by: { $0.lastEdited < $1.lastEdited }) {
+        for group in $0.sorted(by: { $0.lastEdited > $1.lastEdited }) {
           let key = group.lastEdited.title
           let value = group
 

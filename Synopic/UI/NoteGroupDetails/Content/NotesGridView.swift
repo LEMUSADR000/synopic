@@ -49,14 +49,17 @@ struct NotesGridView: View {
           ForEach(0..<notesGridViewModel.notes.count, id: \.self) { i in
             NoteCardView {
               VStack {
-                Text(notesGridViewModel.notes[i].summary)
-                  .fontWeight(.light)
-                  .font(.system(size: 12))
-                  .multilineTextAlignment(.leading)
-                  .lineLimit(14)
-                  .minimumScaleFactor(0.5)
-                  .padding(.vertical, 5)
-                  .padding(.horizontal, 2.5)
+                HStack {
+                  Text(notesGridViewModel.notes[i].summary)
+                    .fontWeight(.light)
+                    .font(.system(size: 12))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(14)
+                    .minimumScaleFactor(0.5)
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 2.5)
+                  Spacer()
+                }
                 Spacer()
               }
             }
