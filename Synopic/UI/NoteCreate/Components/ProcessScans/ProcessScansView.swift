@@ -10,14 +10,12 @@ import Swinject
 
 struct ProcessScansView: View {
   @ObservedObject var viewModel: NoteCreateViewModel
-  @State var isLoading: Bool
   
   let buttonHeight: CGFloat = 60
 
   init(viewModel: NoteCreateViewModel) {
     UITextView.appearance().backgroundColor = .black
     self.viewModel = viewModel
-    self.isLoading = viewModel.isProcessing
   }
 
   var body: some View {
@@ -46,29 +44,13 @@ struct ProcessScansView: View {
       .padding(.horizontal, 50)
       .frame(minWidth: 100, maxWidth: .infinity)
       Spacer().frame(height: 20)
-      Button(action: self.viewModel.processText) {
-        procesButton()
-          .frame(maxWidth: .infinity, minHeight: 55)
-          .background(RoundedRectangle(cornerRadius: 15))
-      }
-      .disabled(self.viewModel.isProcessing)
-      .padding(.horizontal, 50)
-      .frame(minWidth: 100, maxWidth: .infinity)
+      LoadingButton(
+        isLoading: self.$viewModel.isProcessing,
+        onTap: { self.viewModel.processText.send() }
+      )
     }
     .ignoresSafeArea(.keyboard, edges: .bottom)
     .background(Color(UIColor.secondarySystemBackground))
-    .onReceive(self.viewModel.$isProcessing) { processing in
-      self.isLoading = processing
-    }
-  }
-  
-  @ViewBuilder private func procesButton() -> some View {
-    if self.isLoading {
-      ProgressView()
-    } else {
-      Image(systemName: "checkmark")
-        .foregroundColor(Color(.white))
-    }
   }
 }
 

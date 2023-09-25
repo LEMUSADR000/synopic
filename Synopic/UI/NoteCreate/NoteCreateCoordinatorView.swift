@@ -7,8 +7,8 @@
 import SwiftUI
 
 struct NoteCreateCoordinatorView: View {
-  @ObservedObject var coordinator: NoteCreateCoordinator
-  init(coordinator: NoteCreateCoordinator) { self.coordinator = coordinator }
+  @StateObject var coordinator: NoteCreateCoordinator
+  
   var body: some View {
     NavigationView {
       ScanDocumentsView(

@@ -46,6 +46,7 @@
 		1EB301DB298F1B66000CA862 /* Summary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DA298F1B66000CA862 /* Summary.swift */; };
 		1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DD298F2019000CA862 /* ApiErrors.swift */; };
 		1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DF298F2538000CA862 /* SummariesRepository.swift */; };
+		1EBD17332AC24C3A0011EF3C /* ProgressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */; };
 		1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */; };
 		1EC0BFB0294BD73000C7541B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAF294BD73000C7541B /* Assets.xcassets */; };
 		1EC0BFBD294BD73000C7541B /* SynopicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFBC294BD73000C7541B /* SynopicTests.swift */; };
@@ -130,6 +131,7 @@
 		1EB301DA298F1B66000CA862 /* Summary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Summary.swift; sourceTree = "<group>"; };
 		1EB301DD298F2019000CA862 /* ApiErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiErrors.swift; sourceTree = "<group>"; };
 		1EB301DF298F2538000CA862 /* SummariesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummariesRepository.swift; sourceTree = "<group>"; };
+		1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressButton.swift; sourceTree = "<group>"; };
 		1EC0BFA8294BD72E00C7541B /* Synopic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synopic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicApp.swift; sourceTree = "<group>"; };
 		1EC0BFAF294BD73000C7541B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 				1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */,
 				1ED88E4229904D630052BD10 /* TabBarContent.swift */,
 				1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */,
+				1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -767,6 +770,7 @@
 				1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */,
 				1ED88E3C29901C310052BD10 /* Date+Extensions.swift in Sources */,
 				1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */,
+				1EBD17332AC24C3A0011EF3C /* ProgressButton.swift in Sources */,
 				1EF03621299DEB5700BC409C /* Note.swift in Sources */,
 				1E405ED929949129001753A4 /* ViewSection.swift in Sources */,
 				1EB301DB298F1B66000CA862 /* Summary.swift in Sources */,
