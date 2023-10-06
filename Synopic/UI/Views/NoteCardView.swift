@@ -25,7 +25,8 @@ struct NoteCardView<Content>: View where Content: View {
 
   var body: some View {
     RoundedRectangle(cornerRadius: 10, style: .continuous)
-      .foregroundColor(background).aspectRatio(0.6, contentMode: .fill)
+      .foregroundColor(background)
+//      .aspectRatio(0.6, contentMode: .fill)
       .overlay(content())
   }
 }

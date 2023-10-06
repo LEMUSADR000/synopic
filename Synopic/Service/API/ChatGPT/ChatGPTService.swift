@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 protocol ChatGPTService {
-  func makeRequest(prompt: String) async throws -> SummaryResponse
+  func makeRequest(content: String, type: String) async throws -> SummaryResponse
 }
 
 class ChatGPTServiceImpl: ChatGPTService {
@@ -17,28 +17,17 @@ class ChatGPTServiceImpl: ChatGPTService {
 
   init(token: String) { self.token = token }
 
-  func makeRequest(prompt: String) async throws -> SummaryResponse {
-    guard let endpoint = URL(string: "https://api.openai.com/v1/chat/completions")
+  func makeRequest(content: String, type: String) async throws -> SummaryResponse {
+    guard let endpoint = URL(string: "https://saj9exv664.execute-api.us-west-2.amazonaws.com/summarize")
     else { throw ApiError.invalidURL }
 
     var request = URLRequest(url: endpoint)
     request.httpMethod = "POST"
     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
     let body: [String: Any] = [
-      "model": "gpt-3.5-turbo",
-      "messages": [
-        [
-          "role": "system",
-          "content": prompt
-        ]
-      ],
-      "temperature": 0,
-      "max_tokens": 256,
-      "top_p": 1,
-      "frequency_penalty": 2,
-      "presence_penalty": 0,
+      "type": type,
+      "content": content
     ]
     let jsonData = try JSONSerialization.data(withJSONObject: body)
 
@@ -47,8 +36,14 @@ class ChatGPTServiceImpl: ChatGPTService {
     let (data, response) = try await URLSession.shared.data(for: request)
 
     guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+      print(response)
       throw ApiError.failedResponse("Invalid status code \(response)")
     }
     return try JSONDecoder().decode(SummaryResponse.self, from: data)
   }
+}
+
+enum SummaryType: String {
+  case sentence = "sentence"
+  case bullets = "bullets"
 }

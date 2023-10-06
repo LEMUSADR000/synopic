@@ -17,6 +17,7 @@ struct NoteCreateCoordinatorView: View {
       .edgesIgnoringSafeArea(.top)
       .edgesIgnoringSafeArea(.bottom)
       .navigation(isActive: self.$coordinator.toggleNavigation) {
+        let _ = UITextView.appearance().backgroundColor = .black
         ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
       }
     }

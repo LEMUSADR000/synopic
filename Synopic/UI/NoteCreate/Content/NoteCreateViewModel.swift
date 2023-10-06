@@ -132,7 +132,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   // MARK: STATE
   @Published var content: String = .empty
-  @Published var processType: SummaryType = .singleSentence
+  @Published var processType: SummaryType = .sentence
   @Published var isProcessing: Bool = false
 }
 

@@ -54,6 +54,7 @@ class NotesGridViewModel: ViewModel {
   @Published var title: String = .empty
   @Published var author: String = .empty
   @Published var notes: [Note] = []
+  @Published var selected: Int = 0
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
@@ -108,6 +109,7 @@ class NotesGridViewModel: ViewModel {
         guard let self = self else { return }
         withAnimation {
           self.notes.append(note)
+          self.selected = self.notes.count - 1
         }
       })
       .store(in: &self.cancelBag)
@@ -195,4 +197,10 @@ class NotesGridViewModel: ViewModel {
 
     return notesViewModel
   }
+}
+
+enum Ordering {
+  case grid
+  case list
+  case carousel
 }

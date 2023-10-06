@@ -57,6 +57,7 @@
 		1EC0BFE6294E80AF00C7541B /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 1EC0BFE5294E80AF00C7541B /* CombineExt */; };
 		1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949C12990BF8C00024142 /* NoteCreateCoordinatorView.swift */; };
 		1EC949C42990BFA500024142 /* NoteCreateCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC949C32990BFA500024142 /* NoteCreateCoordinator.swift */; };
+		1ECE71D62ACFD468006BDB32 /* PageViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECE71D52ACFD468006BDB32 /* PageViewWrapper.swift */; };
 		1ED88E2D298F3E5B0052BD10 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */; };
 		1ED88E2F298F78E00052BD10 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E2E298F78E00052BD10 /* View+Extensions.swift */; };
 		1ED88E33299004F30052BD10 /* GroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E32299004F30052BD10 /* GroupRow.swift */; };
@@ -143,6 +144,7 @@
 		1EC0BFDF294E74A100C7541B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = "Preview Assets.xcassets"; path = "Preview Content/Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1EC949C12990BF8C00024142 /* NoteCreateCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCreateCoordinatorView.swift; sourceTree = "<group>"; };
 		1EC949C32990BFA500024142 /* NoteCreateCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCreateCoordinator.swift; sourceTree = "<group>"; };
+		1ECE71D52ACFD468006BDB32 /* PageViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewWrapper.swift; sourceTree = "<group>"; };
 		1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		1ED88E2E298F78E00052BD10 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		1ED88E32299004F30052BD10 /* GroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupRow.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 		1EB0D7CF29935FE500716E16 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				1ECE71D42ACFD445006BDB32 /* Components */,
 				1ED88E44299053750052BD10 /* NotesGridView.swift */,
 				1ED88E4829905B4E0052BD10 /* NotesGridViewModel.swift */,
 			);
@@ -525,6 +528,14 @@
 				1E045CB1298245EE00917E75 /* ScanDocumentsView.swift */,
 			);
 			path = ScanDocuments;
+			sourceTree = "<group>";
+		};
+		1ECE71D42ACFD445006BDB32 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1ECE71D52ACFD468006BDB32 /* PageViewWrapper.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		1ED88E3D2990337B0052BD10 /* NoteGroupDetails */ = {
@@ -747,6 +758,7 @@
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
 				1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */,
 				1EF03623299DECA000BC409C /* Group.swift in Sources */,
+				1ECE71D62ACFD468006BDB32 /* PageViewWrapper.swift in Sources */,
 				1EA187302952C0990017B38B /* AppRootCoordinatorView.swift in Sources */,
 				1E8B32D82AA2BDBF004709B9 /* CustomBack.swift in Sources */,
 				1EA1872B2952BFF20017B38B /* ViewModelAssembly.swift in Sources */,

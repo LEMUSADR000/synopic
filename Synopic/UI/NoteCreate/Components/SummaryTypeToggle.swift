@@ -41,18 +41,18 @@ struct SummaryTypeToggle: View {
 
   private var imageName: String {
     switch self.type {
-    case .singleSentence:
+    case .sentence:
       return "text.line.first.and.arrowtriangle.forward"
-    case .threePoints:
+    case .bullets:
       return "list.bullet"
     }
   }
 
   private var desc: String {
     switch self.type {
-    case .singleSentence:
+    case .sentence:
       return "Single Sentence"
-    case .threePoints:
+    case .bullets:
       return "Three Points"
     }
   }
@@ -61,8 +61,8 @@ struct SummaryTypeToggle: View {
 struct SummaryTypeToggle_Previews: PreviewProvider {
   static var previews: some View {
     SummaryTypeToggle(
-      model: .constant(.threePoints),
-      type: .threePoints,
+      model: .constant(.bullets),
+      type: .bullets,
       action: {}
     )
   }
