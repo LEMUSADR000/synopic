@@ -10,11 +10,6 @@ import CombineExt
 import Foundation
 import CoreData
 
-enum SummaryType: String {
-  case singleSentence = "Summarize the following into the shortest sentence while still capturing most meaning:"
-  case threePoints = "Summarize the following into the shortest three points while still capturing most meaning: "
-}
-
 protocol SummariesRepository {
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
   
@@ -31,13 +26,13 @@ class SummariesRepositoryImpl: SummariesRepository {
   private let chatGptApiService: ChatGPTService
   private let persistentStore: PersistentStore
   private let _groups: CurrentValueSubject<LazyList<Group>, Never>
-
+  
   init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
     self.persistentStore = persistentStore
     self._groups = CurrentValueSubject(LazyList.empty)
   }
-
+  
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
     let request = GroupEntityMO.fetchRequest()
     request.sortDescriptors = [
@@ -46,7 +41,7 @@ class SummariesRepositoryImpl: SummariesRepository {
     
     return persistentStore.fetch(request, map: { Group(from: $0) })
   }
-
+  
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
     let request = NoteEntityMO.fetchRequest()
     request.predicate = NSPredicate(format: "parent = %@", parent)
@@ -70,7 +65,7 @@ class SummariesRepositoryImpl: SummariesRepository {
     }
     .eraseToAnyPublisher()
   }
-
+  
   func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error> {
     return persistentStore.update { [group, notes] context in
       
@@ -80,7 +75,7 @@ class SummariesRepositoryImpl: SummariesRepository {
       } else {
         toUpdate = GroupEntityMO(context: context)
       }
-
+      
       toUpdate.title = group.title
       toUpdate.author = group.author
       toUpdate.lastEdited = Date()
@@ -107,20 +102,17 @@ class SummariesRepositoryImpl: SummariesRepository {
       .map { group }
       .eraseToAnyPublisher()
   }
-
+  
   // Should this be in ChatGPTService since it doesn't touch data repositories?
   func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error> {
     return Future<Summary, Error> { promise in
       Task { [weak self] in
         do {
-          // TODO: Explore better (shorter, more accurate, etc) prompts i.e.: `Extreme TLDR`
-          let prompt = type.rawValue
-
-          let result = try await self!.chatGptApiService.makeRequest(prompt: "\(prompt) \(text)")
+          let result = try await self!.chatGptApiService.makeRequest(content: text, type: type.rawValue)
           guard !result.choices.isEmpty else {
             throw SummariesError.requestFailed("No choices found in result")
           }
-
+          
           promise(.success(Summary(
             id: result.id,
             result: result.choices.first?.message.content ?? "#ERROR",

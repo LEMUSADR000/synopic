@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LandingView: View {
   static let path = "/"
-  @ObservedObject var viewModel: LandingViewModel
+  @StateObject var viewModel: LandingViewModel
 
   var body: some View {
     ZStack(alignment: .bottom) {
@@ -26,7 +26,6 @@ struct LandingView: View {
                 )
                 .transition(.move(edge: .leading))
               }
-              // TODO: Finish wiring up delete so that data source gets properly updated when new swipe is performed
               .onDelete { indexSet in
                 delete(sectionIndex: index, at: indexSet)
               }

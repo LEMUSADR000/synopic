@@ -35,41 +35,34 @@ struct NotesGridView: View {
       .padding(.horizontal, 20).padding(.vertical, 20)
 
       Spacer().frame(height: 16)
-      ScrollView {
-        LazyVGrid(
-          columns: [GridItem](
-            repeating: GridItem(
-              .flexible()
-            ),
-            count: 3
-          ),
-          spacing: 10
-        ) {
-          ForEach(0..<notesGridViewModel.notes.count, id: \.self) { i in
-            NoteCardView {
-              VStack(alignment: .leading) {
-                Text(notesGridViewModel.notes[i].summary)
-                  .fontWeight(.light)
-                  .font(.system(size: 12))
-                  .multilineTextAlignment(.leading)
-                  .lineLimit(14)
-                  .minimumScaleFactor(0.5)
-                  .padding(.vertical, 5)
-                  .padding(.horizontal, 2.5)
-                Spacer()
-              }
-              .padding(5)
-            }
+      PageViewWrapper(selection: self.$notesGridViewModel.selected) {
+        ForEach(Array(self.notesGridViewModel.notes.enumerated()), id: \.0) { i, note in
+          NoteCardView {
+            Text(note.summary)
+              .fontWeight(.light)
+              .font(.system(size: 36))
+              .multilineTextAlignment(.leading)
+              .minimumScaleFactor(0.1)
+              .padding()
           }
-          Button(
-            action: { self.notesGridViewModel.createNote.send() },
-            label: {
-              NoteCardView { Image(systemName: "plus").frame(idealHeight: 80) }
-            }
-          )
-        }
+          .tag(i)
+          .padding()
+        }.padding(.bottom, 50)
       }
       Spacer()
+    }
+    .toolbar {
+      Button(
+        action: { self.notesGridViewModel.createNote.send() },
+        label: {
+          ZStack {
+            Image(systemName: "viewfinder")
+              .resizable()
+              .aspectRatio(contentMode: .fill)
+            Image(systemName: "book")
+          }
+        }
+      ).frame(height: 45)
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {

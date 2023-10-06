@@ -67,6 +67,10 @@ public class NoteCreateViewModel: NSObject, ViewModel {
             .eraseToAnyPublisher()
         }
         
+        Task { @MainActor [weak self] in
+          self?.isProcessing = true
+        }
+        
         return self.summariesRepository.requestSummary(text: content, type: processType)
           .map(Optional.some)
           .eraseToAnyPublisher()
@@ -89,7 +93,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
     self.scanReceived
       .setFailureType(to: Error.self)
       .receive(on: .global(qos: .userInitiated))
-      .flatMap { [weak self] scan -> AnyPublisher<String, Error> in
+      .flatMap { scan -> AnyPublisher<String, Error> in
         Future<String, Error> { [weak self] promise in
           do {
             let processed = try self!.ocrService.processDocumentScan(scan)
@@ -104,11 +108,13 @@ public class NoteCreateViewModel: NSObject, ViewModel {
       .sink(
         receiveValue: { [weak self] summary in
           guard let self = self else { return }
+          self.isProcessing = false
           self.content = summary
           self.delegate?.noteCreateViewModelDidProcessScan(self)
         },
         failure: { [weak self] error in
           guard let self = self else { return }
+          self.isProcessing = false
           self.delegate?.noteCreateViewModelFailedToGenerate(error: error, self)
         }
       )
@@ -126,7 +132,8 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   // MARK: STATE
   @Published var content: String = .empty
-  @Published var processType: SummaryType = .singleSentence
+  @Published var processType: SummaryType = .sentence
+  @Published var isProcessing: Bool = false
 }
 
 // MARK: VNDocumentCameraViewControllerDelegate

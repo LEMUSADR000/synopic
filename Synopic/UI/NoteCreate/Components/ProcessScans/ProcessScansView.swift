@@ -9,13 +9,9 @@ import SwiftUI
 import Swinject
 
 struct ProcessScansView: View {
-  @ObservedObject var viewModel: NoteCreateViewModel
+  @StateObject var viewModel: NoteCreateViewModel
+  
   let buttonHeight: CGFloat = 60
-
-  init(viewModel: NoteCreateViewModel) {
-    UITextView.appearance().backgroundColor = .black
-    self.viewModel = viewModel
-  }
 
   var body: some View {
     VStack {
@@ -26,33 +22,30 @@ struct ProcessScansView: View {
       HStack {
         SummaryTypeToggle(
           model: self.$viewModel.processType,
-          type: .singleSentence,
+          type: .sentence,
           action: {
-            self.viewModel.toggleProcessMode.send(.singleSentence)
+            self.viewModel.toggleProcessMode.send(.sentence)
           }
         )
         Spacer().frame(width: 30)
         SummaryTypeToggle(
           model: self.$viewModel.processType,
-          type: .threePoints,
+          type: .bullets,
           action: {
-            self.viewModel.toggleProcessMode.send(.threePoints)
+            self.viewModel.toggleProcessMode.send(.bullets)
           }
         )
       }
       .padding(.horizontal, 50)
       .frame(minWidth: 100, maxWidth: .infinity)
       Spacer().frame(height: 20)
-      Button(action: self.viewModel.processText) {
-        Image(systemName: "checkmark")
-          .foregroundColor(Color(.white))
-          .frame(maxWidth: .infinity, minHeight: 55)
-          .background(RoundedRectangle(cornerRadius: 15))
-      }
-      .padding(.horizontal, 50)
-      .frame(minWidth: 100, maxWidth: .infinity)
+      LoadingButton(
+        isLoading: self.$viewModel.isProcessing,
+        onTap: { self.viewModel.processText.send() }
+      )
     }
-    .ignoresSafeArea(.keyboard, edges: .bottom)
+    .padding(.bottom, 20)
+//    .ignoresSafeArea(.keyboard, edges: .bottom)
     .background(Color(UIColor.secondarySystemBackground))
   }
 }

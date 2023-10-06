@@ -14,7 +14,7 @@ protocol NoteGroupDetailsCoordinatorDelegate: AnyObject {
   func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator)
 }
 
-public class NoteGroupDetailsCoordinator: ViewModel {
+class NoteGroupDetailsCoordinator: ViewModel {
   private let resolver: Resolver
 
   @Published private(set) var notesGridViewModel: NotesGridViewModel!

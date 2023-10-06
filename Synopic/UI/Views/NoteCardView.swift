@@ -9,26 +9,25 @@ import SwiftUI
 
 struct NoteCardView<Content>: View where Content: View {
   var background: Color
-  private var child: Content
+  private var content: () -> Content
 
-  @inlinable init(@ViewBuilder _ content: () -> Content) {
+  @inlinable init(@ViewBuilder content: @escaping () -> Content) {
     self.init(
       background: Color(UIColor.secondarySystemBackground),
       content: content
     )
   }
 
-  init(background: Color, @ViewBuilder content: () -> Content) {
+  init(background: Color, @ViewBuilder content: @escaping () -> Content) {
     self.background = background
-    self.child = content()
+    self.content = content
   }
 
   var body: some View {
-    ZStack {
-      RoundedRectangle(cornerRadius: 10, style: .continuous)
-        .foregroundColor(background).aspectRatio(0.6, contentMode: .fill)
-      child
-    }
+    RoundedRectangle(cornerRadius: 10, style: .continuous)
+      .foregroundColor(background)
+//      .aspectRatio(0.6, contentMode: .fill)
+      .overlay(content())
   }
 }
 

@@ -7,8 +7,8 @@
 import SwiftUI
 
 struct NoteCreateCoordinatorView: View {
-  @ObservedObject var coordinator: NoteCreateCoordinator
-  init(coordinator: NoteCreateCoordinator) { self.coordinator = coordinator }
+  @StateObject var coordinator: NoteCreateCoordinator
+  
   var body: some View {
     NavigationView {
       ScanDocumentsView(
@@ -17,6 +17,7 @@ struct NoteCreateCoordinatorView: View {
       .edgesIgnoringSafeArea(.top)
       .edgesIgnoringSafeArea(.bottom)
       .navigation(isActive: self.$coordinator.toggleNavigation) {
+        let _ = UITextView.appearance().backgroundColor = .black
         ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
       }
     }

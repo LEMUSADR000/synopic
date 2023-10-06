@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct AppRootCoordinatorView: View {
-  @ObservedObject var coordinator: AppRootCoordinator
-
-  init(coordinator: AppRootCoordinator) { self.coordinator = coordinator }
+  @StateObject var coordinator: AppRootCoordinator
 
   var body: some View {
     NavigationView {
@@ -19,8 +17,6 @@ struct AppRootCoordinatorView: View {
         .navigation(item: self.$coordinator.noteGroupDetailsCoordinator) { c in
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
-    }.onAppear {
-      self.coordinator.landingViewModel.loadGroup.send()
     }
   }
 }

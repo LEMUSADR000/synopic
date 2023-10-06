@@ -7,10 +7,14 @@
 
 import Foundation
 
-struct Note {
+struct Note: Hashable {
   let id: InternalObjectId?
   let created: Date
   let summary: String
+  
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.id)
+  }
   
   init(id: InternalObjectId) {
     self.id = id

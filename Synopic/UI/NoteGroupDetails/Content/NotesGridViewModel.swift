@@ -10,6 +10,7 @@ import CombineExt
 import CoreData
 import Foundation
 import UIKit
+import SwiftUI
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
@@ -22,7 +23,7 @@ protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel)
 }
 
-public class NotesGridViewModel: ViewModel {
+class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
   private var group: Group?
   private weak var delegate: NotesGridViewModelDelegate?
@@ -53,6 +54,7 @@ public class NotesGridViewModel: ViewModel {
   @Published var title: String = .empty
   @Published var author: String = .empty
   @Published var notes: [Note] = []
+  @Published var selected: Int = 0
 
   // MARK: EVENT
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
@@ -102,9 +104,13 @@ public class NotesGridViewModel: ViewModel {
   
   private func onNoteCreated() {
     self.noteCreated
+      .delay(for: 0.35, scheduler: RunLoop.main)
       .sink(receiveValue: { [weak self] note in
         guard let self = self else { return }
-        self.notes.append(note)
+        withAnimation {
+          self.notes.append(note)
+          self.selected = self.notes.count - 1
+        }
       })
       .store(in: &self.cancelBag)
   }
@@ -191,4 +197,10 @@ public class NotesGridViewModel: ViewModel {
 
     return notesViewModel
   }
+}
+
+enum Ordering {
+  case grid
+  case list
+  case carousel
 }
