@@ -5,16 +5,16 @@
 //  Created by Adrian Lemus on 7/22/23.
 //
 
-import Foundation
 import Combine
 import CombineExt
+import Foundation
 
-extension AnyPublisher {  
+extension AnyPublisher {
   func async() async throws -> Output {
     try await withCheckedThrowingContinuation { continuation in
       var cancellable: AnyCancellable?
       var finishedWithoutValue = true
-      
+
       cancellable = first()
         .sink { result in
           switch result {

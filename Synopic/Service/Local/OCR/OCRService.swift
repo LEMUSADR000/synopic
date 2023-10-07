@@ -40,8 +40,7 @@ class OCRServiceImpl: NSObject, OCRService {
       do {
         let textRequest = try perform(request, on: cgImage)
         combinedOutput += try postProcess(request: textRequest)
-      }
-      catch {
+      } catch {
         logger.log("Encountered exception on processing of document scan")
         continue
       }
@@ -110,4 +109,3 @@ enum OCRError: Error {
   case noObservations
   case error(Error?)
 }
-                     

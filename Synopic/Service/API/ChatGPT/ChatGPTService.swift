@@ -18,7 +18,8 @@ class ChatGPTServiceImpl: ChatGPTService {
   init(token: String) { self.token = token }
 
   func makeRequest(content: String, type: String) async throws -> SummaryResponse {
-    guard let endpoint = URL(string: "https://saj9exv664.execute-api.us-west-2.amazonaws.com/summarize")
+    guard
+      let endpoint = URL(string: "https://saj9exv664.execute-api.us-west-2.amazonaws.com/summarize")
     else { throw ApiError.invalidURL }
 
     var request = URLRequest(url: endpoint)
@@ -27,7 +28,7 @@ class ChatGPTServiceImpl: ChatGPTService {
 
     let body: [String: Any] = [
       "type": type,
-      "content": content
+      "content": content,
     ]
     let jsonData = try JSONSerialization.data(withJSONObject: body)
 

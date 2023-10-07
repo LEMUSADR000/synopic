@@ -20,8 +20,7 @@ extension UIImage {
     case squareRoot
   }
 
-  func findAverageColor(algorithm: AverageColorAlgorithm = .simple) -> UIColor?
-  {
+  func findAverageColor(algorithm: AverageColorAlgorithm = .simple) -> UIColor? {
     guard let cgImage = cgImage else { return nil }
 
     // First, resize the image. We do this for two reasons, 1) less pixels to deal with means faster calculation and a resized image still has the "gist" of the colors, and 2) the image we're dealing with may come in any of a variety of color formats (CMYK, ARGB, RGBA, etc.) which complicates things, and redrawing it normalizes that into a base color format we can deal with.

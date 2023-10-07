@@ -9,7 +9,7 @@ import Foundation
 
 class ViewSection: ViewModel {
   let title: String
-  
+
   var id: String { title }
 
   @Published var items: [Group]

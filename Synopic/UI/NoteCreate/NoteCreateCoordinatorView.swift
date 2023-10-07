@@ -8,7 +8,7 @@ import SwiftUI
 
 struct NoteCreateCoordinatorView: View {
   @StateObject var coordinator: NoteCreateCoordinator
-  
+
   var body: some View {
     NavigationView {
       ScanDocumentsView(

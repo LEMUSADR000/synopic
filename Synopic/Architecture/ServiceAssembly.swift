@@ -13,9 +13,11 @@ class ServiceAssembly: Assembly {
     // MARK: Local
     container.register(OCRService.self) { _ in OCRServiceImpl() }
       .inObjectScope(.container)
-    
-    container.register(PersistentStore.self) { _ in CoreDataStack(version: CoreDataStack.Version.actual) }
-      .inObjectScope(.container)
+
+    container.register(PersistentStore.self) { _ in
+      CoreDataStack(version: CoreDataStack.Version.actual)
+    }
+    .inObjectScope(.container)
 
     // MARK: Repositories
     container.register(SummariesRepository.self) { r in

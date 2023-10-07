@@ -15,8 +15,7 @@ struct ScanDocumentsView: UIViewControllerRepresentable {
 
   func makeCoordinator() -> NoteCreateViewModel { noteCreateViewModel }
 
-  func makeUIViewController(context: Context) -> VNDocumentCameraViewController
-  {
+  func makeUIViewController(context: Context) -> VNDocumentCameraViewController {
     // TODO: Figure out how to delay creatin of VNDocumentCameraViewController in order to check if scanning is supported on running device
     let documentViewController = VNDocumentCameraViewController()
     documentViewController.delegate = context.coordinator
