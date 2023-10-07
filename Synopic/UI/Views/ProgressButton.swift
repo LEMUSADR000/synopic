@@ -11,7 +11,7 @@ import SwiftUI
 struct LoadingButton: View {
   @Binding var isLoading: Bool
   let onTap: () -> Void
-  
+
   var body: some View {
     Button(action: onTap) {
       procesButton()
@@ -24,7 +24,7 @@ struct LoadingButton: View {
     .padding(.horizontal, 50)
     .frame(minWidth: 100, maxWidth: .infinity)
   }
-  
+
   @ViewBuilder private func procesButton() -> some View {
     if self.isLoading {
       ProgressView()

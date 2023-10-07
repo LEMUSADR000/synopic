@@ -51,8 +51,7 @@ actor Cache<Key: Hashable, Value> {
     self.valueChanged.send(self.cache)
   }
 
-  private nonisolated let valueChanged:
-    CurrentValueSubject<[Key: Value], Never>
+  private nonisolated let valueChanged: CurrentValueSubject<[Key: Value], Never>
   nonisolated var publisher: AnyPublisher<[Key: Value], Never> {
     valueChanged.eraseToAnyPublisher()
   }

@@ -20,7 +20,7 @@ class NoteGroupDetailsCoordinator: ViewModel {
   @Published private(set) var notesGridViewModel: NotesGridViewModel!
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
-  
+
   private weak var delegate: NoteGroupDetailsCoordinatorDelegate?
 
   private var group: Group?
@@ -35,7 +35,7 @@ class NoteGroupDetailsCoordinator: ViewModel {
     )!
     .setup(delegate: self)
   }
-  
+
   func setup(delegate: NoteGroupDetailsCoordinatorDelegate) -> Self {
     self.delegate = delegate
     return self
@@ -48,7 +48,7 @@ extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
   func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel) {
     self.delegate?.noteGroupDetailsCoordinatorDidCreateGroup(self)
   }
-  
+
   func notesGridViewModelDidTapViewNote(
     id: InternalObjectId,
     _ source: NotesGridViewModel
@@ -68,7 +68,7 @@ extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
     self.notesGridViewModel.noteCreated.send(note)
     self.noteCreateCoordinator = nil
   }
-  
+
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator) {
     self.noteCreateCoordinator = nil
   }

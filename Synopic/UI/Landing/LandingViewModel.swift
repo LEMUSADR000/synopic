@@ -41,10 +41,10 @@ class LandingViewModel: ViewModel {
     self.onCreateGroup()
     self.onDeleteGroup()
     self.onViewGroup()
-    
+
     self.loadGroup.send()
   }
-  
+
   var lastTap = Date()
 
   // MARK: STATE
@@ -65,7 +65,7 @@ class LandingViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-  
+
   private func onDeleteGroup() {
     self.deleteGroup
       .receive(on: .main)
@@ -75,12 +75,12 @@ class LandingViewModel: ViewModel {
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
         }
-        
+
         let group = self.sections[path.section].items[path.row]
-        return self.summaries.deleteGroup(group: group )
+        return self.summaries.deleteGroup(group: group)
           .flatMap { _ in self.summaries.loadGroups() }
           .map { _ in path }
-          .map (Optional.some)
+          .map(Optional.some)
           .eraseToAnyPublisher()
       }
       .sink(
@@ -108,17 +108,17 @@ class LandingViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-  
+
   private func onLoadGroup() {
     self.loadGroup
       .receive(on: .main)
       .flatMap { self.summaries.loadGroups() }
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        
+
         var noteKeys: [String] = []
         var noteGroups: [String: [Group]] = [:]
-        
+
         // TODO: Sort these on fetch from DB
         for group in $0.sorted(by: { $0.lastEdited > $1.lastEdited }) {
           let key = group.lastEdited.title
@@ -127,8 +127,7 @@ class LandingViewModel: ViewModel {
           if var list = noteGroups[key] {
             list.append(value)
             noteGroups[key] = list
-          }
-          else {
+          } else {
             noteGroups[key] = [value]
             noteKeys.append(key)
           }
@@ -155,14 +154,11 @@ extension Date {
 
     if day == 0 {
       return "Today"
-    }
-    else if day > 0 && day < 1 {
+    } else if day > 0 && day < 1 {
       return "Yesterday"
-    }
-    else if day < 7 {
+    } else if day < 7 {
       return "Previous 7 Days"
-    }
-    else {
+    } else {
       let formatter = DateFormatter()
       formatter.dateFormat = "yyyy"
       return formatter.string(from: self)

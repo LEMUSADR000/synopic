@@ -15,7 +15,7 @@ struct Group: Identifiable {
   var author: String
   var childCount: Int
   var imageName: String?
-  
+
   init() {
     self.id = nil
     self.lastEdited = Date.init(timeIntervalSince1970: 0.0)
@@ -23,7 +23,7 @@ struct Group: Identifiable {
     self.author = ""
     self.childCount = 0
   }
-  
+
   init(from entity: GroupEntityMO) {
     self.id = entity.objectID
     self.lastEdited = entity.lastEdited ?? Date.init(timeIntervalSince1970: 0.0)
@@ -31,8 +31,11 @@ struct Group: Identifiable {
     self.author = entity.author ?? ""
     self.childCount = entity.child?.count ?? 0
   }
-  
-  init(id: InternalObjectId, lastEdited: Date, title: String, author: String, childCount: Int, imageName: String?) {
+
+  init(
+    id: InternalObjectId, lastEdited: Date, title: String, author: String, childCount: Int,
+    imageName: String?
+  ) {
     self.id = id
     self.lastEdited = lastEdited
     self.title = title

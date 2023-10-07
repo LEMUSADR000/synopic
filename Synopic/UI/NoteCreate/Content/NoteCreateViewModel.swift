@@ -24,7 +24,7 @@ protocol NoteCreateViewModelDelegate: AnyObject {
 public class NoteCreateViewModel: NSObject, ViewModel {
   private let ocrService: OCRService
   private let summariesRepository: SummariesRepository
-  
+
   private weak var delegate: NoteCreateViewModelDelegate?
   private var cancelBag: CancelBag!
 
@@ -66,25 +66,27 @@ public class NoteCreateViewModel: NSObject, ViewModel {
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
         }
-        
+
         Task { @MainActor [weak self] in
           self?.isProcessing = true
         }
-        
+
         return self.summariesRepository.requestSummary(text: content, type: processType)
           .map(Optional.some)
           .eraseToAnyPublisher()
       }
       .receive(on: .main)
-      .sink(receiveValue: { [weak self] summary in
-        guard let self = self, let summary = summary else { return }
-        let note = Note(id: nil, created: summary.created, summary: summary.result)
-        self.delegate?.noteCreateViewModelGenerated(note: note, self)
-      },
-      failure: { [weak self] error in
-        guard let self = self else { return }
-        self.delegate?.noteCreateViewModelFailedToGenerate(error: error, self)
-      })
+      .sink(
+        receiveValue: { [weak self] summary in
+          guard let self = self, let summary = summary else { return }
+          let note = Note(id: nil, created: summary.created, summary: summary.result)
+          self.delegate?.noteCreateViewModelGenerated(note: note, self)
+        },
+        failure: { [weak self] error in
+          guard let self = self else { return }
+          self.delegate?.noteCreateViewModelFailedToGenerate(error: error, self)
+        }
+      )
       .store(in: &self.cancelBag)
   }
 
@@ -98,8 +100,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
           do {
             let processed = try self!.ocrService.processDocumentScan(scan)
             promise(.success(processed))
-          }
-          catch {
+          } catch {
             promise(.failure(error))
           }
         }.eraseToAnyPublisher()

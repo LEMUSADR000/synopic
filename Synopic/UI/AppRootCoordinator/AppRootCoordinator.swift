@@ -6,15 +6,15 @@
 //
 
 import Combine
+import CoreData
 import Foundation
 import Swinject
-import CoreData
 
 class AppRootCoordinator: ViewModel {
   private let resolver: Resolver
-  
+
   @Published private(set) var landingViewModel: LandingViewModel!
-  
+
   @Published var noteGroupDetailsCoordinator: NoteGroupDetailsCoordinator?
 
   init(resolver: Resolver) {

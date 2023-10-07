@@ -12,4 +12,3 @@ struct Summary {
   let result: String
   let created: Date
 }
-

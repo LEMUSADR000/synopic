@@ -7,11 +7,14 @@
 
 import SwiftUI
 
-struct PageViewWrapper<Content> : View where Content : View {
+struct PageViewWrapper<Content>: View where Content: View {
   @ViewBuilder let collection: () -> Content
   @Binding var selection: Int
 
-  @inlinable init(selection: Binding<Int>, _ currentIndicator: UIColor = .systemBlue, @ViewBuilder _ collection: @escaping () -> Content) {
+  @inlinable init(
+    selection: Binding<Int>, _ currentIndicator: UIColor = .systemBlue,
+    @ViewBuilder _ collection: @escaping () -> Content
+  ) {
     UIPageControl.appearance().currentPageIndicatorTintColor = currentIndicator
     UIPageControl.appearance().pageIndicatorTintColor = currentIndicator.withAlphaComponent(0.2)
     self.collection = collection
@@ -20,8 +23,8 @@ struct PageViewWrapper<Content> : View where Content : View {
 
   var body: some View {
     TabView(selection: self.$selection, content: { collection() })
-    .tabViewStyle(PageTabViewStyle())
-    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+      .tabViewStyle(PageTabViewStyle())
+      .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
   }
 }
 

@@ -5,14 +5,14 @@
 //  Created by Adrian Lemus on 9/1/23.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct CustomBack: View {
   init(action: @escaping () -> Void) {
     self.onTap = action
   }
-  
+
   let onTap: () -> Void
   var body: some View {
     Button(

@@ -10,7 +10,7 @@ import Swinject
 
 struct ProcessScansView: View {
   @StateObject var viewModel: NoteCreateViewModel
-  
+
   let buttonHeight: CGFloat = 60
 
   var body: some View {
@@ -45,7 +45,7 @@ struct ProcessScansView: View {
       )
     }
     .padding(.bottom, 20)
-//    .ignoresSafeArea(.keyboard, edges: .bottom)
+    //    .ignoresSafeArea(.keyboard, edges: .bottom)
     .background(Color(UIColor.secondarySystemBackground))
   }
 }

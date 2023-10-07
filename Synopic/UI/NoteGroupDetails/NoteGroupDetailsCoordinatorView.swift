@@ -8,7 +8,7 @@ import SwiftUI
 
 struct NoteGroupDetailsCoordinatorView: View {
   static let path = "NoteGroupDetailsCoordinatorView"
-  
+
   @StateObject var coordinator: NoteGroupDetailsCoordinator
 
   var body: some View {
