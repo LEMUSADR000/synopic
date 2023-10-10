@@ -30,7 +30,7 @@ class LandingViewModel: ViewModel {
 
   func setup(delegate: LandingViewModelDelegate) -> Self {
     self.delegate = delegate
-    bind()
+    self.bind()
     return self
   }
 
@@ -48,10 +48,12 @@ class LandingViewModel: ViewModel {
   var lastTap = Date()
 
   // MARK: STATE
+
   @Published var searchText: String = .empty
   @Published var sections: [ViewSection] = []
 
   // MARK: EVENT
+
   let loadGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let deleteGroup: PassthroughSubject<IndexPath, Never> = PassthroughSubject()
@@ -149,7 +151,7 @@ extension Date {
   var title: String {
     guard
       let day = Calendar.current
-        .dateComponents([.day], from: self, to: .now).day
+      .dateComponents([.day], from: self, to: .now).day
     else { return "--" }
 
     if day == 0 {

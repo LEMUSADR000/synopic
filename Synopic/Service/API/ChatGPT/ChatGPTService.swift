@@ -13,10 +13,6 @@ protocol ChatGPTService {
 }
 
 class ChatGPTServiceImpl: ChatGPTService {
-  private let token: String
-
-  init(token: String) { self.token = token }
-
   func makeRequest(content: String, type: String) async throws -> SummaryResponse {
     guard
       let endpoint = URL(string: "https://saj9exv664.execute-api.us-west-2.amazonaws.com/summarize")
@@ -45,6 +41,6 @@ class ChatGPTServiceImpl: ChatGPTService {
 }
 
 enum SummaryType: String {
-  case sentence = "sentence"
-  case bullets = "bullets"
+  case sentence
+  case bullets
 }

@@ -36,7 +36,7 @@ extension UIImage {
     // ARGB format
     let bitmapInfo: UInt32 =
       CGBitmapInfo.byteOrder32Little.rawValue
-      | CGImageAlphaInfo.premultipliedFirst.rawValue
+        | CGImageAlphaInfo.premultipliedFirst.rawValue
 
     // 8 bits for each color channel, we're doing ARGB so 32 bits (4 bytes) total, and thus if the image is n pixels wide, and has 4 bytes per pixel, the total bytes per row is 4n. That gives us 2^8 = 256 color variations for each RGB channel or 256 * 256 * 256 = ~16.7M color options in total. That seems like a lot, but lots of HDR movies are in 10 bit, which is (2^10)^3 = 1 billion color options!
     guard

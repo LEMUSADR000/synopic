@@ -16,27 +16,33 @@ struct NotesGridView: View {
 
   var body: some View {
     VStack {
-      VStack {
-        TextField(
-          self.notesGridViewModel.title,
-          text: self.$notesGridViewModel.title,
-          prompt: Text("Title")
-        )
-        .font(.headline)
-        Divider()
-        TextField(
-          self.notesGridViewModel.author,
-          text: self.$notesGridViewModel.author,
-          prompt: Text("Author")
-        )
-        .font(.subheadline)
-        Divider()
+      HStack {
+        Button(action: self.notesGridViewModel.takeCoverPicture) {
+          GroupCoverImageView(image: self.$notesGridViewModel.model.imagePath)
+        }
+        Spacer().frame(width: 20)
+        VStack {
+          TextField(
+            self.notesGridViewModel.model.title,
+            text: self.$notesGridViewModel.model.title,
+            prompt: Text("Title")
+          )
+          .font(.headline)
+          Divider()
+          TextField(
+            self.notesGridViewModel.model.author,
+            text: self.$notesGridViewModel.model.author,
+            prompt: Text("Author")
+          )
+          .font(.subheadline)
+          Divider()
+        }
       }
-      .padding(.horizontal, 20).padding(.vertical, 20)
+      .padding(.vertical, 20)
 
       Spacer().frame(height: 16)
       PageViewWrapper(selection: self.$notesGridViewModel.selected) {
-        ForEach(Array(self.notesGridViewModel.notes.enumerated()), id: \.0) { i, note in
+        ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
           NoteCardView {
             Text(note.summary)
               .fontWeight(.light)

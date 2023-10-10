@@ -119,8 +119,7 @@ class SummariesRepositoryImpl: SummariesRepository {
               Summary(
                 id: result.id,
                 result: result.choices.first?.message.content ?? "#ERROR",
-                created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
-              )))
+                created: Date(timeIntervalSince1970: TimeInterval(result.created)))))
         } catch {
           promise(.failure(error))
         }
@@ -136,8 +135,9 @@ enum SummariesError: Error {
 }
 
 // MARK: - Extensions
-extension GroupEntityMO {
-  public override var description: String {
+
+public extension GroupEntityMO {
+  override var description: String {
     return
       "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "")"
   }

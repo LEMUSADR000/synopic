@@ -16,11 +16,10 @@ struct GroupRow: View {
     Button(
       action: self.onTap,
       label: {
-        HStack(alignment: .top) {
-          GroupCoverImageView(image: item.image)
+        HStack {
+          GroupCoverImageView(image: .constant(item.imageName))
           Spacer().frame(width: 15)
           VStack(alignment: .leading, spacing: 0) {
-            Spacer().frame(height: 8)
             Text(item.title).font(.headline)
 
             if !item.author.isEmpty {
@@ -40,7 +39,7 @@ struct GroupRow: View {
 struct GroupRow_Previews: PreviewProvider {
   static let date = Date()
   static let group = Group(
-    id: GroupEntityMO(context: NSManagedObjectContext(.mainQueue)).objectID,
+    id: nil,
     lastEdited: date,
     title: "Lion's King",
     author: "Jamal Lahoover",

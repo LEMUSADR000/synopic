@@ -27,7 +27,7 @@ struct LandingView: View {
                 .transition(.move(edge: .leading))
               }
               .onDelete { indexSet in
-                delete(sectionIndex: index, at: indexSet)
+                self.delete(sectionIndex: index, at: indexSet)
               }
             } header: {
               Text(section.title)
@@ -40,7 +40,7 @@ struct LandingView: View {
   }
 
   private func delete(sectionIndex: Int, at offsets: IndexSet) {
-    let row = offsets.map({ $0 }).first!
+    let row = offsets.map { $0 }.first!
     self.viewModel.deleteGroup.send(IndexPath(row: row, section: sectionIndex))
   }
 }

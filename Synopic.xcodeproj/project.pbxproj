@@ -13,7 +13,6 @@
 		1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37F29556AF700A4821A /* CancelBag.swift */; };
 		1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC3832957B9B100A4821A /* Button+Extensions.swift */; };
 		1E2DEC022AB979E9004606B2 /* SummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2DEC012AB979E9004606B2 /* SummaryResponse.swift */; };
-		1E405ED7299490E8001753A4 /* NoteGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E405ED6299490E8001753A4 /* NoteGroup.swift */; };
 		1E405ED929949129001753A4 /* ViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E405ED829949129001753A4 /* ViewSection.swift */; };
 		1E4B14CE2984D332002D1105 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4B14CD2984D332002D1105 /* String+Extensions.swift */; };
 		1E4B14D32984DB89002D1105 /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4B14D22984DB89002D1105 /* LandingView.swift */; };
@@ -22,8 +21,10 @@
 		1E4D54C52A687D5800CD524A /* LazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4D54C42A687D5800CD524A /* LazyList.swift */; };
 		1E4D54C82A689E1200CD524A /* synopic.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1E4D54C62A689E1200CD524A /* synopic.xcdatamodeld */; };
 		1E56EB0E2992176100EE3D0F /* ProcessScansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E56EB0D2992176100EE3D0F /* ProcessScansView.swift */; };
+		1E5A16B82AD3491200A7CA3F /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5A16B72AD3491200A7CA3F /* CameraManager.swift */; };
 		1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E63E7D7298781C500571DD3 /* NoteCardView.swift */; };
 		1E6661B729B98D0B004938FA /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6661B629B98D0B004938FA /* Cache.swift */; };
+		1E825B852AD20A94005DF4C5 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E825B842AD20A94005DF4C5 /* CameraService.swift */; };
 		1E865DAC29C412620002256E /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E865DAB29C412620002256E /* CoreDataService.swift */; };
 		1E8B32D82AA2BDBF004709B9 /* CustomBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */; };
 		1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E95FB34298A001400586331 /* View+OnReceive.swift */; };
@@ -69,6 +70,7 @@
 		1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E4829905B4E0052BD10 /* NotesGridViewModel.swift */; };
 		1ED88E4F29905FDF0052BD10 /* NoteGroupDetailsCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E4E29905FDF0052BD10 /* NoteGroupDetailsCoordinatorView.swift */; };
 		1ED88E5129905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED88E5029905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift */; };
+		1EED7EFE2AD3D50E00B6A67B /* Image+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EED7EFD2AD3D50E00B6A67B /* Image+Extensions.swift */; };
 		1EF03621299DEB5700BC409C /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF03620299DEB5700BC409C /* Note.swift */; };
 		1EF03623299DECA000BC409C /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF03622299DECA000BC409C /* Group.swift */; };
 		1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */; };
@@ -98,7 +100,6 @@
 		1E2BC37F29556AF700A4821A /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
 		1E2BC3832957B9B100A4821A /* Button+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Extensions.swift"; sourceTree = "<group>"; };
 		1E2DEC012AB979E9004606B2 /* SummaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryResponse.swift; sourceTree = "<group>"; };
-		1E405ED6299490E8001753A4 /* NoteGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGroup.swift; sourceTree = "<group>"; };
 		1E405ED829949129001753A4 /* ViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSection.swift; sourceTree = "<group>"; };
 		1E4B14CD2984D332002D1105 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		1E4B14D22984DB89002D1105 /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
@@ -107,8 +108,10 @@
 		1E4D54C42A687D5800CD524A /* LazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyList.swift; sourceTree = "<group>"; };
 		1E4D54C72A689E1200CD524A /* synopic_data_model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = synopic_data_model.xcdatamodel; sourceTree = "<group>"; };
 		1E56EB0D2992176100EE3D0F /* ProcessScansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessScansView.swift; sourceTree = "<group>"; };
+		1E5A16B72AD3491200A7CA3F /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		1E63E7D7298781C500571DD3 /* NoteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCardView.swift; sourceTree = "<group>"; };
 		1E6661B629B98D0B004938FA /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		1E825B842AD20A94005DF4C5 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		1E865DAB29C412620002256E /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		1E865DAF29C412CA0002256E /* synopic.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = synopic.entitlements; sourceTree = "<group>"; };
 		1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBack.swift; sourceTree = "<group>"; };
@@ -156,6 +159,7 @@
 		1ED88E4829905B4E0052BD10 /* NotesGridViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesGridViewModel.swift; sourceTree = "<group>"; };
 		1ED88E4E29905FDF0052BD10 /* NoteGroupDetailsCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGroupDetailsCoordinatorView.swift; sourceTree = "<group>"; };
 		1ED88E5029905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteGroupDetailsCoordinator.swift; sourceTree = "<group>"; };
+		1EED7EFD2AD3D50E00B6A67B /* Image+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extensions.swift"; sourceTree = "<group>"; };
 		1EF03620299DEB5700BC409C /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		1EF03622299DECA000BC409C /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -222,7 +226,6 @@
 		1E405ED5299490DD001753A4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				1E405ED6299490E8001753A4 /* NoteGroup.swift */,
 				1E405ED829949129001753A4 /* ViewSection.swift */,
 			);
 			path = Models;
@@ -297,6 +300,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		1E825B832AD20A88005DF4C5 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				1E825B842AD20A94005DF4C5 /* CameraService.swift */,
+				1E5A16B72AD3491200A7CA3F /* CameraManager.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
 		1E865DAA29C412170002256E /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -321,6 +333,7 @@
 		1EA187312952C60A0017B38B /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				1EED7EFD2AD3D50E00B6A67B /* Image+Extensions.swift */,
 				1E95FB34298A001400586331 /* View+OnReceive.swift */,
 				1E2BC3832957B9B100A4821A /* Button+Extensions.swift */,
 				1ED88E4629905AFC0052BD10 /* View+Navigation.swift */,
@@ -507,6 +520,7 @@
 		1EC5D6BA294FD56B00A29BF0 /* Local */ = {
 			isa = PBXGroup;
 			children = (
+				1E825B832AD20A88005DF4C5 /* Camera */,
 				1E865DAA29C412170002256E /* CoreData */,
 				1E12FBF0297CD5B50077F046 /* OCR */,
 			);
@@ -567,8 +581,6 @@
 				1EC0BFA4294BD72E00C7541B /* Sources */,
 				1EC0BFA5294BD72E00C7541B /* Frameworks */,
 				1EC0BFA6294BD72E00C7541B /* Resources */,
-				1E2CB255299801F2006C238F /* Formatting */,
-				1E2CB25629980267006C238F /* Linting */,
 			);
 			buildRules = (
 			);
@@ -627,7 +639,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					1EC0BFA7294BD72E00C7541B = {
 						CreatedOnToolsVersion = 14.2;
@@ -692,48 +704,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		1E2CB255299801F2006C238F /* Formatting */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = Formatting;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "if which swift-format >/dev/null; then\n  git status --porcelain | grep -v '^ \\?D' | cut -c 4- | sed 's/.* -> //' | tr -d '\"' | while read file \n  do\n      if [[ \"$file\" == *.swift ]]; then\n          swift-format format -p -r --ignore-unparsable-files --configuration swift-format-config.json -i \"$file\"\n      fi\n  done\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		1E2CB25629980267006C238F /* Linting */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = Linting;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swift-format >/dev/null; then\n    swift-format lint -r --ignore-unparsable-files -p --configuration swift-format-config.json --strict ${PROJECT_DIR}\n    exit 0\nelse\n    echo \"warning: swift-format not installed\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		1EC0BFA4294BD72E00C7541B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -750,10 +720,10 @@
 				1EA187232952BCCF0017B38B /* HapticFeedbackProvider.swift in Sources */,
 				1ED88E4729905AFC0052BD10 /* View+Navigation.swift in Sources */,
 				1E2BC3842957B9B100A4821A /* Button+Extensions.swift in Sources */,
+				1E825B852AD20A94005DF4C5 /* CameraService.swift in Sources */,
 				1EA37A1929984E530073E686 /* MultilineText.swift in Sources */,
 				1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */,
 				1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */,
-				1E405ED7299490E8001753A4 /* NoteGroup.swift in Sources */,
 				1E865DAC29C412620002256E /* CoreDataService.swift in Sources */,
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
 				1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */,
@@ -772,6 +742,7 @@
 				1ED88E33299004F30052BD10 /* GroupRow.swift in Sources */,
 				1E4B14CE2984D332002D1105 /* String+Extensions.swift in Sources */,
 				1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */,
+				1E5A16B82AD3491200A7CA3F /* CameraManager.swift in Sources */,
 				1E4D54C52A687D5800CD524A /* LazyList.swift in Sources */,
 				1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */,
 				1ED88E4329904D630052BD10 /* TabBarContent.swift in Sources */,
@@ -789,6 +760,7 @@
 				1EA187252952BFD00017B38B /* AppAssembler.swift in Sources */,
 				1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */,
 				1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */,
+				1EED7EFE2AD3D50E00B6A67B /* Image+Extensions.swift in Sources */,
 				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
 				1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */,
 				1EA1872E2952C0850017B38B /* AppRootCoordinator.swift in Sources */,
@@ -869,6 +841,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -929,6 +902,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

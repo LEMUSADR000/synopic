@@ -25,20 +25,26 @@ protocol NotesGridViewModelDelegate: AnyObject {
 
 class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
+  private let camera: CameraService
   private var group: Group?
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
 
-  init(summariesRepository: SummariesRepository, group: Group?) {
+  init(summariesRepository: SummariesRepository, cameraService: CameraService, group: Group?) {
     self.summaries = summariesRepository
+    self.camera = cameraService
     self.group = group
-    self.title = self.group?.title ?? .empty
-    self.author = self.group?.author ?? .empty
+
+    self.model = GroupModel(
+      imagePath: self.group?.imageName,
+      title: self.group?.title ?? .empty,
+      author: self.group?.author ?? .empty
+    )
   }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
     self.delegate = delegate
-    bind()
+    self.bind()
     return self
   }
 
@@ -51,26 +57,32 @@ class NotesGridViewModel: ViewModel {
   }
 
   // MARK: STATE
-  @Published var title: String = .empty
-  @Published var author: String = .empty
-  @Published var notes: [Note] = []
+
+  @Published var model: GroupModel
   @Published var selected: Int = 0
 
   // MARK: EVENT
+
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
+  let takeCoverPicture: PassthroughSubject<Void, Never> = PassthroughSubject()
 
   func saveGroup() {
     Just(1)
-      .withLatestFrom(self.$title, self.$author, self.$notes)
+      .withLatestFrom(self.$model)
       .setFailureType(to: Error.self)
-      .flatMapLatest { [weak self] title, author, notes -> AnyPublisher<Group?, Error> in
+      .flatMapLatest { [weak self] model -> AnyPublisher<Group?, Error> in
         guard let self = self else {
           return Just<Group?>(nil)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
         }
+        
+        let title = model.title
+        let author = model.author
+        let notes = model.notes
+        let imagePath = model.imagePath
 
         if title.isEmpty && author.isEmpty && notes.isEmpty, let unwrapped = self.group {
           return self.summaries.deleteGroup(group: unwrapped)
@@ -87,6 +99,7 @@ class NotesGridViewModel: ViewModel {
             .eraseToAnyPublisher()
         }
 
+        toUpdate.imageName = imagePath
         toUpdate.title = title
         toUpdate.author = author
 
@@ -110,8 +123,8 @@ class NotesGridViewModel: ViewModel {
       .sink(receiveValue: { [weak self] note in
         guard let self = self else { return }
         withAnimation {
-          self.notes.append(note)
-          self.selected = self.notes.count - 1
+          self.model.notes.append(note)
+          self.selected = self.model.notes.count - 1
         }
       })
       .store(in: &self.cancelBag)
@@ -134,23 +147,48 @@ class NotesGridViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
+  
+  private func onTakeCoverPhoto() {
+    self.takeCoverPicture
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
+        self.camera.start()
+      })
+      .store(in: &self.cancelBag)
+  }
 
   private func loadNotes() {
     Just<Int>(1)
       .compactMap { _ in self.group?.id }
       .flatMap { self.summaries.loadNotes(parent: $0) }
       .sink(receiveValue: { [weak self] result in
-        self?.notes = result
+        self?.model.notes = result
       })
       .store(in: &self.cancelBag)
+  }
+
+  class GroupModel: ViewModel {
+    init(imagePath: String? = nil, title: String, author: String, _ notes: [Note] = []) {
+      self.imagePath = imagePath
+      self.title = title
+      self.author = author
+      self.notes = notes
+    }
+
+    @Published var imagePath: String?
+    @Published var title: String = .empty
+    @Published var author: String = .empty
+    @Published var notes: [Note] = []
   }
 
   static var notesGridViewModelPreview: NotesGridViewModel {
     let appAssembler = AppAssembler()
     let summaries = appAssembler.resolve(SummariesRepository.self)!
+    let camera = appAssembler.resolve(CameraService.self)!
 
     let notesViewModel = NotesGridViewModel(
       summariesRepository: summaries,
+      cameraService: camera,
       group: Group()
     )
     //

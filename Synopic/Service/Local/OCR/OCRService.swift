@@ -24,12 +24,13 @@ class OCRServiceImpl: NSObject, OCRService {
   }
 
   // MARK: Public
-  lazy private(set) var canScan: AnyPublisher<Bool?, Never> = self._canScan
+
+  private(set) lazy var canScan: AnyPublisher<Bool?, Never> = self._canScan
     .eraseToAnyPublisher()
 
   func processDocumentScan(_ scan: VNDocumentCameraScan) throws -> String {
     var combinedOutput = ""
-    for index in 0..<scan.pageCount {
+    for index in 0 ..< scan.pageCount {
       let extractedImage = scan.imageOfPage(at: index)
 
       guard let cgImage = extractedImage.cgImage else {
@@ -53,6 +54,7 @@ class OCRServiceImpl: NSObject, OCRService {
   }
 
   // MARK: Private Members & Utility
+
   private var cancelBag: CancelBag
 
   private let _canScan: CurrentValueSubject<Bool?, Never> =
@@ -82,7 +84,7 @@ class OCRServiceImpl: NSObject, OCRService {
     for observation in observations {
       guard
         let candidate = observation.topCandidates(maxRecognitionCandidates)
-          .first
+        .first
       else {
         logger.log("Failed to generate a candidate for observation")
         continue

@@ -26,6 +26,7 @@ class ViewModelAssembly: Assembly {
     container.register(NotesGridViewModel.self) { r, group in
       NotesGridViewModel(
         summariesRepository: r.resolve(SummariesRepository.self)!,
+        cameraService: r.resolve(CameraService.self)!,
         group: group
       )
     }

@@ -33,7 +33,7 @@ class NoteGroupDetailsCoordinator: ViewModel {
       NotesGridViewModel.self,
       argument: group
     )!
-    .setup(delegate: self)
+      .setup(delegate: self)
   }
 
   func setup(delegate: NoteGroupDetailsCoordinatorDelegate) -> Self {

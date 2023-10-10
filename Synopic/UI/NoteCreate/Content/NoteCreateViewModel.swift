@@ -35,7 +35,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
 
   func setup(delegate: NoteCreateViewModelDelegate) -> Self {
     self.delegate = delegate
-    bind()
+    self.bind()
     return self
   }
 
@@ -132,6 +132,7 @@ public class NoteCreateViewModel: NSObject, ViewModel {
   }
 
   // MARK: STATE
+
   @Published var content: String = .empty
   @Published var processType: SummaryType = .sentence
   @Published var isProcessing: Bool = false

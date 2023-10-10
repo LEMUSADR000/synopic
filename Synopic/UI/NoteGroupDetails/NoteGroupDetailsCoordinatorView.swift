@@ -21,11 +21,12 @@ struct NoteGroupDetailsCoordinatorView: View {
       }
   }
 }
+
 struct NoteGroupDetailsCoordinatorView_Previews: PreviewProvider {
   static let appAssembler = AppAssembler()
   static let coordinator = appAssembler.resolve(
     NoteGroupDetailsCoordinator.self,
-    argument: ""
+    argument: nil as Group?
   )!
   static var previews: some View {
     NoteGroupDetailsCoordinatorView(coordinator: coordinator)
