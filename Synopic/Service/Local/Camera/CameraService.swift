@@ -20,6 +20,7 @@ protocol CameraService: AnyObject {
 
 class CameraServiceImpl: NSObject, CameraService {
   private let cameraManager: CameraManager
+  private var isCaptureSessionConfigured = false
   private let captureSession: AVCaptureSession
   private var deviceInput: AVCaptureDeviceInput?
   private var photoOutput: AVCapturePhotoOutput?
@@ -38,17 +39,24 @@ class CameraServiceImpl: NSObject, CameraService {
 
   private let _previewStream: CurrentValueSubject<CIImage?, Never> = CurrentValueSubject(nil)
   func start() -> AnyPublisher<CIImage?, Never> {
-    sessionQueue.async { [self] in
-      if !self.captureSession.isRunning {
-        self.configureCaptureSession { configurationDidSucceed in
-          if configurationDidSucceed {
-            self.captureSession.startRunning()
-          } else {
-            logger.error("Failed to configure camera session!")
+    sessionQueue.async { [weak self] in
+      guard let self = self else { return }
+
+      if isCaptureSessionConfigured {
+        if !captureSession.isRunning {
+          sessionQueue.async { [weak self] in
+            self?.captureSession.startRunning()
           }
         }
-      } else {
-        logger.error("Camera session was already running")
+        return
+      }
+
+      sessionQueue.async { [weak self] in
+        guard let self = self else { return }
+        self.configureCaptureSession { success in
+          guard success else { return }
+          self.captureSession.startRunning()
+        }
       }
     }
 
@@ -56,8 +64,12 @@ class CameraServiceImpl: NSObject, CameraService {
   }
 
   func stop() {
-    sessionQueue.async {
-      self.captureSession.stopRunning()
+    guard isCaptureSessionConfigured else { return }
+
+    if captureSession.isRunning {
+      sessionQueue.async {
+        self.captureSession.stopRunning()
+      }
     }
   }
 
@@ -161,6 +173,9 @@ class CameraServiceImpl: NSObject, CameraService {
     photoOutput.maxPhotoQualityPrioritization = .quality
 
     updateVideoOutputConnection()
+
+    isCaptureSessionConfigured = true
+
     configurationDidSucceed = true
   }
 
@@ -175,6 +190,8 @@ class CameraServiceImpl: NSObject, CameraService {
   }
 
   private func updateSessionForCaptureDevice(_ captureDevice: AVCaptureDevice) {
+    guard isCaptureSessionConfigured else { return }
+
     captureSession.beginConfiguration()
     defer { captureSession.commitConfiguration() }
 

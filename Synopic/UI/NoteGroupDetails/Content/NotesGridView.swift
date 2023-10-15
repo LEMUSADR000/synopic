@@ -17,10 +17,11 @@ struct NotesGridView: View {
   var body: some View {
     VStack {
       HStack {
-        Button(action: self.notesGridViewModel.takeCoverPicture) {
-          GroupCoverImageView(image: self.$notesGridViewModel.model.imagePath)
+        Button(action: self.notesGridViewModel.takePicture) {
+          ImageSelection(image: self.$notesGridViewModel.model.imagePath)
+            .frame(width: 70, height: 70)
         }
-        Spacer().frame(width: 20)
+        Spacer().frame(width: 10)
         VStack {
           TextField(
             self.notesGridViewModel.model.title,
@@ -77,6 +78,39 @@ struct NotesGridView: View {
   }
 
   func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
+}
+
+struct ImageSelection: View {
+  @Binding var image: URL?
+
+  var body: some View {
+    if let url = image {
+      GroupCoverImageView(image: .constant(url))
+    } else {
+      ZStack(alignment: .bottomTrailing) {
+        Rectangle().foregroundColor(Color(UIColor.gray))
+          .aspectRatio(contentMode: .fill)
+          .cornerRadius(10)
+        Image(systemName: "photo")
+          .resizable()
+          .frame(width: 40.0, height: 30.0, alignment: .center)
+          .foregroundColor(Color(UIColor.systemBackground))
+          .padding(.vertical, 20)
+          .padding(.horizontal, 15)
+        Circle()
+          .frame(width: 14.0, height: 14.0, alignment: .center)
+          .foregroundColor(Color(UIColor.gray))
+          .padding(.bottom, 15)
+          .padding(.trailing, 7.5)
+        Image(systemName: "plus.circle.fill")
+          .resizable()
+          .frame(width: 15.0, height: 15.0, alignment: .center)
+          .foregroundColor(Color(UIColor.systemBackground))
+          .padding(.bottom, 15)
+          .padding(.trailing, 7.5)
+      }
+    }
+  }
 }
 
 struct NotesGridView_Previews: PreviewProvider {

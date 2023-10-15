@@ -43,6 +43,6 @@ class ServiceAssembly: Assembly {
 
     container.register(CameraService.self) { r in
       CameraServiceImpl(cameraManager: r.resolve(CameraManager.self)!)
-    }.inObjectScope(.weak)
+    }.inObjectScope(.transient)
   }
 }

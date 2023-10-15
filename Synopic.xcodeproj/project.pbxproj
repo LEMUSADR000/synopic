@@ -24,6 +24,9 @@
 		1E5A16B82AD3491200A7CA3F /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5A16B72AD3491200A7CA3F /* CameraManager.swift */; };
 		1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E63E7D7298781C500571DD3 /* NoteCardView.swift */; };
 		1E6661B729B98D0B004938FA /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6661B629B98D0B004938FA /* Cache.swift */; };
+		1E7A68932AD66D6800AB6CF5 /* ImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A68922AD66D6800AB6CF5 /* ImagePreview.swift */; };
+		1E7A68952AD6701200AB6CF5 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A68942AD6701200AB6CF5 /* CameraViewModel.swift */; };
+		1E7A68972AD6705600AB6CF5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A68962AD6705600AB6CF5 /* CameraView.swift */; };
 		1E825B852AD20A94005DF4C5 /* CameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E825B842AD20A94005DF4C5 /* CameraService.swift */; };
 		1E865DAC29C412620002256E /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E865DAB29C412620002256E /* CoreDataService.swift */; };
 		1E8B32D82AA2BDBF004709B9 /* CustomBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */; };
@@ -48,6 +51,7 @@
 		1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DD298F2019000CA862 /* ApiErrors.swift */; };
 		1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB301DF298F2538000CA862 /* SummariesRepository.swift */; };
 		1EBD17332AC24C3A0011EF3C /* ProgressButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */; };
+		1EBEF6E02ADA67BE00C774EF /* Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBEF6DF2ADA67BE00C774EF /* Shimmer.swift */; };
 		1EC0BFAC294BD72E00C7541B /* SynopicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */; };
 		1EC0BFB0294BD73000C7541B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC0BFAF294BD73000C7541B /* Assets.xcassets */; };
 		1EC0BFBD294BD73000C7541B /* SynopicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC0BFBC294BD73000C7541B /* SynopicTests.swift */; };
@@ -111,6 +115,9 @@
 		1E5A16B72AD3491200A7CA3F /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		1E63E7D7298781C500571DD3 /* NoteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCardView.swift; sourceTree = "<group>"; };
 		1E6661B629B98D0B004938FA /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		1E7A68922AD66D6800AB6CF5 /* ImagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreview.swift; sourceTree = "<group>"; };
+		1E7A68942AD6701200AB6CF5 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		1E7A68962AD6705600AB6CF5 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		1E825B842AD20A94005DF4C5 /* CameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraService.swift; sourceTree = "<group>"; };
 		1E865DAB29C412620002256E /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		1E865DAF29C412CA0002256E /* synopic.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = synopic.entitlements; sourceTree = "<group>"; };
@@ -136,6 +143,7 @@
 		1EB301DD298F2019000CA862 /* ApiErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiErrors.swift; sourceTree = "<group>"; };
 		1EB301DF298F2538000CA862 /* SummariesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummariesRepository.swift; sourceTree = "<group>"; };
 		1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressButton.swift; sourceTree = "<group>"; };
+		1EBEF6DF2ADA67BE00C774EF /* Shimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shimmer.swift; sourceTree = "<group>"; };
 		1EC0BFA8294BD72E00C7541B /* Synopic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Synopic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EC0BFAB294BD72E00C7541B /* SynopicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynopicApp.swift; sourceTree = "<group>"; };
 		1EC0BFAF294BD73000C7541B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -290,14 +298,25 @@
 		1E63E7D6298781B700571DD3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1EA37A1729984E350073E686 /* UIViewRepresentable */,
+				1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */,
+				1ED88E392990121F0052BD10 /* GroupCoverImageView.swift */,
 				1E63E7D7298781C500571DD3 /* NoteCardView.swift */,
+				1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */,
 				1ED88E2C298F3E5B0052BD10 /* SearchBar.swift */,
 				1ED88E4229904D630052BD10 /* TabBarContent.swift */,
-				1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */,
-				1EBD17322AC24C3A0011EF3C /* ProgressButton.swift */,
+				1EA37A1729984E350073E686 /* UIViewRepresentable */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		1E8006C12AD4EB7A001E6127 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				1E7A68922AD66D6800AB6CF5 /* ImagePreview.swift */,
+				1E7A68942AD6701200AB6CF5 /* CameraViewModel.swift */,
+				1E7A68962AD6705600AB6CF5 /* CameraView.swift */,
+			);
+			path = Camera;
 			sourceTree = "<group>";
 		};
 		1E825B832AD20A88005DF4C5 /* Camera */ = {
@@ -384,6 +403,14 @@
 				1EB301D6298F1B19000CA862 /* ChatGPTService.swift */,
 			);
 			path = ChatGPT;
+			sourceTree = "<group>";
+		};
+		1EBEF6DE2ADA67A900C774EF /* ViewModifers */ = {
+			isa = PBXGroup;
+			children = (
+				1EBEF6DF2ADA67BE00C774EF /* Shimmer.swift */,
+			);
+			path = ViewModifers;
 			sourceTree = "<group>";
 		};
 		1EBFE5662999894D00D326AC /* SummariesRepository */ = {
@@ -508,6 +535,7 @@
 		1EC0BFF6294F97D300C7541B /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1EBEF6DE2ADA67A900C774EF /* ViewModifers */,
 				1EA1872C2952C0710017B38B /* AppRootCoordinator */,
 				1E4B14CF2984DB3A002D1105 /* Landing */,
 				1E045CB0298245BA00917E75 /* NoteCreate */,
@@ -547,6 +575,7 @@
 		1ECE71D42ACFD445006BDB32 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1E8006C12AD4EB7A001E6127 /* Camera */,
 				1ECE71D52ACFD468006BDB32 /* PageViewWrapper.swift */,
 			);
 			path = Components;
@@ -566,7 +595,6 @@
 			isa = PBXGroup;
 			children = (
 				1ED88E32299004F30052BD10 /* GroupRow.swift */,
-				1ED88E392990121F0052BD10 /* GroupCoverImageView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -724,6 +752,7 @@
 				1EA37A1929984E530073E686 /* MultilineText.swift in Sources */,
 				1EB301D7298F1B19000CA862 /* ChatGPTService.swift in Sources */,
 				1ED88E4929905B4E0052BD10 /* NotesGridViewModel.swift in Sources */,
+				1E7A68972AD6705600AB6CF5 /* CameraView.swift in Sources */,
 				1E865DAC29C412620002256E /* CoreDataService.swift in Sources */,
 				1E95FB35298A001400586331 /* View+OnReceive.swift in Sources */,
 				1EC949C22990BF8C00024142 /* NoteCreateCoordinatorView.swift in Sources */,
@@ -741,6 +770,7 @@
 				1E56EB0E2992176100EE3D0F /* ProcessScansView.swift in Sources */,
 				1ED88E33299004F30052BD10 /* GroupRow.swift in Sources */,
 				1E4B14CE2984D332002D1105 /* String+Extensions.swift in Sources */,
+				1E7A68952AD6701200AB6CF5 /* CameraViewModel.swift in Sources */,
 				1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */,
 				1E5A16B82AD3491200A7CA3F /* CameraManager.swift in Sources */,
 				1E4D54C52A687D5800CD524A /* LazyList.swift in Sources */,
@@ -764,9 +794,11 @@
 				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
 				1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */,
 				1EA1872E2952C0850017B38B /* AppRootCoordinator.swift in Sources */,
+				1E7A68932AD66D6800AB6CF5 /* ImagePreview.swift in Sources */,
 				1EA37A1B29984F560073E686 /* AttributedText.swift in Sources */,
 				1ED88E5129905FEA0052BD10 /* NoteGroupDetailsCoordinator.swift in Sources */,
 				1EB0D7C729932F3800716E16 /* NoteCreateViewModel.swift in Sources */,
+				1EBEF6E02ADA67BE00C774EF /* Shimmer.swift in Sources */,
 				1E2BC37C295567E600A4821A /* Publisher+Extensions.swift in Sources */,
 				1E4D54C22A687CD200CD524A /* CoreDataUtility.swift in Sources */,
 			);

@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct LandingView: View {
-  static let path = "/"
   @StateObject var viewModel: LandingViewModel
 
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView {
+        // TODO: Stop using List here & implement lazy loading solution
         List {
           ForEach(Array(self.viewModel.sections.enumerated()), id: \.0) { index, section in
             Section {

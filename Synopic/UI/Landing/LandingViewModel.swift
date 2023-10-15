@@ -118,6 +118,13 @@ class LandingViewModel: ViewModel {
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
 
+        if let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
+          let fileList = try! FileManager.default.contentsOfDirectory(atPath: path)
+          for file in fileList {
+            print("\(path)/\(file)")
+          }
+        }
+
         var noteKeys: [String] = []
         var noteGroups: [String: [Group]] = [:]
 

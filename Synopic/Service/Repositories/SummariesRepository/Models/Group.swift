@@ -14,14 +14,7 @@ struct Group: Identifiable {
   var title: String
   var author: String
   var childCount: Int
-  var imageName: String?
-  
-  var image : Image? {
-    if let file = imageName {
-      return Image.fromFile(from: file)
-    }
-    return nil
-  }
+  var imageURL: URL?
 
   init() {
     self.id = nil
@@ -37,6 +30,7 @@ struct Group: Identifiable {
     self.title = entity.title ?? ""
     self.author = entity.author ?? ""
     self.childCount = entity.child?.count ?? 0
+    self.imageURL = makePath(rawName: entity.imageName)
   }
 
   init(
@@ -47,7 +41,32 @@ struct Group: Identifiable {
     self.lastEdited = lastEdited
     self.title = title
     self.author = author
-    self.imageName = imageName
     self.childCount = childCount
+    self.imageURL = makePath(rawName: imageName)
+  }
+
+  private func makePath(rawName: String?) -> URL? {
+    if let imageName = rawName {
+      return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imageName)
+    }
+
+    return nil
+  }
+
+  mutating func updateImage(new: URL?) {
+    guard let new = new, let old = imageURL
+    else {
+      return
+    }
+
+    try? FileManager.default.removeItem(at: old)
+
+    do {
+      let newURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(new.lastPathComponent))!
+      try FileManager.default.moveItem(at: new, to: newURL)
+      imageURL = newURL
+    } catch {
+      print("Failed to perform file transfer")
+    }
   }
 }

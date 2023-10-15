@@ -7,8 +7,6 @@
 import SwiftUI
 
 struct NoteGroupDetailsCoordinatorView: View {
-  static let path = "NoteGroupDetailsCoordinatorView"
-
   @StateObject var coordinator: NoteGroupDetailsCoordinator
 
   var body: some View {
@@ -18,6 +16,9 @@ struct NoteGroupDetailsCoordinatorView: View {
           Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
           NoteCreateCoordinatorView(coordinator: c)
         }
+      }
+      .sheet(item: self.$coordinator.cameraViewModel) { c in
+        CameraView(model: c)
       }
   }
 }
