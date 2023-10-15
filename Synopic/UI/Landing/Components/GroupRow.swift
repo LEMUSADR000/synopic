@@ -22,25 +22,30 @@ struct GroupRow: View {
           HStack {
             ZStack {
               Rectangle()
-                .foregroundColor(Color(UIColor.secondarySystemBackground))
+                .foregroundColor(Color(UIColor.systemBackground))
                 .aspectRatio(contentMode: .fill)
                 .cornerRadius(4)
               if let image = item.imageURL {
                 GroupCoverImageView(image: .constant(image))
               } else {
                 VStack(alignment: .center) {
-                  Spacer()
-                  Text(item.title).font(.system(size: 12)).multilineTextAlignment(.center)
+                  Text(item.title)
+                    .font(.headline)
+                    .minimumScaleFactor(0.1)
+                    .multilineTextAlignment(.center)
                   Spacer().frame(height: 4)
                   if !item.author.isEmpty {
                     Text("by")
-                      .font(.system(size: 8)).foregroundColor(.black.opacity(0.5))
+                      .font(.footnote)
+                      .minimumScaleFactor(0.1)
+                      .font(.footnote).foregroundColor(.gray.opacity(0.5))
                     Text(item.author)
-                      .font(.system(size: 8)).foregroundColor(.black)
+                      .font(.subheadline)
+                      .foregroundColor(.gray)
+                      .minimumScaleFactor(0.1)
                       .multilineTextAlignment(.center)
                   }
-                  Spacer()
-                }
+                }.padding(2.5)
               }
             }
             .frame(width: 70, height: 70, alignment: .center)
@@ -50,7 +55,7 @@ struct GroupRow: View {
                 if !item.author.isEmpty {
                   Text("by   ")
                     .font(.footnote).foregroundColor(.gray.opacity(0.5))
-                  + Text(item.author)
+                    + Text(item.author)
                     .font(.subheadline).foregroundColor(.gray)
                 }
               }

@@ -54,7 +54,7 @@ struct Group: Identifiable {
   }
 
   mutating func updateImage(new: URL?) {
-    guard let new = new, let old = imageURL
+    guard let new = new, let old = imageURL, new.lastPathComponent != old.lastPathComponent
     else {
       return
     }
@@ -62,11 +62,11 @@ struct Group: Identifiable {
     try? FileManager.default.removeItem(at: old)
 
     do {
-      let newURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(new.lastPathComponent))!
+      let newURL = makePath(rawName: new.lastPathComponent)!
       try FileManager.default.moveItem(at: new, to: newURL)
       imageURL = newURL
     } catch {
-      print("Failed to perform file transfer")
+      print("Failed to perform file transfer \(error)")
     }
   }
 }
