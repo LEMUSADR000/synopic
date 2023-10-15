@@ -17,20 +17,12 @@ struct SummaryResponse: Codable {
 }
 
 // MARK: - Choice
-<<<<<<< HEAD
 
 struct Choice: Codable {
   let finishReason: String
   let index: Int
   let message: Message
 
-=======
-struct Choice: Codable {
-  let finishReason: String
-  let index: Int
-  let message: Message
-
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   enum CodingKeys: String, CodingKey {
     case finishReason = "finish_reason"
     case index, message
@@ -44,16 +36,10 @@ struct Message: Codable {
 }
 
 // MARK: - Usage
-<<<<<<< HEAD
 
 struct Usage: Codable {
   let completionTokens, promptTokens, totalTokens: Int
 
-=======
-struct Usage: Codable {
-  let completionTokens, promptTokens, totalTokens: Int
-
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   enum CodingKeys: String, CodingKey {
     case completionTokens = "completion_tokens"
     case promptTokens = "prompt_tokens"

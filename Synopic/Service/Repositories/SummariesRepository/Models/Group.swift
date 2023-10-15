@@ -14,11 +14,7 @@ struct Group: Identifiable {
   var title: String
   var author: String
   var childCount: Int
-<<<<<<< HEAD
   var imageURL: URL?
-=======
-  var imageName: String?
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
 
   init() {
     self.id = nil
@@ -38,11 +34,7 @@ struct Group: Identifiable {
   }
 
   init(
-<<<<<<< HEAD
     id: InternalObjectId?, lastEdited: Date, title: String, author: String, childCount: Int,
-=======
-    id: InternalObjectId, lastEdited: Date, title: String, author: String, childCount: Int,
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
     imageName: String?
   ) {
     self.id = id

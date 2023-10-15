@@ -14,10 +14,7 @@ import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
-<<<<<<< HEAD
   func notesGridViewModelDidTapTakePicture(_ source: NotesGridViewModel)
-=======
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
 
   func notesGridViewModelDidTapViewNote(
     id: InternalObjectId,
@@ -71,10 +68,7 @@ class NotesGridViewModel: ViewModel {
   let takePicture: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
-<<<<<<< HEAD
   let imageSelected: PassthroughSubject<CIImage, Never> = PassthroughSubject()
-=======
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
 
   func saveGroup() {
     Just(1)
@@ -99,14 +93,10 @@ class NotesGridViewModel: ViewModel {
         }
 
         var toUpdate = self.group ?? Group()
-<<<<<<< HEAD
 
         // No update required
         if toUpdate.title == title && toUpdate.author == author
           && toUpdate.imageURL == model.imagePath
-=======
-        if toUpdate.title == title && toUpdate.author == author
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
           && toUpdate.childCount == notes.count
         {
           return Just<Group?>(nil)
@@ -114,10 +104,7 @@ class NotesGridViewModel: ViewModel {
             .eraseToAnyPublisher()
         }
 
-<<<<<<< HEAD
         toUpdate.updateImage(new: imagePath)
-=======
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
         toUpdate.title = title
         toUpdate.author = author
 
@@ -228,52 +215,6 @@ class NotesGridViewModel: ViewModel {
       summariesRepository: summaries,
       group: Group()
     )
-<<<<<<< HEAD
-=======
-    //
-    //    notesViewModel.notes = [
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short\n\u{2022} point number four of this should be short\n\u{2022} point number five of this should be short\n\u{2022} point number six of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary: "\u{2022} point number two of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary: "\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //    ]
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
 
     return notesViewModel
   }

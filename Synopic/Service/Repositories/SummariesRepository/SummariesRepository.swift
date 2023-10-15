@@ -81,10 +81,6 @@ class SummariesRepositoryImpl: SummariesRepository {
       // Only store the image name since path may change on re-run
       toUpdate.imageName = group.imageURL?.lastPathComponent
       toUpdate.lastEdited = Date()
-<<<<<<< HEAD
-=======
-      toUpdate.imageName = nil
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
 
       for note: Note in notes {
         if note.id == nil {
@@ -124,12 +120,7 @@ class SummariesRepositoryImpl: SummariesRepository {
               Summary(
                 id: result.id,
                 result: result.choices.first?.message.content ?? "#ERROR",
-<<<<<<< HEAD
                 created: Date(timeIntervalSince1970: TimeInterval(result.created)))))
-=======
-                created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
-              )))
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
         } catch {
           promise(.failure(error))
         }
@@ -145,17 +136,10 @@ enum SummariesError: Error {
 }
 
 // MARK: - Extensions
-<<<<<<< HEAD
 
 public extension GroupEntityMO {
   override var description: String {
     return
       "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "") imageName: \(imageName ?? "")"
-=======
-extension GroupEntityMO {
-  public override var description: String {
-    return
-      "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "")"
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   }
 }

@@ -8,10 +8,6 @@
 import Foundation
 
 struct LazyList<T> {
-<<<<<<< HEAD
-=======
-
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   typealias Access = (Int) throws -> T?
   private let access: Access
   private let useCache: Bool
@@ -53,14 +49,8 @@ struct LazyList<T> {
   }
 }
 
-<<<<<<< HEAD
 private extension LazyList {
   class Cache {
-=======
-extension LazyList {
-  fileprivate class Cache {
-
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
     private var elements = [Int: T]()
 
     func sync(_ access: (inout [Int: T]) throws -> T) throws -> T {
@@ -77,10 +67,6 @@ extension LazyList {
 }
 
 extension LazyList: Sequence {
-<<<<<<< HEAD
-=======
-
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   enum Error: LocalizedError {
     case elementIsNil(index: Int)
 
@@ -122,7 +108,6 @@ extension LazyList: Sequence {
 }
 
 extension LazyList: RandomAccessCollection {
-<<<<<<< HEAD
   typealias Index = Int
   var startIndex: Index { 0 }
   var endIndex: Index { count }
@@ -135,21 +120,6 @@ extension LazyList: RandomAccessCollection {
     }
   }
 
-=======
-
-  typealias Index = Int
-  var startIndex: Index { 0 }
-  var endIndex: Index { count }
-
-  subscript(index: Index) -> Iterator.Element {
-    do {
-      return try element(at: index)
-    } catch let error {
-      fatalError("\(error)")
-    }
-  }
-
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   public func index(after index: Index) -> Index {
     return index + 1
   }
@@ -168,7 +138,6 @@ extension LazyList: Equatable where T: Equatable {
 
 extension LazyList: CustomStringConvertible {
   var description: String {
-<<<<<<< HEAD
     let elements = reduce(
       "")
     { str, element in
@@ -177,27 +146,13 @@ extension LazyList: CustomStringConvertible {
       }
       return str + ", \(element)"
     }
-=======
-    let elements = self.reduce(
-      "",
-      { str, element in
-        if str.count == 0 {
-          return "\(element)"
-        }
-        return str + ", \(element)"
-      })
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
     return "LazyList<[\(elements)]>"
   }
 }
 
 extension RandomAccessCollection {
   var lazyList: LazyList<Element> {
-<<<<<<< HEAD
     return .init(count: count, useCache: false) {
-=======
-    return .init(count: self.count, useCache: false) {
->>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
       guard $0 < self.count else { return nil }
       let index = self.index(self.startIndex, offsetBy: $0)
       return self[index]
