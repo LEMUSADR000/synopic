@@ -140,8 +140,12 @@ public extension Publisher {
       }
     )
   }
+<<<<<<< HEAD
 
   func debug(_ label: String) -> AnyPublisher<Self.Output, Self.Failure> {
+=======
+  public func debug(_ label: String) -> AnyPublisher<Self.Output, Self.Failure> {
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
     self.handleEvents(
       receiveSubscription: { subscription in
         Swift.print("\(Date()) \(label) subscribed \(subscription)")

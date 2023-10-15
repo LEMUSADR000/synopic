@@ -21,7 +21,10 @@ class NoteGroupDetailsCoordinator: ViewModel {
   @Published private(set) var notesGridViewModel: NotesGridViewModel!
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
+<<<<<<< HEAD
   @Published var cameraViewModel: CameraViewModel?
+=======
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
 
   private weak var delegate: NoteGroupDetailsCoordinatorDelegate?
 

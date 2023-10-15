@@ -44,7 +44,11 @@ struct CoreDataStack: PersistentStore {
       container.persistentStoreDescriptions = [store]
     }
     bgQueue.async { [weak isStoreLoaded, weak container] in
+<<<<<<< HEAD
       container?.loadPersistentStores { _, error in
+=======
+      container?.loadPersistentStores { (storeDescription, error) in
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
         DispatchQueue.main.async {
           if let error = error {
             isStoreLoaded?.send(completion: .failure(error))
@@ -60,6 +64,7 @@ struct CoreDataStack: PersistentStore {
   func count<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<Int, Error> {
     return
       onStoreIsReady
+<<<<<<< HEAD
         .flatMap { [weak container] in
           Future<Int, Error> { promise in
             do {
@@ -144,12 +149,20 @@ struct CoreDataStack: PersistentStore {
             }
             context.reset()
             promise(.success(result))
+=======
+      .flatMap { [weak container] in
+        Future<Int, Error> { promise in
+          do {
+            let count = try container?.viewContext.count(for: fetchRequest) ?? 0
+            promise(.success(count))
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
           } catch {
             context.reset()
             promise(.failure(error))
           }
         }
       }
+<<<<<<< HEAD
     }
     return
       onStoreIsReady
@@ -172,6 +185,82 @@ struct CoreDataStack: PersistentStore {
             }
             context.reset()
             promise(.success(()))
+=======
+      .eraseToAnyPublisher()
+  }
+
+  func fetch<T, V>(
+    _ fetchRequest: NSFetchRequest<T>,
+    map: @escaping (T) throws -> V?
+  ) -> AnyPublisher<LazyList<V>, Error> {
+    assert(Thread.isMainThread)
+    print("accessing from main thread? \(Thread.isMainThread)")
+    let fetch = Future<LazyList<V>, Error> { [weak container] promise in
+      guard let context = container?.viewContext else { return }
+      context.performAndWait {
+        do {
+          let managedObjects = try context.fetch(fetchRequest)
+          let results = LazyList<V>(
+            count: managedObjects.count,
+            useCache: true
+          ) { [weak context] in
+            let object = managedObjects[$0]
+            let mapped = try map(object)
+            if let mo = object as? NSManagedObject {
+              // Turning object into a fault
+              context?.refresh(mo, mergeChanges: false)
+            }
+            return mapped
+          }
+          promise(.success(results))
+        } catch {
+          promise(.failure(error))
+        }
+      }
+    }
+    return
+      onStoreIsReady
+      .flatMap { fetch }
+      .eraseToAnyPublisher()
+  }
+
+  func fetchObjectById<T, V>(
+    for id: NSManagedObjectID,
+    map: @escaping (T) throws -> V?
+  ) -> AnyPublisher<V, Error> {
+    let fetch = Future<V, Error> { [weak container] promise in
+      guard let context = container?.viewContext else { return }
+      context.performAndWait {
+        do {
+          let managedObject = try context.existingObject(with: id)
+          let mapped = try map(managedObject as! T)
+          promise(.success(mapped!))
+        } catch {
+          promise(.failure(error))
+        }
+      }
+    }
+    return
+      onStoreIsReady
+      .flatMap { fetch }
+      .eraseToAnyPublisher()
+  }
+
+  func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error> {
+    let update = Future<Result, Error> { [weak bgQueue, weak container] promise in
+      bgQueue?.async {
+        guard let context = container?.newBackgroundContext() else { return }
+        context.configureAsUpdateContext()
+
+        context.performAndWait {
+          do {
+            let result = try operation(context)
+            if context.hasChanges {
+              try context.save()
+            }
+            context.reset()
+            promise(.success(result))
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
           } catch {
             context.reset()
             promise(.failure(error))
@@ -181,9 +270,59 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
+<<<<<<< HEAD
         .flatMap { delete }
         .receive(on: DispatchQueue.main)
         .eraseToAnyPublisher()
+  }
+
+  func delete(for id: NSManagedObjectID) -> AnyPublisher<Void, Error> {
+=======
+      .flatMap { update }
+      //          .subscribe(on: bgQueue) // Does not work as stated in the docs. Using `bgQueue.async`
+      .receive(on: DispatchQueue.main)
+      .eraseToAnyPublisher()
+  }
+
+  func delete(object: NSManagedObject) -> AnyPublisher<Void, Error> {
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
+    let delete = Future<Void, Error> { [weak bgQueue, weak container] promise in
+      bgQueue?.async {
+        guard let context = container?.newBackgroundContext() else { return }
+        context.configureAsUpdateContext()
+        context.performAndWait {
+          do {
+<<<<<<< HEAD
+            let managedObject = try context.existingObject(with: id)
+            context.delete(managedObject)
+=======
+            context.delete(object)
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
+            if context.hasChanges {
+              try context.save()
+            }
+            context.reset()
+            promise(.success(()))
+          } catch {
+            context.reset()
+            promise(.failure(error))
+          }
+        }
+      }
+<<<<<<< HEAD
+    }
+    return
+      onStoreIsReady
+        .flatMap { delete }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
+=======
+    }
+    return
+      onStoreIsReady
+      .flatMap { delete }
+      .receive(on: DispatchQueue.main)
+      .eraseToAnyPublisher()
   }
 
   func delete(for id: NSManagedObjectID) -> AnyPublisher<Void, Error> {
@@ -209,17 +348,24 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
-        .flatMap { delete }
-        .receive(on: DispatchQueue.main)
-        .eraseToAnyPublisher()
+      .flatMap { delete }
+      .receive(on: DispatchQueue.main)
+      .eraseToAnyPublisher()
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   }
 
   private var onStoreIsReady: AnyPublisher<Void, Error> {
     return
       isStoreLoaded
+<<<<<<< HEAD
         .filter { $0 }
         .map { _ in }
         .eraseToAnyPublisher()
+=======
+      .filter { $0 }
+      .map { _ in }
+      .eraseToAnyPublisher()
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   }
 }
 

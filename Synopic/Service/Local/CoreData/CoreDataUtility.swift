@@ -22,13 +22,21 @@ extension NSManagedObject {
   static func insertNew(in context: NSManagedObjectContext) -> Self? {
     return
       NSEntityDescription
+<<<<<<< HEAD
         .insertNewObject(forEntityName: entityName, into: context) as? Self
+=======
+      .insertNewObject(forEntityName: entityName, into: context) as? Self
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   }
 }
 
 // MARK: - NSManagedObjectContext
 
 extension NSManagedObjectContext {
+<<<<<<< HEAD
+=======
+
+>>>>>>> c9af2cb4c9ce28eae5109f046cf1da6cdb93b3c4
   func configureAsReadOnlyContext() {
     automaticallyMergesChangesFromParent = true
     mergePolicy = NSRollbackMergePolicy
