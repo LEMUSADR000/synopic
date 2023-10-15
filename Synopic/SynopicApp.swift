@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-private let appAssembler: AppAssembler = AppAssembler()
+private let appAssembler: AppAssembler = .init()
 
 @main struct SynopicApp: App {
   var body: some Scene {

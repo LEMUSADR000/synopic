@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - Summary
+
 struct SummaryResponse: Codable {
   let choices: [Choice]
   let created: Int
@@ -16,6 +17,7 @@ struct SummaryResponse: Codable {
 }
 
 // MARK: - Choice
+
 struct Choice: Codable {
   let finishReason: String
   let index: Int
@@ -28,11 +30,13 @@ struct Choice: Codable {
 }
 
 // MARK: - Message
+
 struct Message: Codable {
   let content, role: String
 }
 
 // MARK: - Usage
+
 struct Usage: Codable {
   let completionTokens, promptTokens, totalTokens: Int
 

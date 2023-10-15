@@ -13,13 +13,13 @@ struct SummaryTypeToggle: View {
   let action: () -> Void
   var body: some View {
     Button(
-      action: action,
+      action: self.action,
       label: {
         VStack {
           VStack(alignment: .center) {
-            Image(systemName: imageName)
+            Image(systemName: self.imageName)
             Spacer().frame(height: 4)
-            Text(desc)
+            Text(self.desc)
               .font(.system(size: 12))
           }
           .frame(maxWidth: .infinity)
@@ -33,7 +33,7 @@ struct SummaryTypeToggle: View {
     )
     .foregroundColor(
       Color(
-        self.model == type
+        self.model == self.type
           ? UIColor.systemBlue : UIColor.systemGray
       )
     )

@@ -34,7 +34,9 @@ class NoteCreateCoordinator: ViewModel {
     return self
   }
 }
+
 // MARK: NoteCreateViewModelDelegate
+
 extension NoteCreateCoordinator: NoteCreateViewModelDelegate {
   func noteCreateViewModelDidCancel(_ source: NoteCreateViewModel) {
     // TODO: Should we do anything else here?

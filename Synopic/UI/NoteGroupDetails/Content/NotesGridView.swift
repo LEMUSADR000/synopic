@@ -16,27 +16,34 @@ struct NotesGridView: View {
 
   var body: some View {
     VStack {
-      VStack {
-        TextField(
-          self.notesGridViewModel.title,
-          text: self.$notesGridViewModel.title,
-          prompt: Text("Title")
-        )
-        .font(.headline)
-        Divider()
-        TextField(
-          self.notesGridViewModel.author,
-          text: self.$notesGridViewModel.author,
-          prompt: Text("Author")
-        )
-        .font(.subheadline)
-        Divider()
+      HStack {
+        Button(action: self.notesGridViewModel.takePicture) {
+          ImageSelection(image: self.$notesGridViewModel.model.imagePath)
+            .frame(width: 70, height: 70)
+        }
+        Spacer().frame(width: 10)
+        VStack {
+          TextField(
+            self.notesGridViewModel.model.title,
+            text: self.$notesGridViewModel.model.title,
+            prompt: Text("Title")
+          )
+          .font(.headline)
+          Divider()
+          TextField(
+            self.notesGridViewModel.model.author,
+            text: self.$notesGridViewModel.model.author,
+            prompt: Text("Author")
+          )
+          .font(.subheadline)
+          Divider()
+        }
       }
-      .padding(.horizontal, 20).padding(.vertical, 20)
+      .padding(.vertical, 20)
 
       Spacer().frame(height: 16)
       PageViewWrapper(selection: self.$notesGridViewModel.selected) {
-        ForEach(Array(self.notesGridViewModel.notes.enumerated()), id: \.0) { i, note in
+        ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
           NoteCardView {
             Text(note.summary)
               .fontWeight(.light)
@@ -71,6 +78,39 @@ struct NotesGridView: View {
   }
 
   func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
+}
+
+struct ImageSelection: View {
+  @Binding var image: URL?
+
+  var body: some View {
+    if let url = image {
+      GroupCoverImageView(image: .constant(url))
+    } else {
+      ZStack(alignment: .bottomTrailing) {
+        Rectangle().foregroundColor(Color(UIColor.gray))
+          .aspectRatio(contentMode: .fill)
+          .cornerRadius(10)
+        Image(systemName: "photo")
+          .resizable()
+          .frame(width: 40.0, height: 30.0, alignment: .center)
+          .foregroundColor(Color(UIColor.systemBackground))
+          .padding(.vertical, 20)
+          .padding(.horizontal, 15)
+        Circle()
+          .frame(width: 14.0, height: 14.0, alignment: .center)
+          .foregroundColor(Color(UIColor.gray))
+          .padding(.bottom, 15)
+          .padding(.trailing, 7.5)
+        Image(systemName: "plus.circle.fill")
+          .resizable()
+          .frame(width: 15.0, height: 15.0, alignment: .center)
+          .foregroundColor(Color(UIColor.systemBackground))
+          .padding(.bottom, 15)
+          .padding(.trailing, 7.5)
+      }
+    }
+  }
 }
 
 struct NotesGridView_Previews: PreviewProvider {

@@ -14,11 +14,11 @@ struct Group: Identifiable {
   var title: String
   var author: String
   var childCount: Int
-  var imageName: String?
+  var imageURL: URL?
 
   init() {
     self.id = nil
-    self.lastEdited = Date.init(timeIntervalSince1970: 0.0)
+    self.lastEdited = Date(timeIntervalSince1970: 0.0)
     self.title = ""
     self.author = ""
     self.childCount = 0
@@ -26,45 +26,47 @@ struct Group: Identifiable {
 
   init(from entity: GroupEntityMO) {
     self.id = entity.objectID
-    self.lastEdited = entity.lastEdited ?? Date.init(timeIntervalSince1970: 0.0)
+    self.lastEdited = entity.lastEdited ?? Date(timeIntervalSince1970: 0.0)
     self.title = entity.title ?? ""
     self.author = entity.author ?? ""
     self.childCount = entity.child?.count ?? 0
+    self.imageURL = makePath(rawName: entity.imageName)
   }
 
   init(
-    id: InternalObjectId, lastEdited: Date, title: String, author: String, childCount: Int,
+    id: InternalObjectId?, lastEdited: Date, title: String, author: String, childCount: Int,
     imageName: String?
   ) {
     self.id = id
     self.lastEdited = lastEdited
     self.title = title
     self.author = author
-    self.imageName = imageName
     self.childCount = childCount
+    self.imageURL = makePath(rawName: imageName)
   }
-}
 
-// MARK: Extensions
-
-extension Group {
-  var image: Image? {
-    // TODO: Cache result of this if it appears to be an expensive operation
-    let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
-    let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-    let paths = NSSearchPathForDirectoriesInDomains(
-      nsDocumentDirectory,
-      nsUserDomainMask,
-      true
-    )
-
-    if let name = imageName, let dirPath = paths.first {
-      let imageURL = URL(fileURLWithPath: dirPath).appendingPathComponent(name)
-      if let image = UIImage(contentsOfFile: imageURL.path) {
-        return Image(uiImage: image)
-      }
+  private func makePath(rawName: String?) -> URL? {
+    if let imageName = rawName {
+      return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imageName)
     }
 
     return nil
+  }
+
+  mutating func updateImage(new: URL?) {
+    guard let new = new, let old = imageURL
+    else {
+      return
+    }
+
+    try? FileManager.default.removeItem(at: old)
+
+    do {
+      let newURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(new.lastPathComponent))!
+      try FileManager.default.moveItem(at: new, to: newURL)
+      imageURL = newURL
+    } catch {
+      print("Failed to perform file transfer")
+    }
   }
 }

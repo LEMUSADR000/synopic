@@ -13,8 +13,8 @@ struct LoadingButton: View {
   let onTap: () -> Void
 
   var body: some View {
-    Button(action: onTap) {
-      procesButton()
+    Button(action: self.onTap) {
+      self.procesButton()
         .frame(maxWidth: .infinity, minHeight: 55)
         .background(RoundedRectangle(cornerRadius: 15))
     }

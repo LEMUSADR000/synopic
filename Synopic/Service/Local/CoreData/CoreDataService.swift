@@ -44,7 +44,7 @@ struct CoreDataStack: PersistentStore {
       container.persistentStoreDescriptions = [store]
     }
     bgQueue.async { [weak isStoreLoaded, weak container] in
-      container?.loadPersistentStores { (storeDescription, error) in
+      container?.loadPersistentStores { _, error in
         DispatchQueue.main.async {
           if let error = error {
             isStoreLoaded?.send(completion: .failure(error))
@@ -60,17 +60,17 @@ struct CoreDataStack: PersistentStore {
   func count<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<Int, Error> {
     return
       onStoreIsReady
-      .flatMap { [weak container] in
-        Future<Int, Error> { promise in
-          do {
-            let count = try container?.viewContext.count(for: fetchRequest) ?? 0
-            promise(.success(count))
-          } catch {
-            promise(.failure(error))
+        .flatMap { [weak container] in
+          Future<Int, Error> { promise in
+            do {
+              let count = try container?.viewContext.count(for: fetchRequest) ?? 0
+              promise(.success(count))
+            } catch {
+              promise(.failure(error))
+            }
           }
         }
-      }
-      .eraseToAnyPublisher()
+        .eraseToAnyPublisher()
   }
 
   func fetch<T, V>(
@@ -104,8 +104,8 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
-      .flatMap { fetch }
-      .eraseToAnyPublisher()
+        .flatMap { fetch }
+        .eraseToAnyPublisher()
   }
 
   func fetchObjectById<T, V>(
@@ -126,8 +126,8 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
-      .flatMap { fetch }
-      .eraseToAnyPublisher()
+        .flatMap { fetch }
+        .eraseToAnyPublisher()
   }
 
   func update<Result>(_ operation: @escaping DBOperation<Result>) -> AnyPublisher<Result, Error> {
@@ -153,10 +153,10 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
-      .flatMap { update }
-      //          .subscribe(on: bgQueue) // Does not work as stated in the docs. Using `bgQueue.async`
-      .receive(on: DispatchQueue.main)
-      .eraseToAnyPublisher()
+        .flatMap { update }
+        //          .subscribe(on: bgQueue) // Does not work as stated in the docs. Using `bgQueue.async`
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
   }
 
   func delete(object: NSManagedObject) -> AnyPublisher<Void, Error> {
@@ -181,9 +181,9 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
-      .flatMap { delete }
-      .receive(on: DispatchQueue.main)
-      .eraseToAnyPublisher()
+        .flatMap { delete }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
   }
 
   func delete(for id: NSManagedObjectID) -> AnyPublisher<Void, Error> {
@@ -209,17 +209,17 @@ struct CoreDataStack: PersistentStore {
     }
     return
       onStoreIsReady
-      .flatMap { delete }
-      .receive(on: DispatchQueue.main)
-      .eraseToAnyPublisher()
+        .flatMap { delete }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
   }
 
   private var onStoreIsReady: AnyPublisher<Void, Error> {
     return
       isStoreLoaded
-      .filter { $0 }
-      .map { _ in }
-      .eraseToAnyPublisher()
+        .filter { $0 }
+        .map { _ in }
+        .eraseToAnyPublisher()
   }
 }
 

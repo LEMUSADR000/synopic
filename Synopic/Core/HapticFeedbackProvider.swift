@@ -9,15 +9,15 @@ import SwiftUI
 import UIKit
 
 private let impactLightFeedbackGenerator: UIImpactFeedbackGenerator =
-  UIImpactFeedbackGenerator(style: .light)
+  .init(style: .light)
 private let impactMediumFeedbackGenerator: UIImpactFeedbackGenerator =
-  UIImpactFeedbackGenerator()
+  .init()
 private let impactHeavyFeedbackGenerator: UIImpactFeedbackGenerator =
-  UIImpactFeedbackGenerator(style: .heavy)
+  .init(style: .heavy)
 private let selectionFeedbackGenerator: UISelectionFeedbackGenerator =
-  UISelectionFeedbackGenerator()
+  .init()
 private let notificationFeedbackGenerator: UINotificationFeedbackGenerator =
-  UINotificationFeedbackGenerator()
+  .init()
 
 enum HapticFeedbackStyle {
   case impactLight

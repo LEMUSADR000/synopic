@@ -22,7 +22,6 @@ extension AnyPublisher {
             if finishedWithoutValue {
               continuation.resume(throwing: AsyncError.finishedWithoutValue)
             }
-            break
           case let .failure(error):
             continuation.resume(throwing: error)
           }

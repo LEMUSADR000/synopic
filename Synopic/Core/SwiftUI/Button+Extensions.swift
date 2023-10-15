@@ -13,4 +13,9 @@ extension Button {
     action: PassthroughSubject<Void, Never>,
     @ViewBuilder label: () -> Label
   ) { self.init(action: { action.send() }, label: label) }
+  
+  @inlinable init(
+    action: PassthroughSubject<Void, Never>,
+    @ViewBuilder _ label: @escaping () -> Label
+  ) { self.init(action: { action.send() }, label: label) }
 }

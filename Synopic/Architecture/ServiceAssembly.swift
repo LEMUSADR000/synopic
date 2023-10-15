@@ -10,16 +10,18 @@ import Swinject
 
 class ServiceAssembly: Assembly {
   func assemble(container: Container) {
-    // MARK: Local
+    // MARK: - Local
+
     container.register(OCRService.self) { _ in OCRServiceImpl() }
-      .inObjectScope(.container)
+      .inObjectScope(.weak)
 
     container.register(PersistentStore.self) { _ in
       CoreDataStack(version: CoreDataStack.Version.actual)
     }
     .inObjectScope(.container)
 
-    // MARK: Repositories
+    // MARK: - Repositories
+
     container.register(SummariesRepository.self) { r in
       SummariesRepositoryImpl(
         chatGptApiService: r.resolve(ChatGPTService.self)!,
@@ -28,13 +30,19 @@ class ServiceAssembly: Assembly {
     }
     .inObjectScope(.container)
 
-    // MARK: API
+    // MARK: - API
+
     container.register(ChatGPTService.self) { _ in
-      // TODO: Find where we will be getting token from!
-      ChatGPTServiceImpl(
-        token: "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"
-      )
+      ChatGPTServiceImpl()
     }
     .inObjectScope(.transient)
+
+    container.register(CameraManager.self) { _ in
+      CameraManager()
+    }.inObjectScope(.container)
+
+    container.register(CameraService.self) { r in
+      CameraServiceImpl(cameraManager: r.resolve(CameraManager.self)!)
+    }.inObjectScope(.transient)
   }
 }

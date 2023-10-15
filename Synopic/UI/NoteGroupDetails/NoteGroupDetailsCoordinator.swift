@@ -5,6 +5,7 @@
 //  Created by Adrian Lemus on 2/5/23.
 //
 
+import UIKit
 import Combine
 import CoreData
 import Foundation
@@ -20,6 +21,7 @@ class NoteGroupDetailsCoordinator: ViewModel {
   @Published private(set) var notesGridViewModel: NotesGridViewModel!
 
   @Published var noteCreateCoordinator: NoteCreateCoordinator?
+  @Published var cameraViewModel: CameraViewModel?
 
   private weak var delegate: NoteGroupDetailsCoordinatorDelegate?
 
@@ -33,7 +35,7 @@ class NoteGroupDetailsCoordinator: ViewModel {
       NotesGridViewModel.self,
       argument: group
     )!
-    .setup(delegate: self)
+      .setup(delegate: self)
   }
 
   func setup(delegate: NoteGroupDetailsCoordinatorDelegate) -> Self {
@@ -45,6 +47,12 @@ class NoteGroupDetailsCoordinator: ViewModel {
 // MARK: NotesGridViewModelDelegate
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
+  func notesGridViewModelDidTapTakePicture(_ source: NotesGridViewModel) {
+    self.cameraViewModel = self.resolver.resolve(
+      CameraViewModel.self
+    )!.setup(delegate: self)
+  }
+
   func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel) {
     self.delegate?.noteGroupDetailsCoordinatorDidCreateGroup(self)
   }
@@ -71,5 +79,14 @@ extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
 
   func noteCreateCoordinatorDidComplete(_ source: NoteCreateCoordinator) {
     self.noteCreateCoordinator = nil
+  }
+}
+
+// MARK: NotesGridViewModelDelegate
+
+extension NoteGroupDetailsCoordinator: CameraViewModelDelegate {
+  func cameraViewDidSelectImage(image: CIImage, _ source: CameraViewModel) {
+    self.notesGridViewModel.imageSelected.send(image)
+    self.cameraViewModel = nil
   }
 }

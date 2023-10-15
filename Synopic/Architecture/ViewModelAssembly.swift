@@ -30,5 +30,12 @@ class ViewModelAssembly: Assembly {
       )
     }
     .inObjectScope(.transient)
+
+    container.register(CameraViewModel.self) { r in
+      CameraViewModel(
+        camera: r.resolve(CameraService.self)!
+      )
+    }
+    .inObjectScope(.transient)
   }
 }

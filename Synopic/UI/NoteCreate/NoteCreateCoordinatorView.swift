@@ -23,10 +23,7 @@ struct NoteCreateCoordinatorView: View {
     }
   }
 }
-struct NoteCreateCoordinatorView_Previews: PreviewProvider {
-  static let appAssembler = AppAssembler()
-  static let coordinator = appAssembler.resolve(NoteCreateCoordinator.self)!
-  static var previews: some View {
-    NoteCreateCoordinatorView(coordinator: coordinator)
-  }
+
+#Preview {
+  NoteCreateCoordinatorView(coordinator: AppAssembler().resolve(NoteCreateCoordinator.self)!)
 }

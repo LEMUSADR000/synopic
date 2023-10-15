@@ -78,8 +78,9 @@ class SummariesRepositoryImpl: SummariesRepository {
 
       toUpdate.title = group.title
       toUpdate.author = group.author
+      // Only store the image name since path may change on re-run
+      toUpdate.imageName = group.imageURL?.lastPathComponent
       toUpdate.lastEdited = Date()
-      toUpdate.imageName = nil
 
       for note: Note in notes {
         if note.id == nil {
@@ -119,8 +120,7 @@ class SummariesRepositoryImpl: SummariesRepository {
               Summary(
                 id: result.id,
                 result: result.choices.first?.message.content ?? "#ERROR",
-                created: Date.init(timeIntervalSince1970: TimeInterval(result.created))
-              )))
+                created: Date(timeIntervalSince1970: TimeInterval(result.created)))))
         } catch {
           promise(.failure(error))
         }
@@ -136,9 +136,10 @@ enum SummariesError: Error {
 }
 
 // MARK: - Extensions
-extension GroupEntityMO {
-  public override var description: String {
+
+public extension GroupEntityMO {
+  override var description: String {
     return
-      "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "")"
+      "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "") imageName: \(imageName ?? "")"
   }
 }

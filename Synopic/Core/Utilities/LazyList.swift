@@ -8,7 +8,6 @@
 import Foundation
 
 struct LazyList<T> {
-
   typealias Access = (Int) throws -> T?
   private let access: Access
   private let useCache: Bool
@@ -50,9 +49,8 @@ struct LazyList<T> {
   }
 }
 
-extension LazyList {
-  fileprivate class Cache {
-
+private extension LazyList {
+  class Cache {
     private var elements = [Int: T]()
 
     func sync(_ access: (inout [Int: T]) throws -> T) throws -> T {
@@ -69,7 +67,6 @@ extension LazyList {
 }
 
 extension LazyList: Sequence {
-
   enum Error: LocalizedError {
     case elementIsNil(index: Int)
 
@@ -111,7 +108,6 @@ extension LazyList: Sequence {
 }
 
 extension LazyList: RandomAccessCollection {
-
   typealias Index = Int
   var startIndex: Index { 0 }
   var endIndex: Index { count }
@@ -119,7 +115,7 @@ extension LazyList: RandomAccessCollection {
   subscript(index: Index) -> Iterator.Element {
     do {
       return try element(at: index)
-    } catch let error {
+    } catch {
       fatalError("\(error)")
     }
   }
@@ -142,21 +138,21 @@ extension LazyList: Equatable where T: Equatable {
 
 extension LazyList: CustomStringConvertible {
   var description: String {
-    let elements = self.reduce(
-      "",
-      { str, element in
-        if str.count == 0 {
-          return "\(element)"
-        }
-        return str + ", \(element)"
-      })
+    let elements = reduce(
+      "")
+    { str, element in
+      if str.count == 0 {
+        return "\(element)"
+      }
+      return str + ", \(element)"
+    }
     return "LazyList<[\(elements)]>"
   }
 }
 
 extension RandomAccessCollection {
   var lazyList: LazyList<Element> {
-    return .init(count: self.count, useCache: false) {
+    return .init(count: count, useCache: false) {
       guard $0 < self.count else { return nil }
       let index = self.index(self.startIndex, offsetBy: $0)
       return self[index]

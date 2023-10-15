@@ -14,6 +14,7 @@ import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
+  func notesGridViewModelDidTapTakePicture(_ source: NotesGridViewModel)
 
   func notesGridViewModelDidTapViewNote(
     id: InternalObjectId,
@@ -32,54 +33,70 @@ class NotesGridViewModel: ViewModel {
   init(summariesRepository: SummariesRepository, group: Group?) {
     self.summaries = summariesRepository
     self.group = group
-    self.title = self.group?.title ?? .empty
-    self.author = self.group?.author ?? .empty
+
+    self.model = GroupModel(
+      imagePath: self.group?.imageURL,
+      title: self.group?.title ?? .empty,
+      author: self.group?.author ?? .empty
+    )
   }
 
   func setup(delegate: NotesGridViewModelDelegate) -> Self {
     self.delegate = delegate
-    bind()
+    self.bind()
     return self
   }
 
   private func bind() {
     self.cancelBag = CancelBag()
     self.onCreateNote()
+    self.onTakePicture()
     self.onViewNote()
     self.loadNotes()
     self.onNoteCreated()
+    self.onImageSelected()
   }
 
   // MARK: STATE
-  @Published var title: String = .empty
-  @Published var author: String = .empty
-  @Published var notes: [Note] = []
+
+  @Published var model: GroupModel
   @Published var selected: Int = 0
 
   // MARK: EVENT
+
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
+  let takePicture: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
+  let imageSelected: PassthroughSubject<CIImage, Never> = PassthroughSubject()
 
   func saveGroup() {
     Just(1)
-      .withLatestFrom(self.$title, self.$author, self.$notes)
+      .withLatestFrom(self.$model)
       .setFailureType(to: Error.self)
-      .flatMapLatest { [weak self] title, author, notes -> AnyPublisher<Group?, Error> in
+      .flatMapLatest { [weak self] model -> AnyPublisher<Group?, Error> in
         guard let self = self else {
           return Just<Group?>(nil)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
         }
 
-        if title.isEmpty && author.isEmpty && notes.isEmpty, let unwrapped = self.group {
+        let title = model.title
+        let author = model.author
+        let notes = model.notes
+        let imagePath = model.imagePath
+
+        if title.isEmpty && author.isEmpty && notes.isEmpty && imagePath == nil, let unwrapped = self.group {
           return self.summaries.deleteGroup(group: unwrapped)
             .map(Optional.some)
             .eraseToAnyPublisher()
         }
 
         var toUpdate = self.group ?? Group()
+
+        // No update required
         if toUpdate.title == title && toUpdate.author == author
+          && toUpdate.imageURL == model.imagePath
           && toUpdate.childCount == notes.count
         {
           return Just<Group?>(nil)
@@ -87,6 +104,7 @@ class NotesGridViewModel: ViewModel {
             .eraseToAnyPublisher()
         }
 
+        toUpdate.updateImage(new: imagePath)
         toUpdate.title = title
         toUpdate.author = author
 
@@ -110,8 +128,29 @@ class NotesGridViewModel: ViewModel {
       .sink(receiveValue: { [weak self] note in
         guard let self = self else { return }
         withAnimation {
-          self.notes.append(note)
-          self.selected = self.notes.count - 1
+          self.model.notes.append(note)
+          self.selected = self.model.notes.count - 1
+        }
+      })
+      .store(in: &self.cancelBag)
+  }
+
+  private func onImageSelected() {
+    self.imageSelected
+      .subscribe(on: .global(qos: .userInteractive))
+      .sink(receiveValue: { [weak self] image in
+        guard let self = self else { return }
+
+        do {
+          if let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) {
+            let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).png")
+            try CIContext().writePNGRepresentation(of: image, to: destinationURL, format: .RGBA8, colorSpace: colorSpace)
+            withAnimation {
+              self.model.imagePath = destinationURL
+            }
+          }
+        } catch {
+          // TODO: How should we handle this error?
         }
       })
       .store(in: &self.cancelBag)
@@ -122,6 +161,15 @@ class NotesGridViewModel: ViewModel {
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
         self.delegate?.notesGridViewModelDidTapCreateNote(self)
+      })
+      .store(in: &self.cancelBag)
+  }
+
+  private func onTakePicture() {
+    self.takePicture
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
+        self.delegate?.notesGridViewModelDidTapTakePicture(self)
       })
       .store(in: &self.cancelBag)
   }
@@ -140,9 +188,23 @@ class NotesGridViewModel: ViewModel {
       .compactMap { _ in self.group?.id }
       .flatMap { self.summaries.loadNotes(parent: $0) }
       .sink(receiveValue: { [weak self] result in
-        self?.notes = result
+        self?.model.notes = result
       })
       .store(in: &self.cancelBag)
+  }
+
+  class GroupModel: ViewModel {
+    init(imagePath: URL? = nil, title: String, author: String, _ notes: [Note] = []) {
+      self.imagePath = imagePath
+      self.title = title
+      self.author = author
+      self.notes = notes
+    }
+
+    @Published var imagePath: URL?
+    @Published var title: String = .empty
+    @Published var author: String = .empty
+    @Published var notes: [Note] = []
   }
 
   static var notesGridViewModelPreview: NotesGridViewModel {
@@ -153,49 +215,6 @@ class NotesGridViewModel: ViewModel {
       summariesRepository: summaries,
       group: Group()
     )
-    //
-    //    notesViewModel.notes = [
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short\n\u{2022} point number four of this should be short\n\u{2022} point number five of this should be short\n\u{2022} point number six of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary:
-    //          "\u{2022} point number one of this should be short\n\u{2022} point number two of this should be short\n\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary: "\u{2022} point number two of this should be short",
-    //        groupId: "test"
-    //      ),
-    //      Note(
-    //        id: UUID().uuidString,
-    //        created: Date(),
-    //        summary: "\u{2022} point number three of this should be short",
-    //        groupId: "test"
-    //      ),
-    //    ]
 
     return notesViewModel
   }

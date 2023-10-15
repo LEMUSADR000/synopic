@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct LandingView: View {
-  static let path = "/"
   @StateObject var viewModel: LandingViewModel
 
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView {
+        // TODO: Stop using List here & implement lazy loading solution
         List {
           ForEach(Array(self.viewModel.sections.enumerated()), id: \.0) { index, section in
             Section {
@@ -27,7 +27,7 @@ struct LandingView: View {
                 .transition(.move(edge: .leading))
               }
               .onDelete { indexSet in
-                delete(sectionIndex: index, at: indexSet)
+                self.delete(sectionIndex: index, at: indexSet)
               }
             } header: {
               Text(section.title)
@@ -40,7 +40,7 @@ struct LandingView: View {
   }
 
   private func delete(sectionIndex: Int, at offsets: IndexSet) {
-    let row = offsets.map({ $0 }).first!
+    let row = offsets.map { $0 }.first!
     self.viewModel.deleteGroup.send(IndexPath(row: row, section: sectionIndex))
   }
 }
