@@ -22,21 +22,23 @@ struct GroupCard: View {
         .frame(height: width * (2 / 3), alignment: .top)
         .foregroundColor(theme)
       VStack(alignment: .center) {
-        if !title.isEmpty {
-          Text(title.capitalized)
-            .font(.headline.monospaced())
-            .foregroundColor(.primary.opacity(0.6))
-            .minimumScaleFactor(0.1)
-            .multilineTextAlignment(.center)
-        }
-        if !author.isEmpty {
-          Spacer().frame(height: 4)
-          Text(author.capitalized)
-            .font(.subheadline.monospaced())
-            .foregroundColor(.primary.opacity(0.5))
-            .minimumScaleFactor(0.1)
-            .multilineTextAlignment(.center)
-        }
+        VStack {
+          if !title.isEmpty {
+            Text(title.capitalized)
+              .font(.headline.monospaced())
+              .foregroundColor(.primary.opacity(0.6))
+              .minimumScaleFactor(0.1)
+              .multilineTextAlignment(.center)
+          }
+          if !author.isEmpty {
+            Spacer().frame(height: 8)
+            Text(author.capitalized)
+              .font(.subheadline.monospaced())
+              .foregroundColor(.primary.opacity(0.5))
+              .minimumScaleFactor(0.1)
+              .multilineTextAlignment(.center)
+          }
+        }.padding(2.5)
       }
       .frame(height: width * (2 / 3))
     }.frame(height: width)

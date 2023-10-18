@@ -57,7 +57,10 @@ struct ViewContent: View {
   let sections = [
     ViewSection(
       title: "Today", items: [
-        Group(title: "Book1", author: "Author1"),
+        Group(
+          title: "Very long name made purely to test what it would look like",
+          author: "Very long author to test what this would look like as well"
+        ),
         Group(title: "Book2", author: "Author2"),
         Group(title: "Book3", author: "Author3"),
         Group(title: "Book4", author: "Author4"),
@@ -88,7 +91,6 @@ struct ViewContent: View {
   ]
 
   return ViewContent(
-    //    sections: .constant(sections.count),
     viewModel: {
       let model = AppAssembler().resolve(LandingViewModel.self)!
       model.sections = sections
