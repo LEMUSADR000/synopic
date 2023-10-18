@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1E045CB2298245EE00917E75 /* ScanDocumentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E045CB1298245EE00917E75 /* ScanDocumentsView.swift */; };
 		1E16BD9E2AE07662007AE5D6 /* GroupCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E16BD9D2AE07662007AE5D6 /* GroupCard.swift */; };
+		1E16BDA02AE09D9C007AE5D6 /* Stripes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E16BD9F2AE09D9C007AE5D6 /* Stripes.swift */; };
 		1E2BC37C295567E600A4821A /* Publisher+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */; };
 		1E2BC37E2955681500A4821A /* Publisher+DefinedScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */; };
 		1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2BC37F29556AF700A4821A /* CancelBag.swift */; };
@@ -105,6 +106,7 @@
 /* Begin PBXFileReference section */
 		1E045CB1298245EE00917E75 /* ScanDocumentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDocumentsView.swift; sourceTree = "<group>"; };
 		1E16BD9D2AE07662007AE5D6 /* GroupCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCard.swift; sourceTree = "<group>"; };
+		1E16BD9F2AE09D9C007AE5D6 /* Stripes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stripes.swift; sourceTree = "<group>"; };
 		1E2BC37B295567E600A4821A /* Publisher+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+Extensions.swift"; sourceTree = "<group>"; };
 		1E2BC37D2955681500A4821A /* Publisher+DefinedScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+DefinedScheduler.swift"; sourceTree = "<group>"; };
 		1E2BC37F29556AF700A4821A /* CancelBag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelBag.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 		1E63E7D6298781B700571DD3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1E16BD9F2AE09D9C007AE5D6 /* Stripes.swift */,
 				1E8B32D72AA2BDBF004709B9 /* CustomBack.swift */,
 				1ED88E392990121F0052BD10 /* GroupCoverImageView.swift */,
 				1E63E7D7298781C500571DD3 /* NoteCardView.swift */,
@@ -788,6 +791,7 @@
 				1E4B14CE2984D332002D1105 /* String+Extensions.swift in Sources */,
 				1E7A68952AD6701200AB6CF5 /* CameraViewModel.swift in Sources */,
 				1EA187292952BFE80017B38B /* ServiceAssembly.swift in Sources */,
+				1E16BDA02AE09D9C007AE5D6 /* Stripes.swift in Sources */,
 				1E5A16B82AD3491200A7CA3F /* CameraManager.swift in Sources */,
 				1E4D54C52A687D5800CD524A /* LazyList.swift in Sources */,
 				1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */,

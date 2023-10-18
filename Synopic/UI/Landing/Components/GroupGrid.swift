@@ -27,7 +27,8 @@ struct GroupGrid: View {
           Button(action: { self.onTap(item) }) {
             GroupCard(
               title: item.title,
-              author: item.author, 
+              author: item.author,
+              noteCount: item.childCount,
               theme: item.usableColor,
               width: width
             )

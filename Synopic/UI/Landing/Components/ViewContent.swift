@@ -35,7 +35,7 @@ struct ViewContent: View {
                 .padding(.leading, 20)
               Spacer()
             }
-            
+
             GroupGrid(
               items: self.$viewModel.sections[i].items,
               onDelete: { indexSet in
@@ -59,7 +59,8 @@ struct ViewContent: View {
       title: "Today", items: [
         Group(
           title: "Very long name made purely to test what it would look like",
-          author: "Very long author to test what this would look like as well"
+          author: "Very long author to test what this would look like as well",
+          childCount: 100
         ),
         Group(title: "Book2", author: "Author2"),
         Group(title: "Book3", author: "Author3"),

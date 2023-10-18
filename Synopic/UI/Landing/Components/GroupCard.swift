@@ -5,23 +5,21 @@
 //  Created by Adrian Lemus on 10/18/23.
 //
 
+import CoreImage.CIFilterBuiltins
 import SwiftUI
 
 struct GroupCard: View {
   let title: String
   let author: String
+  let noteCount: Int
   let theme: Color
   let width: Double
 
   var body: some View {
-    ZStack(alignment: .top) {
-      Rectangle()
-        .frame(height: width)
-        .foregroundColor(.white)
-      Rectangle()
-        .frame(height: width * (2 / 3), alignment: .top)
-        .foregroundColor(theme)
-      VStack(alignment: .center) {
+    VStack(spacing: 0) {
+      ZStack {
+        Rectangle()
+          .foregroundColor(theme)
         VStack {
           if !title.isEmpty {
             Text(title.capitalized)
@@ -41,14 +39,51 @@ struct GroupCard: View {
         }.padding(2.5)
       }
       .frame(height: width * (2 / 3))
+      ZStack(alignment: .bottomTrailing) {
+        Rectangle()
+          .foregroundColor(.white)
+        Stripes(
+          config: StripesConfig(
+            background: .white,
+            foreground: .blue.opacity(0.05),
+            degrees: 90,
+            barWidth: 1,
+            barSpacing: 7.1
+          )
+        )
+        Stripes(
+          config: StripesConfig(
+            background: .clear,
+            foreground: .red.opacity(0.05),
+            degrees: 0,
+            barWidth: 2,
+            barSpacing: width
+          )
+        ).padding(.leading, 35)
+        ZStack(alignment: .center) {
+          Image(systemName: "note")
+            .resizable()
+            .foregroundColor(.primary.opacity(0.5))
+            .padding(5)
+          Text("\(noteCount)")
+            .font(.headline.monospaced())
+            .foregroundColor(.primary.opacity(0.5))
+            .padding(.horizontal, 10)
+            .minimumScaleFactor(0.1)
+        }
+        .frame(width: width / 6, height: width / 6)
+        .padding(.trailing, width / 16)
+        .padding(.bottom, width / 16)
+      }
     }.frame(height: width)
   }
 }
 
 #Preview {
   GroupCard(
-    title: "Author",
+    title: "Title",
     author: "Author",
+    noteCount: 100,
     theme: Color.generateRandomPastelColor(),
     width: 393
   )

@@ -66,12 +66,12 @@ struct Group: Identifiable, Hashable {
     self.backsplash = theme?.cgColor ?? CGColor.generateRandomPastelColor()
   }
 
-  init(title: String, author: String) {
+  init(title: String, author: String, childCount: Int = 0) {
     self.id = nil
     self.lastEdited = Date.now
     self.title = title
     self.author = author
-    self.childCount = 0
+    self.childCount = childCount
     self.backsplash = CGColor.generateRandomPastelColor()
   }
 
