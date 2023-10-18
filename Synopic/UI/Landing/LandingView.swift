@@ -8,15 +8,12 @@
 import SwiftUI
 
 struct LandingView: View {
-  @StateObject var viewModel: LandingViewModel
+  let viewModel: LandingViewModel
 
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView {
-        LandingContent(
-          sections: self.$viewModel.sectionCount,
-          viewModel: self.viewModel
-        )
+        ViewContent(viewModel: self.viewModel)
       }
       TabBarContent(viewModel: self.viewModel)
     }

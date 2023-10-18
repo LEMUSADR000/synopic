@@ -1,5 +1,5 @@
 //
-//  LandingSection.swift
+//  GroupGrid.swift
 //  Synopic
 //
 //  Created by Adrian Lemus on 10/16/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LandingSection: View {
+struct GroupGrid: View {
   @Binding var items: [Group]
   let onDelete: (IndexSet) -> Void
   let onTap: (Group) -> Void
@@ -25,28 +25,12 @@ struct LandingSection: View {
       ForEach(Array(items.enumerated()), id: \.1) { _, item in
         HStack {
           Button(action: { self.onTap(item) }) {
-            ZStack(alignment: .top) {
-              Rectangle()
-                .frame(height: width)
-                .foregroundColor(.white)
-              Rectangle()
-                .frame(height: width * (2 / 3), alignment: .top)
-                .foregroundColor(item.usableColor)
-              VStack(alignment: .center) {
-                Text(item.title.capitalized)
-                  .font(.headline.monospaced())
-                  .foregroundColor(.primary.opacity(0.6))
-                  .minimumScaleFactor(0.1)
-                  .multilineTextAlignment(.center)
-                Spacer().frame(height: 4)
-                Text(item.author.capitalized)
-                  .font(.subheadline.monospaced())
-                  .foregroundColor(.primary.opacity(0.5))
-                  .minimumScaleFactor(0.1)
-                  .multilineTextAlignment(.center)
-              }
-              .frame(height: width * (2 / 3))
-            }
+            GroupCard(
+              title: item.title,
+              author: item.author, 
+              theme: item.usableColor,
+              width: width
+            )
           }
           .clipShape(RoundedRectangle(cornerRadius: 20))
           .foregroundColor(Color(UIColor.label))
@@ -61,7 +45,7 @@ struct LandingSection: View {
 }
 
 #Preview {
-  LandingSection(
+  GroupGrid(
     items: .constant([
       Group(title: "Book1", author: "Author1"),
       Group(title: "Book2", author: "Author2"),
@@ -75,7 +59,7 @@ struct LandingSection: View {
     ]),
     onDelete: { _ in },
     onTap: { _ in },
-    width: 300,
+    width: 250,
     columns: 2,
     spacing: 20
   )

@@ -1,5 +1,5 @@
 //
-//  LandingContent.swift
+//  Content.swift
 //  Synopic
 //
 //  Created by Adrian Lemus on 10/16/23.
@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-struct LandingContent: View {
-  @Binding var sections: Int
+struct ViewContent: View {
   @StateObject var viewModel: LandingViewModel
 
   private let columns: Int = 2
@@ -28,15 +27,16 @@ struct LandingContent: View {
   var body: some View {
     GeometryReader { geo in
       ScrollView {
-        ForEach(0 ..< self.sections, id: \.self) { i in
-          VStack(alignment: .leading) {
+        ForEach(0 ..< self.viewModel.sectionCount, id: \.self) { i in
+          LazyVStack(alignment: .leading, spacing: 0) {
             HStack {
-              Text(self.viewModel.sections[i].title)
-                .font(.caption2)
-                .padding(.leading, 10)
+              Text(self.viewModel.sections[i].title.uppercased())
+                .font(.caption)
+                .padding(.leading, 20)
               Spacer()
             }
-            LandingSection(
+            
+            GroupGrid(
               items: self.$viewModel.sections[i].items,
               onDelete: { indexSet in
                 self.delete(sectionIndex: i, at: indexSet)
@@ -48,7 +48,6 @@ struct LandingContent: View {
             )
           }
         }
-        .listRowSeparator(.hidden)
       }
     }
   }
@@ -88,8 +87,8 @@ struct LandingContent: View {
     ),
   ]
 
-  return LandingContent(
-    sections: .constant(sections.count),
+  return ViewContent(
+    //    sections: .constant(sections.count),
     viewModel: {
       let model = AppAssembler().resolve(LandingViewModel.self)!
       model.sections = sections
