@@ -14,11 +14,8 @@ struct LandingView: View {
     ZStack(alignment: .bottom) {
       TabView {
         LandingContent(
-          sections: self.$viewModel.sections,
-          onDelete: self.delete,
-          onTap: { group in
-            self.viewModel.viewGroup.send(group)
-          }
+          sections: self.$viewModel.sectionCount,
+          viewModel: self.viewModel
         )
       }
       TabBarContent(viewModel: self.viewModel)
@@ -31,11 +28,6 @@ struct LandingView: View {
   }
 }
 
-struct LandingView_Previews: PreviewProvider {
-  static let appAssembler = AppAssembler()
-  static let viewModel = appAssembler.resolve(LandingViewModel.self)!
-
-  static var previews: some View {
-    LandingView(viewModel: viewModel)
-  }
+#Preview {
+  LandingView(viewModel: AppAssembler().resolve(LandingViewModel.self)!)
 }

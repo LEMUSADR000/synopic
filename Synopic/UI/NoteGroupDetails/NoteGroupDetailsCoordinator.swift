@@ -86,7 +86,7 @@ extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
 
 extension NoteGroupDetailsCoordinator: CameraViewModelDelegate {
   func cameraViewDidSelectImage(image: CIImage, _ source: CameraViewModel) {
-    self.notesGridViewModel.imageSelected.send(image)
-    self.cameraViewModel = nil
+//    self.notesGridViewModel.imageSelected.send(image)
+//    self.cameraViewModel = nil
   }
 }

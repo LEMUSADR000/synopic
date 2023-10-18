@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LandingSection: View {
-  var items: [Group]
+  @Binding var items: [Group]
   let onDelete: (IndexSet) -> Void
   let onTap: (Group) -> Void
 
@@ -31,7 +31,7 @@ struct LandingSection: View {
                 .foregroundColor(.white)
               Rectangle()
                 .frame(height: width * (2 / 3), alignment: .top)
-                .foregroundColor(LandingViewModel.randomPastelColor())
+                .foregroundColor(item.usableColor)
               VStack(alignment: .center) {
                 Text(item.title.capitalized)
                   .font(.headline.monospaced())
@@ -62,7 +62,7 @@ struct LandingSection: View {
 
 #Preview {
   LandingSection(
-    items: [
+    items: .constant([
       Group(title: "Book1", author: "Author1"),
       Group(title: "Book2", author: "Author2"),
       Group(title: "Book3", author: "Author3"),
@@ -72,7 +72,7 @@ struct LandingSection: View {
       Group(title: "Book1", author: "Author1"),
       Group(title: "Book2", author: "Author2"),
       Group(title: "Book3", author: "Author3"),
-    ],
+    ]),
     onDelete: { _ in },
     onTap: { _ in },
     width: 300,

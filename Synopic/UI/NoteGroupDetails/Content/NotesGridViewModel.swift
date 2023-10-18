@@ -35,9 +35,9 @@ class NotesGridViewModel: ViewModel {
     self.group = group
 
     self.model = GroupModel(
-      imagePath: self.group?.imageURL,
       title: self.group?.title ?? .empty,
-      author: self.group?.author ?? .empty
+      author: self.group?.author ?? .empty,
+      theme: self.group?.usableColor ?? Color.generateRandomPastelColor()
     )
   }
 
@@ -54,7 +54,6 @@ class NotesGridViewModel: ViewModel {
     self.onViewNote()
     self.loadNotes()
     self.onNoteCreated()
-    self.onImageSelected()
   }
 
   // MARK: STATE
@@ -68,7 +67,6 @@ class NotesGridViewModel: ViewModel {
   let takePicture: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
-  let imageSelected: PassthroughSubject<CIImage, Never> = PassthroughSubject()
 
   func saveGroup() {
     Just(1)
@@ -84,9 +82,8 @@ class NotesGridViewModel: ViewModel {
         let title = model.title
         let author = model.author
         let notes = model.notes
-        let imagePath = model.imagePath
 
-        if title.isEmpty && author.isEmpty && notes.isEmpty && imagePath == nil, let unwrapped = self.group {
+        if title.isEmpty && author.isEmpty && notes.isEmpty, let unwrapped = self.group {
           return self.summaries.deleteGroup(group: unwrapped)
             .map(Optional.some)
             .eraseToAnyPublisher()
@@ -96,7 +93,6 @@ class NotesGridViewModel: ViewModel {
 
         // No update required
         if toUpdate.title == title && toUpdate.author == author
-          && toUpdate.imageURL == model.imagePath
           && toUpdate.childCount == notes.count
         {
           return Just<Group?>(nil)
@@ -104,14 +100,13 @@ class NotesGridViewModel: ViewModel {
             .eraseToAnyPublisher()
         }
 
-        toUpdate.updateImage(new: imagePath)
         toUpdate.title = title
         toUpdate.author = author
 
-//        for i in 0 ... 20 {
+//        for i in 0 ... 100 {
 //          var new = Group()
-//          new.title = "title_\(i)"
-//          new.author = "author_\(i)"
+//          new.title = "Title \(i)"
+//          new.author = "Author \(i)"
 //
 //          self.summaries.updateGroup(group: new, notes: [])
 //        }
@@ -138,27 +133,6 @@ class NotesGridViewModel: ViewModel {
         withAnimation {
           self.model.notes.append(note)
           self.selected = self.model.notes.count - 1
-        }
-      })
-      .store(in: &self.cancelBag)
-  }
-
-  private func onImageSelected() {
-    self.imageSelected
-      .subscribe(on: .global(qos: .userInteractive))
-      .sink(receiveValue: { [weak self] image in
-        guard let self = self else { return }
-
-        do {
-          if let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) {
-            let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).png")
-            try CIContext().writePNGRepresentation(of: image, to: destinationURL, format: .RGBA8, colorSpace: colorSpace)
-            withAnimation {
-              self.model.imagePath = destinationURL
-            }
-          }
-        } catch {
-          // TODO: How should we handle this error?
         }
       })
       .store(in: &self.cancelBag)
@@ -202,17 +176,17 @@ class NotesGridViewModel: ViewModel {
   }
 
   class GroupModel: ViewModel {
-    init(imagePath: URL? = nil, title: String, author: String, _ notes: [Note] = []) {
-      self.imagePath = imagePath
+    init(title: String, author: String, _ notes: [Note] = [], theme: Color) {
       self.title = title
       self.author = author
       self.notes = notes
+      self.theme = theme
     }
 
-    @Published var imagePath: URL?
     @Published var title: String = .empty
     @Published var author: String = .empty
     @Published var notes: [Note] = []
+    let theme: Color
   }
 
   static var notesGridViewModelPreview: NotesGridViewModel {
