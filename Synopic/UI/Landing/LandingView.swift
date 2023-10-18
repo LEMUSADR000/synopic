@@ -13,27 +13,13 @@ struct LandingView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView {
-        // TODO: Stop using List here & implement lazy loading solution
-        List {
-          ForEach(Array(self.viewModel.sections.enumerated()), id: \.0) { index, section in
-            Section {
-              ForEach(section.items) { item in
-                GroupRow(
-                  item: item,
-                  onTap: {
-                    self.viewModel.viewGroup.send(item)
-                  }
-                )
-                .transition(.move(edge: .leading))
-              }
-              .onDelete { indexSet in
-                self.delete(sectionIndex: index, at: indexSet)
-              }
-            } header: {
-              Text(section.title)
-            }.listStyle(SidebarListStyle())
+        LandingContent(
+          sections: self.$viewModel.sections,
+          onDelete: self.delete,
+          onTap: { group in
+            self.viewModel.viewGroup.send(group)
           }
-        }.listStyle(InsetGroupedListStyle())
+        )
       }
       TabBarContent(viewModel: self.viewModel)
     }

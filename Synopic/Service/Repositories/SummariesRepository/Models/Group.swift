@@ -8,13 +8,18 @@
 import Foundation
 import SwiftUI
 
-struct Group: Identifiable {
+struct Group: Identifiable, Hashable {
   let id: InternalObjectId?
   var lastEdited: Date
   var title: String
   var author: String
   var childCount: Int
   var imageURL: URL?
+  var backsplash: Color?
+  
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.id)
+  }
 
   init() {
     self.id = nil
@@ -43,6 +48,14 @@ struct Group: Identifiable {
     self.author = author
     self.childCount = childCount
     self.imageURL = makePath(rawName: imageName)
+  }
+
+  init(title: String, author: String) {
+    self.id = nil
+    self.lastEdited = Date.now
+    self.title = title
+    self.author = author
+    self.childCount = 0
   }
 
   private func makePath(rawName: String?) -> URL? {

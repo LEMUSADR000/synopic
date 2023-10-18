@@ -21,10 +21,6 @@ struct GroupRow: View {
         label: {
           HStack {
             ZStack {
-              Rectangle()
-                .foregroundColor(Color(UIColor.systemBackground))
-                .aspectRatio(contentMode: .fill)
-                .cornerRadius(4)
               if let image = item.imageURL {
                 GroupCoverImageView(image: .constant(image))
               } else {

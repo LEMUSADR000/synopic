@@ -108,6 +108,14 @@ class NotesGridViewModel: ViewModel {
         toUpdate.title = title
         toUpdate.author = author
 
+//        for i in 0 ... 20 {
+//          var new = Group()
+//          new.title = "title_\(i)"
+//          new.author = "author_\(i)"
+//
+//          self.summaries.updateGroup(group: new, notes: [])
+//        }
+
         return self.summaries.updateGroup(group: toUpdate, notes: notes)
           .map(Optional.some)
           .eraseToAnyPublisher()

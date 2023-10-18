@@ -152,6 +152,24 @@ class LandingViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
+
+  // Function to generate a random CGFloat between 0 and 1
+  private static var randomCGFloat: CGFloat {
+    CGFloat.random(in: 0 ... 1)
+  }
+
+  // Function to generate a random pastel color
+  static func randomPastelColor() -> Color {
+    var randomColor = UIColor(red: self.randomCGFloat, green: self.randomCGFloat, blue: self.randomCGFloat, alpha: 1.0)
+
+    // Saturate the color by 10%
+    randomColor = randomColor.saturated(by: 0.1)
+
+    // Mix with white
+    randomColor = randomColor.mixed(with: .white)
+
+    return Color(randomColor)
+  }
 }
 
 extension Date {
