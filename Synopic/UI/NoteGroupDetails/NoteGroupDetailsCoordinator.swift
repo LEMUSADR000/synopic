@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 import Combine
 import CoreData
 import Foundation
@@ -25,9 +26,13 @@ class NoteGroupDetailsCoordinator: ViewModel {
 
   private weak var delegate: NoteGroupDetailsCoordinatorDelegate?
 
-  private var group: Group?
+  private var group: Group
+  
+  var theme: Color {
+    group.usableColor
+  }
 
-  init(resolver: Resolver, group: Group?) {
+  init(resolver: Resolver, group: Group) {
     self.resolver = resolver
     self.group = group
 
@@ -86,7 +91,7 @@ extension NoteGroupDetailsCoordinator: NoteCreateCoordinatorDelegate {
 
 extension NoteGroupDetailsCoordinator: CameraViewModelDelegate {
   func cameraViewDidSelectImage(image: CIImage, _ source: CameraViewModel) {
-    self.notesGridViewModel.imageSelected.send(image)
-    self.cameraViewModel = nil
+//    self.notesGridViewModel.imageSelected.send(image)
+//    self.cameraViewModel = nil
   }
 }

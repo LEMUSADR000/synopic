@@ -8,32 +8,12 @@
 import SwiftUI
 
 struct LandingView: View {
-  @StateObject var viewModel: LandingViewModel
+  let viewModel: LandingViewModel
 
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView {
-        // TODO: Stop using List here & implement lazy loading solution
-        List {
-          ForEach(Array(self.viewModel.sections.enumerated()), id: \.0) { index, section in
-            Section {
-              ForEach(section.items) { item in
-                GroupRow(
-                  item: item,
-                  onTap: {
-                    self.viewModel.viewGroup.send(item)
-                  }
-                )
-                .transition(.move(edge: .leading))
-              }
-              .onDelete { indexSet in
-                self.delete(sectionIndex: index, at: indexSet)
-              }
-            } header: {
-              Text(section.title)
-            }.listStyle(SidebarListStyle())
-          }
-        }.listStyle(InsetGroupedListStyle())
+        ViewContent(viewModel: self.viewModel)
       }
       TabBarContent(viewModel: self.viewModel)
     }
@@ -45,11 +25,6 @@ struct LandingView: View {
   }
 }
 
-struct LandingView_Previews: PreviewProvider {
-  static let appAssembler = AppAssembler()
-  static let viewModel = appAssembler.resolve(LandingViewModel.self)!
-
-  static var previews: some View {
-    LandingView(viewModel: viewModel)
-  }
+#Preview {
+  LandingView(viewModel: AppAssembler().resolve(LandingViewModel.self)!)
 }

@@ -7,14 +7,27 @@
 
 import Foundation
 import SwiftUI
+import UIKit
 
-struct Group: Identifiable {
+struct Group: Identifiable, Hashable {
   let id: InternalObjectId?
   var lastEdited: Date
   var title: String
   var author: String
   var childCount: Int
-  var imageURL: URL?
+  private let backsplash: CGColor
+
+  var usableColor: Color {
+    Color(cgColor: backsplash)
+  }
+
+  var codableTheme: Data? {
+    try? JSONEncoder().encode(CodableColor(cgColor: backsplash))
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
 
   init() {
     self.id = nil
@@ -22,6 +35,7 @@ struct Group: Identifiable {
     self.title = ""
     self.author = ""
     self.childCount = 0
+    self.backsplash = CGColor.generateRandomPastelColor()
   }
 
   init(from entity: GroupEntityMO) {
@@ -30,43 +44,60 @@ struct Group: Identifiable {
     self.title = entity.title ?? ""
     self.author = entity.author ?? ""
     self.childCount = entity.child?.count ?? 0
-    self.imageURL = makePath(rawName: entity.imageName)
+
+    if let colorData = entity.theme, let storedCGColor = (try? JSONDecoder()
+      .decode(CodableColor.self, from: colorData))?.cgColor
+    {
+      self.backsplash = storedCGColor
+    } else {
+      self.backsplash = CGColor.generateRandomPastelColor()
+    }
   }
 
   init(
     id: InternalObjectId?, lastEdited: Date, title: String, author: String, childCount: Int,
-    imageName: String?
+    theme: Color?
   ) {
     self.id = id
     self.lastEdited = lastEdited
     self.title = title
     self.author = author
     self.childCount = childCount
-    self.imageURL = makePath(rawName: imageName)
+    self.backsplash = theme?.cgColor ?? CGColor.generateRandomPastelColor()
   }
 
-  private func makePath(rawName: String?) -> URL? {
-    if let imageName = rawName {
-      return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imageName)
-    }
-
-    return nil
+  init(title: String, author: String, childCount: Int = 0) {
+    self.id = nil
+    self.lastEdited = Date.now
+    self.title = title
+    self.author = author
+    self.childCount = childCount
+    self.backsplash = CGColor.generateRandomPastelColor()
   }
 
-  mutating func updateImage(new: URL?) {
-    guard let new = new, let old = imageURL
-    else {
-      return
-    }
-
-    try? FileManager.default.removeItem(at: old)
-
-    do {
-      let newURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(new.lastPathComponent))!
-      try FileManager.default.moveItem(at: new, to: newURL)
-      imageURL = newURL
-    } catch {
-      print("Failed to perform file transfer")
-    }
-  }
+  // TODO: Figure out what kind of images we actually care about
+//  private func makePath(rawName: String?) -> URL? {
+//    if let imageName = rawName {
+//      return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(imageName)
+//    }
+//
+//    return nil
+//  }
+//
+//  mutating func updateImage(new: URL?) {
+//    guard let new = new, let old = imageURL, new.lastPathComponent != old.lastPathComponent
+//    else {
+//      return
+//    }
+//
+//    try? FileManager.default.removeItem(at: old)
+//
+//    do {
+//      let newURL = makePath(rawName: new.lastPathComponent)!
+//      try FileManager.default.moveItem(at: new, to: newURL)
+//      imageURL = newURL
+//    } catch {
+//      print("Failed to perform file transfer \(error)")
+//    }
+//  }
 }

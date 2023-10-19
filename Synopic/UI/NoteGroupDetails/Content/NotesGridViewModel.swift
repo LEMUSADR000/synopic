@@ -26,18 +26,22 @@ protocol NotesGridViewModelDelegate: AnyObject {
 
 class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private var group: Group?
+  private var group: Group
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
+  
+  var theme: UIColor {
+    UIColor(group.usableColor)
+  }
 
-  init(summariesRepository: SummariesRepository, group: Group?) {
+  init(summariesRepository: SummariesRepository, group: Group) {
     self.summaries = summariesRepository
     self.group = group
 
     self.model = GroupModel(
-      imagePath: self.group?.imageURL,
-      title: self.group?.title ?? .empty,
-      author: self.group?.author ?? .empty
+      title: self.group.title,
+      author: self.group.author,
+      theme: self.group.usableColor
     )
   }
 
@@ -54,7 +58,6 @@ class NotesGridViewModel: ViewModel {
     self.onViewNote()
     self.loadNotes()
     self.onNoteCreated()
-    self.onImageSelected()
   }
 
   // MARK: STATE
@@ -68,7 +71,6 @@ class NotesGridViewModel: ViewModel {
   let takePicture: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
-  let imageSelected: PassthroughSubject<CIImage, Never> = PassthroughSubject()
 
   func saveGroup() {
     Just(1)
@@ -84,19 +86,17 @@ class NotesGridViewModel: ViewModel {
         let title = model.title
         let author = model.author
         let notes = model.notes
-        let imagePath = model.imagePath
 
-        if title.isEmpty && author.isEmpty && notes.isEmpty && imagePath == nil, let unwrapped = self.group {
-          return self.summaries.deleteGroup(group: unwrapped)
+        if title.isEmpty && author.isEmpty && notes.isEmpty, self.group.id != nil {
+          return self.summaries.deleteGroup(group: self.group)
             .map(Optional.some)
             .eraseToAnyPublisher()
         }
 
-        var toUpdate = self.group ?? Group()
+        var toUpdate = self.group
 
         // No update required
         if toUpdate.title == title && toUpdate.author == author
-          && toUpdate.imageURL == model.imagePath
           && toUpdate.childCount == notes.count
         {
           return Just<Group?>(nil)
@@ -104,9 +104,16 @@ class NotesGridViewModel: ViewModel {
             .eraseToAnyPublisher()
         }
 
-        toUpdate.updateImage(new: imagePath)
         toUpdate.title = title
         toUpdate.author = author
+
+//        for i in 0 ... 100 {
+//          var new = Group()
+//          new.title = "Title \(i)"
+//          new.author = "Author \(i)"
+//
+//          self.summaries.updateGroup(group: new, notes: [])
+//        }
 
         return self.summaries.updateGroup(group: toUpdate, notes: notes)
           .map(Optional.some)
@@ -130,27 +137,6 @@ class NotesGridViewModel: ViewModel {
         withAnimation {
           self.model.notes.append(note)
           self.selected = self.model.notes.count - 1
-        }
-      })
-      .store(in: &self.cancelBag)
-  }
-
-  private func onImageSelected() {
-    self.imageSelected
-      .subscribe(on: .global(qos: .userInteractive))
-      .sink(receiveValue: { [weak self] image in
-        guard let self = self else { return }
-
-        do {
-          if let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) {
-            let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).png")
-            try CIContext().writePNGRepresentation(of: image, to: destinationURL, format: .RGBA8, colorSpace: colorSpace)
-            withAnimation {
-              self.model.imagePath = destinationURL
-            }
-          }
-        } catch {
-          // TODO: How should we handle this error?
         }
       })
       .store(in: &self.cancelBag)
@@ -185,7 +171,7 @@ class NotesGridViewModel: ViewModel {
 
   private func loadNotes() {
     Just<Int>(1)
-      .compactMap { _ in self.group?.id }
+      .compactMap { _ in self.group.id }
       .flatMap { self.summaries.loadNotes(parent: $0) }
       .sink(receiveValue: { [weak self] result in
         self?.model.notes = result
@@ -194,17 +180,17 @@ class NotesGridViewModel: ViewModel {
   }
 
   class GroupModel: ViewModel {
-    init(imagePath: URL? = nil, title: String, author: String, _ notes: [Note] = []) {
-      self.imagePath = imagePath
+    init(title: String, author: String, _ notes: [Note] = [], theme: Color) {
       self.title = title
       self.author = author
       self.notes = notes
+      self.theme = theme
     }
 
-    @Published var imagePath: URL?
     @Published var title: String = .empty
     @Published var author: String = .empty
     @Published var notes: [Note] = []
+    let theme: Color
   }
 
   static var notesGridViewModelPreview: NotesGridViewModel {

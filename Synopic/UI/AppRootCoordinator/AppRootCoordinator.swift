@@ -29,7 +29,7 @@ class AppRootCoordinator: ViewModel {
 
 extension AppRootCoordinator: LandingViewModelDelegate {
   func landingViewModelDidTapViewGroup(
-    group: Group?,
+    group: Group,
     _ source: LandingViewModel
   ) {
     self.noteGroupDetailsCoordinator = self.resolver.resolve(

@@ -14,7 +14,7 @@ private let defaultDate = Date(timeIntervalSince1970: 0.0)
 
 protocol LandingViewModelDelegate: AnyObject {
   func landingViewModelDidTapViewGroup(
-    group: Group?,
+    group: Group,
     _ source: LandingViewModel
   )
 }
@@ -50,7 +50,13 @@ class LandingViewModel: ViewModel {
   // MARK: STATE
 
   @Published var searchText: String = .empty
-  @Published var sections: [ViewSection] = []
+  @Published var sections: [ViewSection] = [] {
+    didSet {
+      self.sectionCount = self.sections.count
+    }
+  }
+
+  @Published var sectionCount = 0
 
   // MARK: EVENT
 
@@ -63,7 +69,8 @@ class LandingViewModel: ViewModel {
     self.createGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        self.delegate?.landingViewModelDidTapViewGroup(group: nil, self)
+        // It's okay to create empty Group since it will be used to save a new one anyway
+        self.delegate?.landingViewModelDidTapViewGroup(group: Group(), self)
       })
       .store(in: &self.cancelBag)
   }
@@ -118,11 +125,8 @@ class LandingViewModel: ViewModel {
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
 
-        if let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
-          let fileList = try! FileManager.default.contentsOfDirectory(atPath: path)
-          for file in fileList {
-            print("\(path)/\(file)")
-          }
+        withAnimation {
+          self.sections.removeAll(keepingCapacity: true)
         }
 
         var noteKeys: [String] = []
@@ -142,12 +146,10 @@ class LandingViewModel: ViewModel {
           }
         }
 
-        var sections: [ViewSection] = []
         for key in noteKeys {
-          sections.append(ViewSection(title: key, items: noteGroups[key]!))
-        }
-        withAnimation {
-          self.sections = sections
+          withAnimation {
+            self.sections.append(ViewSection(title: key, items: noteGroups[key]!))
+          }
         }
       })
       .store(in: &self.cancelBag)

@@ -14,13 +14,13 @@ struct NotesGridView: View {
 
   let horizontalPadding: CGFloat = 10
 
+  private func hideKeyboard() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+  }
+
   var body: some View {
     VStack {
       HStack {
-        Button(action: self.notesGridViewModel.takePicture) {
-          ImageSelection(image: self.$notesGridViewModel.model.imagePath)
-            .frame(width: 70, height: 70)
-        }
         Spacer().frame(width: 10)
         VStack {
           TextField(
@@ -42,19 +42,36 @@ struct NotesGridView: View {
       .padding(.vertical, 20)
 
       Spacer().frame(height: 16)
-      PageViewWrapper(selection: self.$notesGridViewModel.selected) {
-        ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-          NoteCardView {
-            Text(note.summary)
-              .fontWeight(.light)
-              .font(.system(size: 36))
-              .multilineTextAlignment(.leading)
-              .minimumScaleFactor(0.1)
-              .padding()
-          }
-          .tag(i)
-          .padding()
-        }.padding(.bottom, 50)
+      if self.notesGridViewModel.model.notes.isEmpty {
+        Spacer()
+        Text("Tap scan button and begin studying!")
+          .font(.title.monospaced())
+          .foregroundColor(.primary.opacity(0.5))
+          .multilineTextAlignment(.center)
+          .padding(.bottom, 50)
+          .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+      } else {
+        PageViewWrapper(
+          selection: self.$notesGridViewModel.selected,
+          currentIndicator: self.notesGridViewModel.theme
+        ) {
+          ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
+            NoteCardView {
+              Text(note.summary)
+                .fontWeight(.light)
+                .font(.system(size: 36))
+                .multilineTextAlignment(.leading)
+                .minimumScaleFactor(0.1)
+                .padding()
+            }
+            .tag(i)
+            .padding()
+          }.padding(.bottom, 50)
+        }
+        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+        .onTapGesture {
+          self.hideKeyboard()
+        }
       }
       Spacer()
     }
@@ -69,7 +86,9 @@ struct NotesGridView: View {
             Image(systemName: "book")
           }
         }
-      ).frame(height: 45)
+      )
+      .frame(height: 45)
+      .foregroundColor(.primary.opacity(0.6))
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
@@ -78,39 +97,6 @@ struct NotesGridView: View {
   }
 
   func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
-}
-
-struct ImageSelection: View {
-  @Binding var image: URL?
-
-  var body: some View {
-    if let url = image {
-      GroupCoverImageView(image: .constant(url))
-    } else {
-      ZStack(alignment: .bottomTrailing) {
-        Rectangle().foregroundColor(Color(UIColor.gray))
-          .aspectRatio(contentMode: .fill)
-          .cornerRadius(10)
-        Image(systemName: "photo")
-          .resizable()
-          .frame(width: 40.0, height: 30.0, alignment: .center)
-          .foregroundColor(Color(UIColor.systemBackground))
-          .padding(.vertical, 20)
-          .padding(.horizontal, 15)
-        Circle()
-          .frame(width: 14.0, height: 14.0, alignment: .center)
-          .foregroundColor(Color(UIColor.gray))
-          .padding(.bottom, 15)
-          .padding(.trailing, 7.5)
-        Image(systemName: "plus.circle.fill")
-          .resizable()
-          .frame(width: 15.0, height: 15.0, alignment: .center)
-          .foregroundColor(Color(UIColor.systemBackground))
-          .padding(.bottom, 15)
-          .padding(.trailing, 7.5)
-      }
-    }
-  }
 }
 
 struct NotesGridView_Previews: PreviewProvider {

@@ -78,8 +78,7 @@ class SummariesRepositoryImpl: SummariesRepository {
 
       toUpdate.title = group.title
       toUpdate.author = group.author
-      // Only store the image name since path may change on re-run
-      toUpdate.imageName = group.imageURL?.lastPathComponent
+      toUpdate.theme = group.codableTheme
       toUpdate.lastEdited = Date()
 
       for note: Note in notes {
@@ -139,7 +138,6 @@ enum SummariesError: Error {
 
 public extension GroupEntityMO {
   override var description: String {
-    return
-      "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "") imageName: \(imageName ?? "")"
+    "title: \(title ?? "")\nauthor: \(author ?? "")\nlastEdited: \(lastEdited?.ISO8601Format() ?? "") theme: \(theme?.base64EncodedString() ?? "")"
   }
 }

@@ -20,6 +20,8 @@ struct NoteGroupDetailsCoordinatorView: View {
       .sheet(item: self.$coordinator.cameraViewModel) { c in
         CameraView(model: c)
       }
+      .toolbarBackground(self.coordinator.theme, for: .navigationBar)
+      .toolbarBackground(.visible, for: .navigationBar)
   }
 }
 
@@ -27,7 +29,7 @@ struct NoteGroupDetailsCoordinatorView_Previews: PreviewProvider {
   static let appAssembler = AppAssembler()
   static let coordinator = appAssembler.resolve(
     NoteGroupDetailsCoordinator.self,
-    argument: nil as Group?
+    argument: Group(title: "Title", author: "Author", childCount: 12)
   )!
   static var previews: some View {
     NoteGroupDetailsCoordinatorView(coordinator: coordinator)
