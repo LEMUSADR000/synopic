@@ -26,18 +26,22 @@ protocol NotesGridViewModelDelegate: AnyObject {
 
 class NotesGridViewModel: ViewModel {
   private let summaries: SummariesRepository
-  private var group: Group?
+  private var group: Group
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
+  
+  var theme: Color {
+    group.usableColor
+  }
 
-  init(summariesRepository: SummariesRepository, group: Group?) {
+  init(summariesRepository: SummariesRepository, group: Group) {
     self.summaries = summariesRepository
     self.group = group
 
     self.model = GroupModel(
-      title: self.group?.title ?? .empty,
-      author: self.group?.author ?? .empty,
-      theme: self.group?.usableColor ?? Color.generateRandomPastelColor()
+      title: self.group.title,
+      author: self.group.author,
+      theme: self.group.usableColor
     )
   }
 
@@ -83,13 +87,13 @@ class NotesGridViewModel: ViewModel {
         let author = model.author
         let notes = model.notes
 
-        if title.isEmpty && author.isEmpty && notes.isEmpty, let unwrapped = self.group {
-          return self.summaries.deleteGroup(group: unwrapped)
+        if title.isEmpty && author.isEmpty && notes.isEmpty, self.group.id != nil {
+          return self.summaries.deleteGroup(group: self.group)
             .map(Optional.some)
             .eraseToAnyPublisher()
         }
 
-        var toUpdate = self.group ?? Group()
+        var toUpdate = self.group
 
         // No update required
         if toUpdate.title == title && toUpdate.author == author
@@ -167,7 +171,7 @@ class NotesGridViewModel: ViewModel {
 
   private func loadNotes() {
     Just<Int>(1)
-      .compactMap { _ in self.group?.id }
+      .compactMap { _ in self.group.id }
       .flatMap { self.summaries.loadNotes(parent: $0) }
       .sink(receiveValue: { [weak self] result in
         self?.model.notes = result

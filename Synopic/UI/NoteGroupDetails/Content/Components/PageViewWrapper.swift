@@ -12,9 +12,11 @@ struct PageViewWrapper<Content>: View where Content: View {
   @Binding var selection: Int
 
   @inlinable init(
-    selection: Binding<Int>, _ currentIndicator: UIColor = .systemBlue,
+    selection: Binding<Int>,
+    currentIndicator: UIColor = .systemBlue,
     @ViewBuilder _ collection: @escaping () -> Content
   ) {
+    UIPageControl.appearance().tintColor = .red
     UIPageControl.appearance().currentPageIndicatorTintColor = currentIndicator
     UIPageControl.appearance().pageIndicatorTintColor = currentIndicator.withAlphaComponent(0.2)
     self.collection = collection

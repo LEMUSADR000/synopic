@@ -38,7 +38,10 @@ struct NotesGridView: View {
       .padding(.vertical, 20)
 
       Spacer().frame(height: 16)
-      PageViewWrapper(selection: self.$notesGridViewModel.selected) {
+      PageViewWrapper(
+        selection: self.$notesGridViewModel.selected,
+        currentIndicator: UIColor(self.notesGridViewModel.theme)
+      ) {
         ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
           NoteCardView {
             Text(note.summary)
@@ -65,7 +68,9 @@ struct NotesGridView: View {
             Image(systemName: "book")
           }
         }
-      ).frame(height: 45)
+      )
+      .frame(height: 45)
+      .foregroundColor(.primary.opacity(0.6))
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {

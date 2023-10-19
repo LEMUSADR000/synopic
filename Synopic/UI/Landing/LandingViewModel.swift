@@ -14,7 +14,7 @@ private let defaultDate = Date(timeIntervalSince1970: 0.0)
 
 protocol LandingViewModelDelegate: AnyObject {
   func landingViewModelDidTapViewGroup(
-    group: Group?,
+    group: Group,
     _ source: LandingViewModel
   )
 }
@@ -69,7 +69,8 @@ class LandingViewModel: ViewModel {
     self.createGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        self.delegate?.landingViewModelDidTapViewGroup(group: nil, self)
+        // It's okay to create empty Group since it will be used to save a new one anyway
+        self.delegate?.landingViewModelDidTapViewGroup(group: Group(), self)
       })
       .store(in: &self.cancelBag)
   }

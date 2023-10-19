@@ -17,7 +17,7 @@ struct AppRootCoordinatorView: View {
         .navigation(item: self.$coordinator.noteGroupDetailsCoordinator) { c in
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
-    }
+    }.accentColor(.primary.opacity(0.6))
   }
 }
 

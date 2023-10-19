@@ -42,24 +42,6 @@ struct GroupCard: View {
       ZStack(alignment: .bottomTrailing) {
         Rectangle()
           .foregroundColor(.white)
-        Stripes(
-          config: StripesConfig(
-            background: .white,
-            foreground: .blue.opacity(0.05),
-            degrees: 90,
-            barWidth: 1,
-            barSpacing: 7.1
-          )
-        )
-        Stripes(
-          config: StripesConfig(
-            background: .clear,
-            foreground: .red.opacity(0.05),
-            degrees: 0,
-            barWidth: 2,
-            barSpacing: width
-          )
-        ).padding(.leading, 35)
         ZStack(alignment: .center) {
           Image(systemName: "note")
             .resizable()
@@ -68,7 +50,7 @@ struct GroupCard: View {
           Text("\(noteCount)")
             .font(.headline.monospaced())
             .foregroundColor(.primary.opacity(0.5))
-            .padding(.horizontal, 10)
+            .padding(10)
             .minimumScaleFactor(0.1)
         }
         .frame(width: width / 6, height: width / 6)
