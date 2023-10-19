@@ -23,6 +23,7 @@ struct NotesGridView: View {
       HStack {
         Spacer().frame(width: 10)
         VStack {
+          Spacer().frame(height: 20)
           TextField(
             self.notesGridViewModel.model.title,
             text: self.$notesGridViewModel.model.title,
@@ -37,43 +38,42 @@ struct NotesGridView: View {
           )
           .font(.subheadline)
           Divider()
+          Spacer().frame(height: 20)
         }
       }
-      .padding(.vertical, 20)
 
-      Spacer().frame(height: 16)
-      if self.notesGridViewModel.model.notes.isEmpty {
+      VStack(alignment: .center) {
         Spacer()
-        Text("Tap scan button and begin studying!")
-          .font(.title.monospaced())
-          .foregroundColor(.black.opacity(0.5))
-          .multilineTextAlignment(.center)
-          .padding(.bottom, 50)
-          .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
-      } else {
-        PageViewWrapper(
-          selection: self.$notesGridViewModel.selected,
-          currentIndicator: self.notesGridViewModel.theme
-        ) {
-          ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-            NoteCardView {
-              Text(note.summary)
-                .fontWeight(.light)
-                .font(.system(size: 36))
-                .multilineTextAlignment(.leading)
-                .minimumScaleFactor(0.1)
-                .padding()
-            }
-            .tag(i)
-            .padding()
-          }.padding(.bottom, 50)
+        if self.notesGridViewModel.model.notes.isEmpty {
+          Text("Tap scan button and begin studying!")
+            .font(.title.monospaced())
+            .foregroundColor(.primary.opacity(0.5))
+            .multilineTextAlignment(.center)
+            .padding(.bottom, 50)
+            .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+        } else {
+          PageViewWrapper(
+            selection: self.$notesGridViewModel.selected,
+            currentIndicator: self.notesGridViewModel.theme
+          ) {
+            ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
+              NoteCardView {
+                Text(note.summary)
+                  .fontWeight(.light)
+                  .font(.system(size: 36))
+                  .multilineTextAlignment(.leading)
+                  .minimumScaleFactor(0.1)
+                  .padding()
+              }
+              .tag(i)
+              .padding()
+            }.padding(.bottom, 50)
+          }
         }
-        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
-        .onTapGesture {
-          self.hideKeyboard()
-        }
+        Spacer()
+      }.onTapGesture {
+        self.hideKeyboard()
       }
-      Spacer()
     }
     .toolbar {
       Button(
