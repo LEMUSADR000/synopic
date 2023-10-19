@@ -69,7 +69,6 @@ struct NotesGridView: View {
               .padding()
             }.padding(.bottom, 50)
           }
-          .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
         }
         Spacer()
       }.onTapGesture {
@@ -89,7 +88,7 @@ struct NotesGridView: View {
         }
       )
       .frame(height: 45)
-      .foregroundColor(.primary.opacity(0.6))
+      .foregroundColor(.black.opacity(0.6))
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
