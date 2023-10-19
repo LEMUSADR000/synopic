@@ -30,8 +30,8 @@ class NotesGridViewModel: ViewModel {
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
   
-  var theme: Color {
-    group.usableColor
+  var theme: UIColor {
+    UIColor(group.usableColor)
   }
 
   init(summariesRepository: SummariesRepository, group: Group) {

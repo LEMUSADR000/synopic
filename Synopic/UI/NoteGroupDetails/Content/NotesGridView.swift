@@ -14,6 +14,10 @@ struct NotesGridView: View {
 
   let horizontalPadding: CGFloat = 10
 
+  private func hideKeyboard() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+  }
+
   var body: some View {
     VStack {
       HStack {
@@ -38,22 +42,36 @@ struct NotesGridView: View {
       .padding(.vertical, 20)
 
       Spacer().frame(height: 16)
-      PageViewWrapper(
-        selection: self.$notesGridViewModel.selected,
-        currentIndicator: UIColor(self.notesGridViewModel.theme)
-      ) {
-        ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-          NoteCardView {
-            Text(note.summary)
-              .fontWeight(.light)
-              .font(.system(size: 36))
-              .multilineTextAlignment(.leading)
-              .minimumScaleFactor(0.1)
-              .padding()
-          }
-          .tag(i)
-          .padding()
-        }.padding(.bottom, 50)
+      if self.notesGridViewModel.model.notes.isEmpty {
+        Spacer()
+        Text("Tap scan button and begin studying!")
+          .font(.title.monospaced())
+          .foregroundColor(.primary.opacity(0.5))
+          .multilineTextAlignment(.center)
+          .padding(.bottom, 50)
+          .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+      } else {
+        PageViewWrapper(
+          selection: self.$notesGridViewModel.selected,
+          currentIndicator: self.notesGridViewModel.theme
+        ) {
+          ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
+            NoteCardView {
+              Text(note.summary)
+                .fontWeight(.light)
+                .font(.system(size: 36))
+                .multilineTextAlignment(.leading)
+                .minimumScaleFactor(0.1)
+                .padding()
+            }
+            .tag(i)
+            .padding()
+          }.padding(.bottom, 50)
+        }
+        .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+        .onTapGesture {
+          self.hideKeyboard()
+        }
       }
       Spacer()
     }

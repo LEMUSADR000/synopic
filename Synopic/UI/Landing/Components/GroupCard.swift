@@ -42,20 +42,22 @@ struct GroupCard: View {
       ZStack(alignment: .bottomTrailing) {
         Rectangle()
           .foregroundColor(.white)
-        ZStack(alignment: .center) {
-          Image(systemName: "note")
-            .resizable()
-            .foregroundColor(.primary.opacity(0.5))
-            .padding(5)
-          Text("\(noteCount)")
-            .font(.headline.monospaced())
-            .foregroundColor(.primary.opacity(0.5))
-            .padding(10)
-            .minimumScaleFactor(0.1)
+        if noteCount > 0 {
+          ZStack(alignment: .center) {
+            Image(systemName: "note")
+              .resizable()
+              .foregroundColor(.primary.opacity(0.5))
+              .padding(5)
+            Text("\(noteCount)")
+              .font(.headline.monospaced())
+              .foregroundColor(.primary.opacity(0.5))
+              .padding(10)
+              .minimumScaleFactor(0.1)
+          }
+          .frame(width: width / 6, height: width / 6)
+          .padding(.trailing, width / 16)
+          .padding(.bottom, width / 16)
         }
-        .frame(width: width / 6, height: width / 6)
-        .padding(.trailing, width / 16)
-        .padding(.bottom, width / 16)
       }
     }.frame(height: width)
   }
