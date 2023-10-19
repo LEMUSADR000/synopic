@@ -13,6 +13,10 @@ struct ProcessScansView: View {
 
   let buttonHeight: CGFloat = 60
 
+  private func hideKeyboard() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+  }
+
   var body: some View {
     VStack {
       TextEditor(text: self.$viewModel.content)
@@ -47,6 +51,9 @@ struct ProcessScansView: View {
     .padding(.bottom, 20)
     //    .ignoresSafeArea(.keyboard, edges: .bottom)
     .background(Color(UIColor.secondarySystemBackground))
+    .onTapGesture {
+      self.hideKeyboard()
+    }
   }
 }
 
