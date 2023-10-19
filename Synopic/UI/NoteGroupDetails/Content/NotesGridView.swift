@@ -46,7 +46,7 @@ struct NotesGridView: View {
         Spacer()
         Text("Tap scan button and begin studying!")
           .font(.title.monospaced())
-          .foregroundColor(.primary.opacity(0.5))
+          .foregroundColor(.black.opacity(0.5))
           .multilineTextAlignment(.center)
           .padding(.bottom, 50)
           .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
@@ -88,7 +88,7 @@ struct NotesGridView: View {
         }
       )
       .frame(height: 45)
-      .foregroundColor(.primary.opacity(0.6))
+      .foregroundColor(.black.opacity(0.6))
     }
     .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {

@@ -24,7 +24,7 @@ struct GroupCard: View {
           if !title.isEmpty {
             Text(title.capitalized)
               .font(.headline.monospaced())
-              .foregroundColor(.primary.opacity(0.6))
+              .foregroundColor(.black.opacity(0.6))
               .minimumScaleFactor(0.1)
               .multilineTextAlignment(.center)
           }
@@ -32,7 +32,7 @@ struct GroupCard: View {
             Spacer().frame(height: 8)
             Text(author.capitalized)
               .font(.subheadline.monospaced())
-              .foregroundColor(.primary.opacity(0.5))
+              .foregroundColor(.black.opacity(0.5))
               .minimumScaleFactor(0.1)
               .multilineTextAlignment(.center)
           }
@@ -46,11 +46,11 @@ struct GroupCard: View {
           ZStack(alignment: .center) {
             Image(systemName: "note")
               .resizable()
-              .foregroundColor(.primary.opacity(0.5))
+              .foregroundColor(.black.opacity(0.5))
               .padding(5)
             Text("\(noteCount)")
               .font(.headline.monospaced())
-              .foregroundColor(.primary.opacity(0.5))
+              .foregroundColor(.black.opacity(0.5))
               .padding(10)
               .minimumScaleFactor(0.1)
           }
