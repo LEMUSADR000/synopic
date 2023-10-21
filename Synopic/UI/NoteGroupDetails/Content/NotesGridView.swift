@@ -20,27 +20,22 @@ struct NotesGridView: View {
 
   var body: some View {
     VStack {
-      HStack {
-        Spacer().frame(width: 10)
-        VStack {
-          Spacer().frame(height: 20)
-          TextField(
-            self.notesGridViewModel.model.title,
-            text: self.$notesGridViewModel.model.title,
-            prompt: Text("Title")
-          )
-          .font(.headline)
-          Divider()
-          TextField(
-            self.notesGridViewModel.model.author,
-            text: self.$notesGridViewModel.model.author,
-            prompt: Text("Author")
-          )
-          .font(.subheadline)
-          Divider()
-          Spacer().frame(height: 20)
-        }
-      }
+      TextField(
+        self.notesGridViewModel.model.title,
+        text: self.$notesGridViewModel.model.title,
+        prompt: Text("Title")
+      )
+      .font(.headline)
+      .frame(height: 45)
+      Divider()
+      TextField(
+        self.notesGridViewModel.model.author,
+        text: self.$notesGridViewModel.model.author,
+        prompt: Text("Author")
+      )
+      .font(.subheadline)
+      .frame(height: 45)
+      Divider()
 
       VStack(alignment: .center) {
         Spacer()
@@ -54,7 +49,7 @@ struct NotesGridView: View {
         } else {
           PageViewWrapper(
             selection: self.$notesGridViewModel.selected,
-            currentIndicator: self.notesGridViewModel.theme
+            currentIndicator: UIColor(self.notesGridViewModel.theme)
           ) {
             ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
               NoteCardView {
@@ -76,21 +71,28 @@ struct NotesGridView: View {
       }
     }
     .toolbar {
-      Button(
-        action: { self.notesGridViewModel.createNote.send() },
-        label: {
-          ZStack {
-            Image(systemName: "viewfinder")
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-            Image(systemName: "book")
-          }
+      ToolbarItem(placement: .bottomBar) {
+        GeometryReader { geo in
+          let _ = print(geo.size.width)
+          Button(
+            action: { self.notesGridViewModel.createNote.send() },
+            label: {
+              ZStack {
+                Image(systemName: "viewfinder")
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(height: 45)
+                Image(systemName: "book")
+              }
+            }
+          )
+          .foregroundColor(.black.opacity(0.6))
+          .buttonStyle(.borderedProminent)
         }
-      )
-      .frame(height: 45)
-      .foregroundColor(.black.opacity(0.6))
+      }
     }
-    .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
+    .padding(.horizontal, 24)
+    .navigationBarTitle("", displayMode: .inline)
     .onDisappear {
       self.notesGridViewModel.saveGroup()
     }

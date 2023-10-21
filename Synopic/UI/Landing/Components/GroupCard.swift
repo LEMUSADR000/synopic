@@ -49,9 +49,10 @@ struct GroupCard: View {
               .foregroundColor(.black.opacity(0.5))
               .padding(5)
             Text("\(noteCount)")
-              .font(.headline.monospaced())
+              .font(.title.monospaced())
               .foregroundColor(.black.opacity(0.5))
-              .padding(10)
+              .padding(width / 30)
+              .lineLimit(1)
               .minimumScaleFactor(0.1)
           }
           .frame(width: width / 6, height: width / 6)

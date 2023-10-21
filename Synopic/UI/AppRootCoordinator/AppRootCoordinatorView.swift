@@ -11,13 +11,13 @@ struct AppRootCoordinatorView: View {
   @StateObject var coordinator: AppRootCoordinator
 
   var body: some View {
-    NavigationView {
+    NavigationStack {
       LandingView(viewModel: self.coordinator.landingViewModel)
         .navigationTitle("Note Groups")
         .navigation(item: self.$coordinator.noteGroupDetailsCoordinator) { c in
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
-    }.accentColor(.black.opacity(0.6))
+    }
   }
 }
 

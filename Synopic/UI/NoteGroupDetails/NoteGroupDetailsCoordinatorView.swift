@@ -20,8 +20,6 @@ struct NoteGroupDetailsCoordinatorView: View {
       .sheet(item: self.$coordinator.cameraViewModel) { c in
         CameraView(model: c)
       }
-      .toolbarBackground(self.coordinator.theme, for: .navigationBar)
-      .toolbarBackground(.visible, for: .navigationBar)
   }
 }
 
