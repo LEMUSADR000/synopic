@@ -13,16 +13,13 @@ import SwiftUI
 import UIKit
 
 protocol NotesGridViewModelDelegate: AnyObject {
+  func notesGridViewModelDidDeleteGroup(deleted: Group, _ source: NotesGridViewModel)
   func notesGridViewModelDidTapCreateNote(_ source: NotesGridViewModel)
   func notesGridViewModelDidTapTakePicture(_ source: NotesGridViewModel)
-
   func notesGridViewModelDidTapViewNote(
     id: InternalObjectId,
     _ source: NotesGridViewModel
   )
-
-  func notesGridViewModelDidCreateGroup(newGroup: Group, _ source: NotesGridViewModel)
-  func notesGridViewModelDidDeleteGroup(_ source: NotesGridViewModel)
 }
 
 class NotesGridViewModel: ViewModel {
@@ -35,11 +32,12 @@ class NotesGridViewModel: ViewModel {
     self.group.usableColor
   }
 
-  var canDelete: Bool { self.group.id != nil }
+  let canDelete: Bool
 
   init(summariesRepository: SummariesRepository, group: Group) {
     self.summaries = summariesRepository
     self.group = group
+    self.canDelete = group.id != nil
 
     self.model = GroupModel(
       title: self.group.title,
@@ -68,7 +66,6 @@ class NotesGridViewModel: ViewModel {
 
   @Published var model: GroupModel
   @Published var selected: Int = 0
-  private var deleting = CurrentValueSubject<Bool, Never>(false)
 
   // MARK: EVENT
 
@@ -81,11 +78,11 @@ class NotesGridViewModel: ViewModel {
 
   func saveGroup() {
     Just(1)
-      .withLatestFrom(self.$model, self.deleting)
+      .withLatestFrom(self.$model)
       .setFailureType(to: Error.self)
-      .flatMapLatest { [weak self] model, deleting -> AnyPublisher<Group?, Error> in
-        guard let self = self, !deleting else {
-          return Just<Group?>(nil)
+      .flatMapLatest { [weak self] model -> AnyPublisher<Void, Error> in
+        guard let self = self else {
+          return Just(())
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
         }
@@ -94,19 +91,19 @@ class NotesGridViewModel: ViewModel {
         let author = model.author
         let notes = model.notes
 
-        if title.isEmpty && author.isEmpty && notes.isEmpty, self.group.id != nil {
+        if title.isEmpty, author.isEmpty, notes.isEmpty, self.group.id != nil {
           return self.summaries.deleteGroup(group: self.group)
-            .map(Optional.some)
+            .map { _ in () }
             .eraseToAnyPublisher()
         }
 
         var toUpdate = self.group
 
         // No update required
-        if toUpdate.title == title && toUpdate.author == author
-          && toUpdate.childCount == notes.count
+        if toUpdate.title == title, toUpdate.author == author,
+           toUpdate.childCount == notes.count
         {
-          return Just<Group?>(nil)
+          return Just(())
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
         }
@@ -115,40 +112,25 @@ class NotesGridViewModel: ViewModel {
         toUpdate.author = author
 
         return self.summaries.updateGroup(group: toUpdate, notes: notes)
-          .map(Optional.some)
+          .map { _ in () }
           .eraseToAnyPublisher()
       }
-      .sink(receiveValue: { [weak self] group in
-        guard let self = self, let newGroup = group else { return }
-        self.delegate?.notesGridViewModelDidCreateGroup(newGroup: newGroup, self)
-      })
+      .sink()
       .store(in: &self.cancelBag)
   }
 
   private func onGroupDelete() {
     self.deleteGroup
       .receive(on: .main)
-      .map { self.deleting.send(true) }
-      .flatMap { [weak self] in
-        guard let self = self, group.id != nil else {
-          return Just<Group?>(nil)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-        }
-
-        return self.summaries.deleteGroup(group: self.group)
-          .map(Optional.some)
+      .flatMap {
+        self.summaries.deleteGroup(group: self.group)
+          .map { _ in () }
           .eraseToAnyPublisher()
       }
-      .sink(
-        receiveValue: { [weak self] deleted in
-          guard let self = self, deleted != nil else { return }
-          self.delegate?.notesGridViewModelDidDeleteGroup(self)
-        },
-        failure: { error in
-          print("failed to delete \(error.localizedDescription)")
-        }
-      )
+      .sink(receiveValue: { [weak self] in
+        guard let self = self else { return }
+        self.delegate?.notesGridViewModelDidDeleteGroup(deleted: self.group, self)
+      })
       .store(in: &self.cancelBag)
   }
 

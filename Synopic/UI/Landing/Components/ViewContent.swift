@@ -19,11 +19,6 @@ struct ViewContent: View {
     return totalWidth * (2 / 3)
   }
 
-  private func delete(sectionIndex: Int, at offsets: IndexSet) {
-    let row = offsets.map { $0 }.first!
-    viewModel.deleteGroup.send(IndexPath(row: row, section: sectionIndex))
-  }
-
   var body: some View {
     GeometryReader { geo in
       ScrollView {
@@ -38,9 +33,6 @@ struct ViewContent: View {
 
             GroupGrid(
               items: self.$viewModel.sections[i].items,
-              onDelete: { indexSet in
-                self.delete(sectionIndex: i, at: indexSet)
-              },
               onTap: self.viewModel.viewGroup.send,
               width: computeWidth(geo.size.width),
               columns: columns,

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct GroupGrid: View {
   @Binding var items: [Group]
-  let onDelete: (IndexSet) -> Void
   let onTap: (Group) -> Void
 
   let width: Double
@@ -40,7 +39,6 @@ struct GroupGrid: View {
         .padding(.horizontal, spacing / 2)
         .padding(.vertical, spacing / 2)
       }
-      .onDelete(perform: onDelete)
     }
   }
 }
@@ -58,7 +56,6 @@ struct GroupGrid: View {
       Group(title: "Book2", author: "Author2"),
       Group(title: "Book3", author: "Author3"),
     ]),
-    onDelete: { _ in },
     onTap: { _ in },
     width: 250,
     columns: 2,

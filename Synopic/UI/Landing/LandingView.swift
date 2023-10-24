@@ -18,11 +18,6 @@ struct LandingView: View {
       TabBarContent(viewModel: self.viewModel)
     }
   }
-
-  private func delete(sectionIndex: Int, at offsets: IndexSet) {
-    let row = offsets.map { $0 }.first!
-    self.viewModel.deleteGroup.send(IndexPath(row: row, section: sectionIndex))
-  }
 }
 
 #Preview {

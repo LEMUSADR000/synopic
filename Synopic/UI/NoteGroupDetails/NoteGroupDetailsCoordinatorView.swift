@@ -22,9 +22,6 @@ struct NoteGroupDetailsCoordinatorView: View {
       }
       .navigationBarTitleDisplayMode(.inline)
       .navigationTitle("")
-      .onDisappear {
-        self.coordinator.notesGridViewModel.saveGroup()
-      }
   }
 }
 

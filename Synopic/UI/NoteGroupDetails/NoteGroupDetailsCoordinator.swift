@@ -13,7 +13,7 @@ import Swinject
 import UIKit
 
 protocol NoteGroupDetailsCoordinatorDelegate: AnyObject {
-  func noteGroupDetailsCoordinatorDidModifyGroup(_ source: NoteGroupDetailsCoordinator)
+  func noteGroupDetailsCoordinatorDidDeleteGroup(deleted: Group, _ source: NotesGridViewModelDelegate)
 }
 
 class NoteGroupDetailsCoordinator: ViewModel {
@@ -52,18 +52,14 @@ class NoteGroupDetailsCoordinator: ViewModel {
 // MARK: NotesGridViewModelDelegate
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
-  func notesGridViewModelDidDeleteGroup(_ source: NotesGridViewModel) {
-    self.delegate?.noteGroupDetailsCoordinatorDidModifyGroup(self)
+  func notesGridViewModelDidDeleteGroup(deleted: Group, _ source: NotesGridViewModel) {
+    self.delegate?.noteGroupDetailsCoordinatorDidDeleteGroup(deleted: deleted, self)
   }
-
+  
   func notesGridViewModelDidTapTakePicture(_ source: NotesGridViewModel) {
     self.cameraViewModel = self.resolver.resolve(
       CameraViewModel.self
     )!.setup(delegate: self)
-  }
-
-  func notesGridViewModelDidCreateGroup(newGroup: Group, _ source: NotesGridViewModel) {
-    self.delegate?.noteGroupDetailsCoordinatorDidModifyGroup(self)
   }
 
   func notesGridViewModelDidTapViewNote(

@@ -11,13 +11,15 @@ import CoreData
 import Foundation
 
 protocol SummariesRepository {
-  func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
+  var groups: CurrentValueSubject<LazyList<Group>, Error> { get }
+
+  @discardableResult  func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
 
-  @discardableResult func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error>
+  @discardableResult func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<LazyList<Group>, Error>
 
-  func deleteGroup(group: Group) -> AnyPublisher<Group, Error>
+  @discardableResult func deleteGroup(group: Group) -> AnyPublisher<LazyList<Group>, Error>
 
   func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error>
 }
@@ -25,13 +27,14 @@ protocol SummariesRepository {
 class SummariesRepositoryImpl: SummariesRepository {
   private let chatGptApiService: ChatGPTService
   private let persistentStore: PersistentStore
-  private let _groups: CurrentValueSubject<LazyList<Group>, Never>
+  private var cancelBag: CancelBag = .init()
 
   init(chatGptApiService: ChatGPTService, persistentStore: PersistentStore) {
     self.chatGptApiService = chatGptApiService
     self.persistentStore = persistentStore
-    self._groups = CurrentValueSubject(LazyList.empty)
   }
+
+  var groups: CurrentValueSubject<LazyList<Group>, Error> = CurrentValueSubject(LazyList.empty)
 
   func loadGroups() -> AnyPublisher<LazyList<Group>, Error> {
     let request = GroupEntityMO.fetchRequest()
@@ -39,7 +42,14 @@ class SummariesRepositoryImpl: SummariesRepository {
       NSSortDescriptor(key: "lastEdited", ascending: true)
     ]
 
-    return persistentStore.fetch(request, map: { Group(from: $0) })
+    let publisher = groups.eraseToAnyPublisher()
+
+    persistentStore
+      .fetch(request, map: { Group(from: $0) })
+      .assign(to: \.value, on: groups)
+      .store(in: &cancelBag)
+
+    return publisher
   }
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error> {
@@ -66,7 +76,7 @@ class SummariesRepositoryImpl: SummariesRepository {
     .eraseToAnyPublisher()
   }
 
-  func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<Group, Error> {
+  func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<LazyList<Group>, Error> {
     return persistentStore.update { [group, notes] context in
 
       var toUpdate: GroupEntityMO
@@ -93,13 +103,15 @@ class SummariesRepositoryImpl: SummariesRepository {
 
       return Group(from: toUpdate)
     }
+    .flatMap { _ in self.loadGroups() }
+    .eraseToAnyPublisher()
   }
 
-  func deleteGroup(group: Group) -> AnyPublisher<Group, Error> {
+  func deleteGroup(group: Group) -> AnyPublisher<LazyList<Group>, Error> {
     return Just(group.id)
       .compactMap { $0 }
       .flatMap { self.persistentStore.delete(for: $0) }
-      .map { group }
+      .flatMap { _ in self.loadGroups() }
       .eraseToAnyPublisher()
   }
 

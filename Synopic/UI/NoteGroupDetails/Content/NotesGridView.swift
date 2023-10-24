@@ -114,6 +114,9 @@ struct NotesGridView: View {
         }
       }
     }
+    .onDisappear {
+      self.notesGridViewModel.saveGroup()
+    }
   }
 
   func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
