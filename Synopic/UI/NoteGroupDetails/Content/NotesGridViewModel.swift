@@ -201,7 +201,7 @@ class NotesGridViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-  
+
   static var notesGridViewModelPreview: NotesGridViewModel {
     let appAssembler = AppAssembler()
     let summaries = appAssembler.resolve(SummariesRepository.self)!
