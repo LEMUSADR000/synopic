@@ -21,7 +21,8 @@ protocol NotesGridViewModelDelegate: AnyObject {
     _ source: NotesGridViewModel
   )
 
-  func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel)
+  func notesGridViewModelDidCreateGroup(newGroup: Group, _ source: NotesGridViewModel)
+  func notesGridViewModelDidDeleteGroup(_ source: NotesGridViewModel)
 }
 
 class NotesGridViewModel: ViewModel {
@@ -29,14 +30,12 @@ class NotesGridViewModel: ViewModel {
   private var group: Group
   private weak var delegate: NotesGridViewModelDelegate?
   private var cancelBag: CancelBag!
-  
-//  var theme: UIColor {
-//    UIColor(group.usableColor)
-//  }
-  
+
   var theme: Color {
-    group.usableColor
+    self.group.usableColor
   }
+
+  var canDelete: Bool { self.group.id != nil }
 
   init(summariesRepository: SummariesRepository, group: Group) {
     self.summaries = summariesRepository
@@ -57,6 +56,7 @@ class NotesGridViewModel: ViewModel {
 
   private func bind() {
     self.cancelBag = CancelBag()
+    self.onGroupDelete()
     self.onCreateNote()
     self.onTakePicture()
     self.onViewNote()
@@ -68,9 +68,12 @@ class NotesGridViewModel: ViewModel {
 
   @Published var model: GroupModel
   @Published var selected: Int = 0
+  private var deleting = CurrentValueSubject<Bool, Never>(false)
 
   // MARK: EVENT
 
+  let deleteGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
+  let confirmDeleteGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
   let createNote: PassthroughSubject<Void, Never> = PassthroughSubject()
   let takePicture: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
@@ -78,10 +81,10 @@ class NotesGridViewModel: ViewModel {
 
   func saveGroup() {
     Just(1)
-      .withLatestFrom(self.$model)
+      .withLatestFrom(self.$model, self.deleting)
       .setFailureType(to: Error.self)
-      .flatMapLatest { [weak self] model -> AnyPublisher<Group?, Error> in
-        guard let self = self else {
+      .flatMapLatest { [weak self] model, deleting -> AnyPublisher<Group?, Error> in
+        guard let self = self, !deleting else {
           return Just<Group?>(nil)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
@@ -111,25 +114,41 @@ class NotesGridViewModel: ViewModel {
         toUpdate.title = title
         toUpdate.author = author
 
-//        for i in 0 ... 100 {
-//          var new = Group()
-//          new.title = "Title \(i)"
-//          new.author = "Author \(i)"
-//
-//          self.summaries.updateGroup(group: new, notes: [])
-//        }
-
         return self.summaries.updateGroup(group: toUpdate, notes: notes)
           .map(Optional.some)
           .eraseToAnyPublisher()
       }
       .sink(receiveValue: { [weak self] group in
-        guard let self = self else { return }
-
-        if group != nil {
-          self.delegate?.notesGridViewModelDidRequireGroupCreation(self)
-        }
+        guard let self = self, let newGroup = group else { return }
+        self.delegate?.notesGridViewModelDidCreateGroup(newGroup: newGroup, self)
       })
+      .store(in: &self.cancelBag)
+  }
+
+  private func onGroupDelete() {
+    self.deleteGroup
+      .receive(on: .main)
+      .map { self.deleting.send(true) }
+      .flatMap { [weak self] in
+        guard let self = self, group.id != nil else {
+          return Just<Group?>(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+
+        return self.summaries.deleteGroup(group: self.group)
+          .map(Optional.some)
+          .eraseToAnyPublisher()
+      }
+      .sink(
+        receiveValue: { [weak self] deleted in
+          guard let self = self, deleted != nil else { return }
+          self.delegate?.notesGridViewModelDidDeleteGroup(self)
+        },
+        failure: { error in
+          print("failed to delete \(error.localizedDescription)")
+        }
+      )
       .store(in: &self.cancelBag)
   }
 
@@ -182,21 +201,7 @@ class NotesGridViewModel: ViewModel {
       })
       .store(in: &self.cancelBag)
   }
-
-  class GroupModel: ViewModel {
-    init(title: String, author: String, _ notes: [Note] = [], theme: Color) {
-      self.title = title
-      self.author = author
-      self.notes = notes
-      self.theme = theme
-    }
-
-    @Published var title: String = .empty
-    @Published var author: String = .empty
-    @Published var notes: [Note] = []
-    let theme: Color
-  }
-
+  
   static var notesGridViewModelPreview: NotesGridViewModel {
     let appAssembler = AppAssembler()
     let summaries = appAssembler.resolve(SummariesRepository.self)!

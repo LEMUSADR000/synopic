@@ -5,15 +5,15 @@
 //  Created by Adrian Lemus on 2/5/23.
 //
 
-import UIKit
-import SwiftUI
 import Combine
 import CoreData
 import Foundation
+import SwiftUI
 import Swinject
+import UIKit
 
 protocol NoteGroupDetailsCoordinatorDelegate: AnyObject {
-  func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator)
+  func noteGroupDetailsCoordinatorDidModifyGroup(_ source: NoteGroupDetailsCoordinator)
 }
 
 class NoteGroupDetailsCoordinator: ViewModel {
@@ -27,9 +27,9 @@ class NoteGroupDetailsCoordinator: ViewModel {
   private weak var delegate: NoteGroupDetailsCoordinatorDelegate?
 
   private var group: Group
-  
+
   var theme: Color {
-    group.usableColor
+    self.group.usableColor
   }
 
   init(resolver: Resolver, group: Group) {
@@ -52,14 +52,18 @@ class NoteGroupDetailsCoordinator: ViewModel {
 // MARK: NotesGridViewModelDelegate
 
 extension NoteGroupDetailsCoordinator: NotesGridViewModelDelegate {
+  func notesGridViewModelDidDeleteGroup(_ source: NotesGridViewModel) {
+    self.delegate?.noteGroupDetailsCoordinatorDidModifyGroup(self)
+  }
+
   func notesGridViewModelDidTapTakePicture(_ source: NotesGridViewModel) {
     self.cameraViewModel = self.resolver.resolve(
       CameraViewModel.self
     )!.setup(delegate: self)
   }
 
-  func notesGridViewModelDidRequireGroupCreation(_ source: NotesGridViewModel) {
-    self.delegate?.noteGroupDetailsCoordinatorDidCreateGroup(self)
+  func notesGridViewModelDidCreateGroup(newGroup: Group, _ source: NotesGridViewModel) {
+    self.delegate?.noteGroupDetailsCoordinatorDidModifyGroup(self)
   }
 
   func notesGridViewModelDidTapViewNote(

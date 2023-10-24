@@ -20,6 +20,11 @@ struct NoteGroupDetailsCoordinatorView: View {
       .sheet(item: self.$coordinator.cameraViewModel) { c in
         CameraView(model: c)
       }
+      .navigationBarTitleDisplayMode(.inline)
+      .navigationTitle("")
+      .onDisappear {
+        self.coordinator.notesGridViewModel.saveGroup()
+      }
   }
 }
 

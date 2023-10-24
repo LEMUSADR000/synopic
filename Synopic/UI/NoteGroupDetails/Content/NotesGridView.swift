@@ -11,41 +11,47 @@ import Swinject
 
 struct NotesGridView: View {
   @StateObject var notesGridViewModel: NotesGridViewModel
-
-  let horizontalPadding: CGFloat = 10
+  @State private var isConfirmingDelete: Bool = false
 
   private func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
   }
 
   var body: some View {
-    VStack {
-      TextField(
-        self.notesGridViewModel.model.title,
-        text: self.$notesGridViewModel.model.title,
-        prompt: Text("Title")
-      )
-      .font(.headline)
-      .frame(height: 45)
-      Divider()
-      TextField(
-        self.notesGridViewModel.model.author,
-        text: self.$notesGridViewModel.model.author,
-        prompt: Text("Author")
-      )
-      .font(.subheadline)
-      .frame(height: 45)
-      Divider()
+    VStack(alignment: .leading, spacing: 0) {
+      VStack {
+        TextField(
+          self.notesGridViewModel.model.title,
+          text: self.$notesGridViewModel.model.title,
+          prompt: Text("Title")
+        )
+        .font(.headline)
+        .frame(height: 45)
+        Divider()
+        TextField(
+          self.notesGridViewModel.model.author,
+          text: self.$notesGridViewModel.model.author,
+          prompt: Text("Author")
+        )
+        .font(.subheadline)
+        .frame(height: 45)
+        Divider()
+      }
+      .padding(.horizontal, 24)
+
+      Spacer().frame(height: 20)
 
       VStack(alignment: .center) {
-        Spacer()
         if self.notesGridViewModel.model.notes.isEmpty {
-          Text("Tap scan button and begin studying!")
-            .font(.title.monospaced())
-            .foregroundColor(.primary.opacity(0.5))
-            .multilineTextAlignment(.center)
-            .padding(.bottom, 50)
-            .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+          Spacer()
+          HStack(alignment: .center) {
+            Text("Tap scan button and begin studying!")
+              .font(.title.monospaced())
+              .foregroundColor(.primary.opacity(0.5))
+              .multilineTextAlignment(.center)
+              .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+          }
+          Spacer()
         } else {
           PageViewWrapper(
             selection: self.$notesGridViewModel.selected,
@@ -62,39 +68,51 @@ struct NotesGridView: View {
               }
               .tag(i)
               .padding()
-            }.padding(.bottom, 50)
+            }.padding(.bottom, 25)
           }
         }
-        Spacer()
-      }.onTapGesture {
+      }
+      .padding(.horizontal, 24)
+      .onTapGesture {
         self.hideKeyboard()
       }
+      Spacer()
     }
     .toolbar {
       ToolbarItem(placement: .bottomBar) {
-        GeometryReader { geo in
-          let _ = print(geo.size.width)
-          Button(
-            action: { self.notesGridViewModel.createNote.send() },
-            label: {
-              ZStack {
-                Image(systemName: "viewfinder")
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
-                  .frame(height: 45)
-                Image(systemName: "book")
-              }
+        Button(
+          action: { self.notesGridViewModel.createNote.send() },
+          label: {
+            ZStack {
+              Image(systemName: "viewfinder")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 45)
+              Image(systemName: "book")
             }
-          )
-          .foregroundColor(.black.opacity(0.6))
-          .buttonStyle(.borderedProminent)
+          }
+        )
+        .foregroundColor(.black.opacity(0.6))
+      }
+      ToolbarItem(placement: .destructiveAction) {
+        if self.notesGridViewModel.canDelete {
+          Button("Delete", role: .destructive) {
+            self.isConfirmingDelete = true
+          }
+          .foregroundColor(.red)
+          .font(.system(size: 15))
+          .confirmationDialog(
+            "Are you sure?",
+            isPresented: self.$isConfirmingDelete
+          ) {
+            Button("Delete group", role: .destructive) {
+              self.notesGridViewModel.deleteGroup.send()
+            }
+          }
+        } else {
+          Spacer().frame(height: 0)
         }
       }
-    }
-    .padding(.horizontal, 24)
-    .navigationBarTitle("", displayMode: .inline)
-    .onDisappear {
-      self.notesGridViewModel.saveGroup()
     }
   }
 
