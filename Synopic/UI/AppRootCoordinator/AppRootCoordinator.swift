@@ -40,7 +40,7 @@ extension AppRootCoordinator: LandingViewModelDelegate {
 }
 
 extension AppRootCoordinator: NoteGroupDetailsCoordinatorDelegate {
-  func noteGroupDetailsCoordinatorDidCreateGroup(_ source: NoteGroupDetailsCoordinator) {
-    self.landingViewModel.loadGroup.send()
+  func noteGroupDetailsCoordinatorDidDeleteGroup(deleted: Group, _ source: NotesGridViewModelDelegate) {
+    self.noteGroupDetailsCoordinator = nil
   }
 }

@@ -8,20 +8,44 @@ import SwiftUI
 
 struct NoteGroupDetailsCoordinatorView: View {
   @StateObject var coordinator: NoteGroupDetailsCoordinator
+  @State private var isConfirmingDelete: Bool = false
 
   var body: some View {
-    NotesGridView(notesGridViewModel: self.coordinator.notesGridViewModel)
-      .fullScreenCover(item: self.$coordinator.noteCreateCoordinator) { c in
-        ZStack {
-          Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
-          NoteCreateCoordinatorView(coordinator: c)
+    NavigationView {
+      NotesGridView(notesGridViewModel: self.coordinator.notesGridViewModel)
+        .fullScreenCover(item: self.$coordinator.noteCreateCoordinator) { c in
+          ZStack {
+            Rectangle().foregroundColor(.black).edgesIgnoringSafeArea(.all)
+            NoteCreateCoordinatorView(coordinator: c)
+          }
+        }
+        .sheet(item: self.$coordinator.cameraViewModel) { c in
+          CameraView(model: c)
+        }
+    }
+    .navigationBarTitleDisplayMode(.inline)
+    .navigationTitle("")
+    .navigationViewStyle(.stack)
+    .toolbar {
+      ToolbarItem(placement: .primaryAction) {
+        if self.coordinator.notesGridViewModel.canDelete {
+          Button("Delete", role: .destructive) {
+            self.isConfirmingDelete = true
+          }
+          .foregroundColor(.red)
+          .confirmationDialog(
+            "Are you sure?",
+            isPresented: self.$isConfirmingDelete
+          ) {
+            Button("Delete group", role: .destructive) {
+              self.coordinator.notesGridViewModel.deleteGroup.send()
+            }
+          }
+        } else {
+          Spacer().frame(height: 0)
         }
       }
-      .sheet(item: self.$coordinator.cameraViewModel) { c in
-        CameraView(model: c)
-      }
-      .toolbarBackground(self.coordinator.theme, for: .navigationBar)
-      .toolbarBackground(.visible, for: .navigationBar)
+    }
   }
 }
 

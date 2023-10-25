@@ -36,13 +36,9 @@ class LandingViewModel: ViewModel {
 
   private func bind() {
     self.cancelBag = CancelBag()
-
     self.onLoadGroup()
-    self.onCreateGroup()
-    self.onDeleteGroup()
     self.onViewGroup()
-
-    self.loadGroup.send()
+    self.summaries.loadGroups()
   }
 
   var lastTap = Date()
@@ -61,67 +57,24 @@ class LandingViewModel: ViewModel {
   // MARK: EVENT
 
   let loadGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let createGroup: PassthroughSubject<Void, Never> = PassthroughSubject()
-  let deleteGroup: PassthroughSubject<IndexPath, Never> = PassthroughSubject()
-  let viewGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
-
-  private func onCreateGroup() {
-    self.createGroup
-      .sink(receiveValue: { [weak self] in
-        guard let self = self else { return }
-        // It's okay to create empty Group since it will be used to save a new one anyway
-        self.delegate?.landingViewModelDidTapViewGroup(group: Group(), self)
-      })
-      .store(in: &self.cancelBag)
-  }
-
-  private func onDeleteGroup() {
-    self.deleteGroup
-      .receive(on: .main)
-      .flatMap { [weak self] path in
-        guard let self = self else {
-          return Just<IndexPath?>(nil)
-            .setFailureType(to: Error.self)
-            .eraseToAnyPublisher()
-        }
-
-        let group = self.sections[path.section].items[path.row]
-        return self.summaries.deleteGroup(group: group)
-          .flatMap { _ in self.summaries.loadGroups() }
-          .map { _ in path }
-          .map(Optional.some)
-          .eraseToAnyPublisher()
-      }
-      .sink(
-        receiveValue: { [weak self] path in
-          guard let self = self, let path = path else { return }
-          self.sections[path.section].items.remove(at: path.row)
-          if self.sections[path.section].items.count == 0 {
-            _ = withAnimation(.easeOut) {
-              self.sections.remove(at: path.section)
-            }
-          }
-        },
-        failure: { error in
-          print("failed to delete \(error.localizedDescription)")
-        }
-      )
-      .store(in: &self.cancelBag)
-  }
+  let createGroup: PassthroughSubject<GroupModel, Never> = PassthroughSubject()
+  let deleteGroup: PassthroughSubject<Group, Never> = PassthroughSubject()
+  let viewGroup: PassthroughSubject<Group?, Never> = PassthroughSubject()
 
   private func onViewGroup() {
     self.viewGroup
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
-        self.delegate?.landingViewModelDidTapViewGroup(group: $0, self)
+        // It's okay to create empty Group since it will be used to save a new one anyway
+        let group = $0 ?? Group()
+        self.delegate?.landingViewModelDidTapViewGroup(group: group, self)
       })
       .store(in: &self.cancelBag)
   }
 
   private func onLoadGroup() {
-    self.loadGroup
-      .receive(on: .main)
-      .flatMap { self.summaries.loadGroups() }
+    self.summaries.groups
+      .delay(for: 0.05, scheduler: RunLoop.main)
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
 

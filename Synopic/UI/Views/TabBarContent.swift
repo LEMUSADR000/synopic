@@ -20,7 +20,7 @@ struct TabBarContent: View {
 
       Button(
         action: {
-          self.viewModel.createGroup.send()
+          self.viewModel.viewGroup.send(nil as Group?)
         },
         label: {
           Image(systemName: "rectangle.and.pencil.and.ellipsis")

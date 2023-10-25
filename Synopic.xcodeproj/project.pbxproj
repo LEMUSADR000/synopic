@@ -84,6 +84,7 @@
 		1EF03621299DEB5700BC409C /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF03620299DEB5700BC409C /* Note.swift */; };
 		1EF03623299DECA000BC409C /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF03622299DECA000BC409C /* Group.swift */; };
 		1EFB3F64298716F4005227FB /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */; };
+		7924A6542AE745A4000F8575 /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7924A6532AE745A4000F8575 /* GroupModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,6 +184,7 @@
 		1EF03620299DEB5700BC409C /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		1EF03622299DECA000BC409C /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		1EFB3F63298716F4005227FB /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		7924A6532AE745A4000F8575 /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,7 +298,6 @@
 			children = (
 				1E56EB0C299216D600EE3D0F /* ProcessScans */,
 				1EC949C52990BFD000024142 /* ScanDocuments */,
-				1EA37A1C2999665F0073E686 /* SummaryTypeToggle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -304,6 +305,7 @@
 		1E56EB0C299216D600EE3D0F /* ProcessScans */ = {
 			isa = PBXGroup;
 			children = (
+				1EA37A1C2999665F0073E686 /* SummaryTypeToggle.swift */,
 				1E56EB0D2992176100EE3D0F /* ProcessScansView.swift */,
 			);
 			path = ProcessScans;
@@ -397,6 +399,7 @@
 		1EB0D7CF29935FE500716E16 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				7924A6522AE74591000F8575 /* Models */,
 				1ECE71D42ACFD445006BDB32 /* Components */,
 				1ED88E44299053750052BD10 /* NotesGridView.swift */,
 				1ED88E4829905B4E0052BD10 /* NotesGridViewModel.swift */,
@@ -617,6 +620,14 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		7924A6522AE74591000F8575 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7924A6532AE745A4000F8575 /* GroupModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -813,6 +824,7 @@
 				1EB301E0298F2538000CA862 /* SummariesRepository.swift in Sources */,
 				1EB301DE298F2019000CA862 /* ApiErrors.swift in Sources */,
 				1EED7EFE2AD3D50E00B6A67B /* Image+Extensions.swift in Sources */,
+				7924A6542AE745A4000F8575 /* GroupModel.swift in Sources */,
 				1E2BC38029556AF700A4821A /* CancelBag.swift in Sources */,
 				1EA8D89C2986E2990016AFFA /* DocumentScanResult.swift in Sources */,
 				1EA1872E2952C0850017B38B /* AppRootCoordinator.swift in Sources */,
@@ -988,6 +1000,7 @@
 				DEVELOPMENT_TEAM = B9HGZT984S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow us to use your camera";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow us to use camera";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -995,7 +1008,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1023,6 +1036,7 @@
 				DEVELOPMENT_TEAM = B9HGZT984S;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow us to use your camera";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow us to use camera";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -1030,7 +1044,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

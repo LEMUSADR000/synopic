@@ -12,97 +12,127 @@ import Swinject
 struct NotesGridView: View {
   @StateObject var notesGridViewModel: NotesGridViewModel
 
-  let horizontalPadding: CGFloat = 10
-
   private func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
   }
 
   var body: some View {
-    VStack {
-      HStack {
-        Spacer().frame(width: 10)
-        VStack {
-          Spacer().frame(height: 20)
-          TextField(
-            self.notesGridViewModel.model.title,
-            text: self.$notesGridViewModel.model.title,
-            prompt: Text("Title")
-          )
-          .font(.headline)
-          Divider()
-          TextField(
-            self.notesGridViewModel.model.author,
-            text: self.$notesGridViewModel.model.author,
-            prompt: Text("Author")
-          )
-          .font(.subheadline)
-          Divider()
-          Spacer().frame(height: 20)
-        }
+    VStack(alignment: .leading, spacing: 0) {
+      VStack {
+        TextField(
+          self.notesGridViewModel.model.title,
+          text: self.$notesGridViewModel.model.title,
+          prompt: Text("Title")
+        )
+        .font(.headline)
+        .frame(height: 25)
+        .padding()
+        .cornerRadius(5)
+        Divider()
+        TextField(
+          self.notesGridViewModel.model.author,
+          text: self.$notesGridViewModel.model.author,
+          prompt: Text("Author")
+        )
+        .font(.subheadline)
+        .frame(height: 25)
+        .padding()
+        .cornerRadius(5)
+        Divider()
       }
+      .padding(.horizontal, 24)
 
-      VStack(alignment: .center) {
+      Spacer().frame(height: 20)
+
+      HStack {
         Spacer()
-        if self.notesGridViewModel.model.notes.isEmpty {
-          Text("Tap scan button and begin studying!")
-            .font(.title.monospaced())
-            .foregroundColor(.primary.opacity(0.5))
-            .multilineTextAlignment(.center)
-            .padding(.bottom, 50)
-            .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
-        } else {
-          PageViewWrapper(
-            selection: self.$notesGridViewModel.selected,
-            currentIndicator: self.notesGridViewModel.theme
-          ) {
-            ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-              NoteCardView {
-                Text(note.summary)
-                  .fontWeight(.light)
-                  .font(.system(size: 36))
-                  .multilineTextAlignment(.leading)
-                  .minimumScaleFactor(0.1)
-                  .padding()
+        VStack {
+          if self.notesGridViewModel.model.notes.isEmpty {
+            Spacer()
+            HStack(alignment: .center) {
+              Text("Tap to begin scanning!")
+                .font(.title.monospaced())
+                .foregroundColor(.primary.opacity(0.5))
+                .multilineTextAlignment(.center)
+                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+            }
+            Button(
+              action: { self.notesGridViewModel.createNote.send() },
+              label: {
+                ZStack {
+                  Image(systemName: "viewfinder")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 45)
+                  Image(systemName: "book")
+                }
               }
-              .tag(i)
-              .padding()
-            }.padding(.bottom, 50)
+            )
+            .foregroundColor(.primary.opacity(0.6))
+            Spacer()
+          } else {
+            PageViewWrapper(
+              selection: self.$notesGridViewModel.selected,
+              currentIndicator: UIColor(self.notesGridViewModel.theme)
+            ) {
+              ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
+                NoteCardView(background: Color(UIColor.secondarySystemBackground)) {
+                  Text(note.summary)
+                    .fontWeight(.light)
+                    .font(.system(size: 36))
+                    .multilineTextAlignment(.leading)
+                    .minimumScaleFactor(0.1)
+                    .padding()
+                }
+                .tag(i)
+                .padding()
+              }.padding(.bottom, 25)
+            }
           }
         }
         Spacer()
-      }.onTapGesture {
+      }
+      .padding(.horizontal, 24)
+      .onTapGesture {
         self.hideKeyboard()
       }
+      Spacer()
     }
+    .navigationBarHidden(true)
     .toolbar {
-      Button(
-        action: { self.notesGridViewModel.createNote.send() },
-        label: {
-          ZStack {
-            Image(systemName: "viewfinder")
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-            Image(systemName: "book")
-          }
+      ToolbarItem(placement: .bottomBar) {
+        if self.notesGridViewModel.model.notes.count == 0 {
+          Spacer().frame(height: 0)
+            .transition(AnyTransition.slide.animation(.easeInOut(duration: 0.35)))
+        } else {
+          Button(
+            action: { self.notesGridViewModel.createNote.send() },
+            label: {
+              ZStack {
+                Image(systemName: "viewfinder")
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(height: 45)
+                Image(systemName: "book")
+              }
+            }
+          )
+          .foregroundColor(.primary.opacity(0.6))
+          .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
         }
-      )
-      .frame(height: 45)
-      .foregroundColor(.black.opacity(0.6))
+      }
     }
-    .padding(.horizontal, 24).navigationBarTitle("", displayMode: .inline)
     .onDisappear {
       self.notesGridViewModel.saveGroup()
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
   }
 
   func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
 }
 
-struct NotesGridView_Previews: PreviewProvider {
-  static var previews: some View {
-    NotesGridView(
-      notesGridViewModel: NotesGridViewModel.notesGridViewModelPreview
-    )
-  }
+#Preview {
+  NotesGridView(
+    notesGridViewModel: NotesGridViewModel.notesGridViewModelPreview
+  )
 }

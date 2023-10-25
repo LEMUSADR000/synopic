@@ -9,6 +9,7 @@ import CoreImage.CIFilterBuiltins
 import SwiftUI
 
 struct GroupCard: View {
+    
   let title: String
   let author: String
   let noteCount: Int
@@ -49,9 +50,12 @@ struct GroupCard: View {
               .foregroundColor(.black.opacity(0.5))
               .padding(5)
             Text("\(noteCount)")
-              .font(.headline.monospaced())
+              .font(.title.monospaced())
               .foregroundColor(.black.opacity(0.5))
-              .padding(10)
+              .padding(.top, width / 25)
+              .padding(.bottom, width / 40)
+              .padding(.horizontal, width / 40)
+              .lineLimit(1)
               .minimumScaleFactor(0.1)
           }
           .frame(width: width / 6, height: width / 6)
