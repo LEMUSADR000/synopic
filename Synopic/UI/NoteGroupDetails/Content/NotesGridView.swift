@@ -11,7 +11,6 @@ import Swinject
 
 struct NotesGridView: View {
   @StateObject var notesGridViewModel: NotesGridViewModel
-  @State private var isConfirmingDelete: Bool = false
 
   private func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -41,36 +40,53 @@ struct NotesGridView: View {
 
       Spacer().frame(height: 20)
 
-      VStack(alignment: .center) {
-        if self.notesGridViewModel.model.notes.isEmpty {
-          Spacer()
-          HStack(alignment: .center) {
-            Text("Tap scan button and begin studying!")
-              .font(.title.monospaced())
-              .foregroundColor(.primary.opacity(0.5))
-              .multilineTextAlignment(.center)
-              .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
-          }
-          Spacer()
-        } else {
-          PageViewWrapper(
-            selection: self.$notesGridViewModel.selected,
-            currentIndicator: UIColor(self.notesGridViewModel.theme)
-          ) {
-            ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-              NoteCardView {
-                Text(note.summary)
-                  .fontWeight(.light)
-                  .font(.system(size: 36))
-                  .multilineTextAlignment(.leading)
-                  .minimumScaleFactor(0.1)
-                  .padding()
+      HStack {
+        Spacer()
+        VStack {
+          if self.notesGridViewModel.model.notes.isEmpty {
+            Spacer()
+            HStack(alignment: .center) {
+              Text("Tap to begin scanning!")
+                .font(.title.monospaced())
+                .foregroundColor(.primary.opacity(0.5))
+                .multilineTextAlignment(.center)
+                .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
+            }
+            Button(
+              action: { self.notesGridViewModel.createNote.send() },
+              label: {
+                ZStack {
+                  Image(systemName: "viewfinder")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 45)
+                  Image(systemName: "book")
+                }
               }
-              .tag(i)
-              .padding()
-            }.padding(.bottom, 25)
+            )
+            .foregroundColor(.primary.opacity(0.6))
+            Spacer()
+          } else {
+            PageViewWrapper(
+              selection: self.$notesGridViewModel.selected,
+              currentIndicator: UIColor(self.notesGridViewModel.theme)
+            ) {
+              ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
+                NoteCardView(background: Color(UIColor.secondarySystemBackground)) {
+                  Text(note.summary)
+                    .fontWeight(.light)
+                    .font(.system(size: 36))
+                    .multilineTextAlignment(.leading)
+                    .minimumScaleFactor(0.1)
+                    .padding()
+                }
+                .tag(i)
+                .padding()
+              }.padding(.bottom, 25)
+            }
           }
         }
+        Spacer()
       }
       .padding(.horizontal, 24)
       .onTapGesture {
@@ -78,54 +94,41 @@ struct NotesGridView: View {
       }
       Spacer()
     }
+    .navigationBarHidden(true)
     .toolbar {
       ToolbarItem(placement: .bottomBar) {
-        Button(
-          action: { self.notesGridViewModel.createNote.send() },
-          label: {
-            ZStack {
-              Image(systemName: "viewfinder")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 45)
-              Image(systemName: "book")
-            }
-          }
-        )
-        .foregroundColor(.black.opacity(0.6))
-      }
-      ToolbarItem(placement: .destructiveAction) {
-        if self.notesGridViewModel.canDelete {
-          Button("Delete", role: .destructive) {
-            self.isConfirmingDelete = true
-          }
-          .foregroundColor(.red)
-          .font(.system(size: 15))
-          .confirmationDialog(
-            "Are you sure?",
-            isPresented: self.$isConfirmingDelete
-          ) {
-            Button("Delete group", role: .destructive) {
-              self.notesGridViewModel.deleteGroup.send()
-            }
-          }
-        } else {
+        if self.notesGridViewModel.model.notes.count == 0 {
           Spacer().frame(height: 0)
+            .transition(AnyTransition.slide.animation(.easeInOut(duration: 0.35)))
+        } else {
+          Button(
+            action: { self.notesGridViewModel.createNote.send() },
+            label: {
+              ZStack {
+                Image(systemName: "viewfinder")
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(height: 45)
+                Image(systemName: "book")
+              }
+            }
+          )
+          .foregroundColor(.primary.opacity(0.6))
+          .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
         }
       }
     }
     .onDisappear {
       self.notesGridViewModel.saveGroup()
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
   }
 
   func onNoteSend(id: InternalObjectId) { self.notesGridViewModel.viewNote.send(id) }
 }
 
-struct NotesGridView_Previews: PreviewProvider {
-  static var previews: some View {
-    NotesGridView(
-      notesGridViewModel: NotesGridViewModel.notesGridViewModelPreview
-    )
-  }
+#Preview {
+  NotesGridView(
+    notesGridViewModel: NotesGridViewModel.notesGridViewModelPreview
+  )
 }

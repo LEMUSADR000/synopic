@@ -298,7 +298,6 @@
 			children = (
 				1E56EB0C299216D600EE3D0F /* ProcessScans */,
 				1EC949C52990BFD000024142 /* ScanDocuments */,
-				1EA37A1C2999665F0073E686 /* SummaryTypeToggle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -306,6 +305,7 @@
 		1E56EB0C299216D600EE3D0F /* ProcessScans */ = {
 			isa = PBXGroup;
 			children = (
+				1EA37A1C2999665F0073E686 /* SummaryTypeToggle.swift */,
 				1E56EB0D2992176100EE3D0F /* ProcessScansView.swift */,
 			);
 			path = ProcessScans;

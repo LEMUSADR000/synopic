@@ -74,6 +74,7 @@ class LandingViewModel: ViewModel {
 
   private func onLoadGroup() {
     self.summaries.groups
+      .delay(for: 0.05, scheduler: RunLoop.main)
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }
 

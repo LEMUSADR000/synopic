@@ -193,6 +193,17 @@ class NotesGridViewModel: ViewModel {
       group: Group()
     )
 
+    notesViewModel.model = GroupModel(
+      title: "Title",
+      author: "Author", 
+      [
+//        Note(id: nil, created: Date.now, summary: "Body1"),
+//        Note(id: nil, created: Date.now, summary: "Body2"),
+//        Note(id: nil, created: Date.now, summary: "Body3")
+      ],
+      theme: Color.generateRandomPastelColor()
+    )
+
     return notesViewModel
   }
 }

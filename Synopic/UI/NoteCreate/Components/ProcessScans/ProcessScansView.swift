@@ -49,7 +49,6 @@ struct ProcessScansView: View {
       )
     }
     .padding(.bottom, 20)
-    //    .ignoresSafeArea(.keyboard, edges: .bottom)
     .background(Color(UIColor.secondarySystemBackground))
     .onTapGesture {
       self.hideKeyboard()
@@ -57,8 +56,7 @@ struct ProcessScansView: View {
   }
 }
 
-struct ProcessScansView_Previews: PreviewProvider {
-  static let appAssembler = AppAssembler()
-  static let viewModel = appAssembler.resolve(NoteCreateViewModel.self)!
-  static var previews: some View { ProcessScansView(viewModel: viewModel) }
+#Preview {
+  let model = AppAssembler().resolve(NoteCreateViewModel.self)!
+  return ProcessScansView(viewModel: model)
 }
