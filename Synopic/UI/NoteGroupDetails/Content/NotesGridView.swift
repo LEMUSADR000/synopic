@@ -25,7 +25,9 @@ struct NotesGridView: View {
           prompt: Text("Title")
         )
         .font(.headline)
-        .frame(height: 45)
+        .frame(height: 25)
+        .padding()
+        .cornerRadius(5)
         Divider()
         TextField(
           self.notesGridViewModel.model.author,
@@ -33,7 +35,9 @@ struct NotesGridView: View {
           prompt: Text("Author")
         )
         .font(.subheadline)
-        .frame(height: 45)
+        .frame(height: 25)
+        .padding()
+        .cornerRadius(5)
         Divider()
       }
       .padding(.horizontal, 24)
