@@ -54,7 +54,7 @@ struct GroupCard: View {
               .foregroundColor(.black.opacity(0.5))
               .padding(.top, width / 25)
               .padding(.bottom, width / 40)
-              .padding(.horizontal, width / 40)
+              .padding(.horizontal, width / 30)
               .lineLimit(1)
               .minimumScaleFactor(0.1)
           }

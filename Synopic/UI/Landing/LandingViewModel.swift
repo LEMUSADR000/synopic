@@ -118,10 +118,12 @@ extension Date {
 
     if day == 0 {
       return "Today"
-    } else if day > 0 && day < 1 {
+    } else if day > 0 && day <= 1 {
       return "Yesterday"
     } else if day < 7 {
       return "Previous 7 Days"
+    } else if day <= 30 {
+      return "Previous 30 Days"
     } else {
       let formatter = DateFormatter()
       formatter.dateFormat = "yyyy"
