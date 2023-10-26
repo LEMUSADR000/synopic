@@ -25,7 +25,6 @@ struct NoteGroupDetailsCoordinatorView: View {
     }
     .navigationBarTitleDisplayMode(.inline)
     .navigationTitle("")
-    .navigationViewStyle(.stack)
     .toolbar {
       ToolbarItem(placement: .primaryAction) {
         if self.coordinator.notesGridViewModel.canDelete {
