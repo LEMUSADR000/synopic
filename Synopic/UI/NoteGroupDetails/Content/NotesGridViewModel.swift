@@ -195,11 +195,11 @@ class NotesGridViewModel: ViewModel {
 
     notesViewModel.model = GroupModel(
       title: "Title",
-      author: "Author", 
+      author: "Author",
       [
-//        Note(id: nil, created: Date.now, summary: "Body1"),
-//        Note(id: nil, created: Date.now, summary: "Body2"),
-//        Note(id: nil, created: Date.now, summary: "Body3")
+        Note(id: nil, created: Date.now, summary: "Body1"),
+        Note(id: nil, created: Date.now, summary: "Body2"),
+        Note(id: nil, created: Date.now, summary: "Body3")
       ],
       theme: Color.generateRandomPastelColor()
     )

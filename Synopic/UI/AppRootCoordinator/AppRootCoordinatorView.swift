@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AppRootCoordinatorView: View {
+  @State var isActive: Bool = false
   @StateObject var coordinator: AppRootCoordinator
 
   var body: some View {
@@ -17,7 +18,7 @@ struct AppRootCoordinatorView: View {
         .navigation(item: self.$coordinator.noteGroupDetailsCoordinator) { c in
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
-    }.navigationViewStyle(.stack)
+    }
   }
 }
 
