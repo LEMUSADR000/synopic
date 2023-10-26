@@ -29,7 +29,7 @@ struct ViewContent: View {
                 .font(.caption)
                 .padding(.leading, spacing)
               Spacer()
-            }
+            }.frame(width: geo.size.width)
             GroupGrid(
               items: self.$viewModel.sections[i].items,
               onTap: self.viewModel.viewGroup.send,
@@ -38,9 +38,9 @@ struct ViewContent: View {
               spacing: spacing
             )
             Spacer().frame(height: spacing * 2)
-          }
+          }.frame(width: geo.size.width)
         }
-      }
+      }.frame(width: geo.size.width)
     }
   }
 }
