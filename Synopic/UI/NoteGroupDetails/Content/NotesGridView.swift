@@ -99,11 +99,6 @@ struct NotesGridView: View {
         }
         Spacer().frame(height: 50)
       }
-      .navigationBarHidden(true)
-      .onDisappear {
-        self.notesGridViewModel.saveGroup()
-      }
-      .ignoresSafeArea(.keyboard, edges: .bottom)
 
       VStack {
         Spacer()
@@ -128,6 +123,11 @@ struct NotesGridView: View {
           .transition(AnyTransition.opacity.animation(.easeInOut(duration: 0.35)))
         }
       }
+    }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
+    .navigationBarHidden(true)
+    .onDisappear {
+      self.notesGridViewModel.saveGroup()
     }
   }
 
