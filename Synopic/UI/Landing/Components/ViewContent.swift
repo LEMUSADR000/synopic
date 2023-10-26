@@ -27,10 +27,9 @@ struct ViewContent: View {
             HStack {
               Text(self.viewModel.sections[i].title.uppercased())
                 .font(.caption)
-                .padding(.leading, 20)
+                .padding(.leading, spacing)
               Spacer()
             }
-
             GroupGrid(
               items: self.$viewModel.sections[i].items,
               onTap: self.viewModel.viewGroup.send,
@@ -38,6 +37,7 @@ struct ViewContent: View {
               columns: columns,
               spacing: spacing
             )
+            Spacer().frame(height: spacing * 2)
           }
         }
       }
