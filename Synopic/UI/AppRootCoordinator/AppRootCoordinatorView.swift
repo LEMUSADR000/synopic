@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AppRootCoordinatorView: View {
-  @State var isActive: Bool = false
   @StateObject var coordinator: AppRootCoordinator
 
   var body: some View {
