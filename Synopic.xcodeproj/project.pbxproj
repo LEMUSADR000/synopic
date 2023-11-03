@@ -87,6 +87,7 @@
 		7924A6542AE745A4000F8575 /* GroupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7924A6532AE745A4000F8575 /* GroupModel.swift */; };
 		7924CA3C2AEB5EC200E7E57C /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7924CA3B2AEB5EC200E7E57C /* Splash.swift */; };
 		7935BEF62AEA297700237030 /* ColorSchemeAwareColorInverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7935BEF52AEA297700237030 /* ColorSchemeAwareColorInverter.swift */; };
+		79BD9BC02AF4CBCA00DA01CC /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BD9BBF2AF4CBCA00DA01CC /* CardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -189,6 +190,7 @@
 		7924A6532AE745A4000F8575 /* GroupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupModel.swift; sourceTree = "<group>"; };
 		7924CA3B2AEB5EC200E7E57C /* Splash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
 		7935BEF52AEA297700237030 /* ColorSchemeAwareColorInverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSchemeAwareColorInverter.swift; sourceTree = "<group>"; };
+		79BD9BBF2AF4CBCA00DA01CC /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -327,6 +329,7 @@
 				1ED88E4229904D630052BD10 /* TabBarContent.swift */,
 				1EA37A1729984E350073E686 /* UIViewRepresentable */,
 				7935BEF52AEA297700237030 /* ColorSchemeAwareColorInverter.swift */,
+				79BD9BBF2AF4CBCA00DA01CC /* CardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -822,6 +825,7 @@
 				1E5A16B82AD3491200A7CA3F /* CameraManager.swift in Sources */,
 				1E4D54C52A687D5800CD524A /* LazyList.swift in Sources */,
 				1E63E7D8298781C500571DD3 /* NoteCardView.swift in Sources */,
+				79BD9BC02AF4CBCA00DA01CC /* CardView.swift in Sources */,
 				1ED88E4329904D630052BD10 /* TabBarContent.swift in Sources */,
 				1EA187212952BC590017B38B /* ViewModel.swift in Sources */,
 				1ED88E2D298F3E5B0052BD10 /* SearchBar.swift in Sources */,
