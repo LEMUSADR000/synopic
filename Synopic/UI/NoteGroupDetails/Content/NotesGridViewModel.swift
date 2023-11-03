@@ -55,7 +55,8 @@ class NotesGridViewModel: ViewModel {
   private func bind() {
     self.cancelBag = CancelBag()
     self.onGroupDelete()
-    self.onCreateNote()
+    self.onCreateNoteTapped()
+    self.onDeleteNote()
     self.onTakePicture()
     self.onViewNote()
     self.loadNotes()
@@ -75,6 +76,7 @@ class NotesGridViewModel: ViewModel {
   let takePicture: PassthroughSubject<Void, Never> = PassthroughSubject()
   let viewNote: PassthroughSubject<InternalObjectId, Never> = PassthroughSubject()
   let noteCreated: PassthroughSubject<Note, Never> = PassthroughSubject()
+  let deleteNote: PassthroughSubject<Int, Never> = PassthroughSubject()
 
   func saveGroup() {
     Just(1)
@@ -147,7 +149,19 @@ class NotesGridViewModel: ViewModel {
       .store(in: &self.cancelBag)
   }
 
-  private func onCreateNote() {
+  private func onDeleteNote() {
+    self.deleteNote
+      .sink(receiveValue: { [weak self] index in
+        guard let self = self else { return }
+        withAnimation {
+          self.model.notes.remove(at: index)
+          self.selected = index
+        }
+      })
+      .store(in: &self.cancelBag)
+  }
+
+  private func onCreateNoteTapped() {
     self.createNote
       .sink(receiveValue: { [weak self] in
         guard let self = self else { return }

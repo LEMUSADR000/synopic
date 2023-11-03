@@ -79,7 +79,7 @@ struct NotesGridView: View {
                 ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
                   CardView(
                     background: self.notesGridViewModel.theme,
-                    onTap: { /* TODO: Implement note delete */ }
+                    onTap: { self.notesGridViewModel.deleteNote.send(i) }
                   ) {
                     VStack {
                       Spacer()
