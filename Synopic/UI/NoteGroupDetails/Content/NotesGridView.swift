@@ -77,7 +77,10 @@ struct NotesGridView: View {
                 currentIndicator: UIColor(self.notesGridViewModel.theme)
               ) {
                 ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-                  CardView(background: self.notesGridViewModel.theme) {
+                  CardView(
+                    background: self.notesGridViewModel.theme,
+                    onTap: { /* TODO: Implement note delete */ }
+                  ) {
                     VStack {
                       Spacer()
                       HStack {

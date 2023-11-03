@@ -7,13 +7,21 @@
 
 import SwiftUI
 
+typealias OnTap = () -> Void
+
 struct CardView<Content>: View where Content: View {
   let background: Color
   private var content: () -> Content
+  private let onTap: OnTap?
 
-  @inlinable init(background: Color, @ViewBuilder content: @escaping () -> Content) {
+  @inlinable init(
+    background: Color,
+    onTap: OnTap?,
+    @ViewBuilder content: @escaping () -> Content
+  ) {
     self.background = background
     self.content = content
+    self.onTap = onTap
   }
 
   var body: some View {
@@ -23,12 +31,9 @@ struct CardView<Content>: View where Content: View {
         .cornerRadius(10)
         .shadow(radius: 5)
         .padding()
-      Button(action: {
-        // Handle the exit button action here
-        print("Exit button tapped")
-      }) {
+      Button(action: onTap ?? {}) {
         Image(systemName: "xmark.circle.fill")
-          .foregroundColor(.primary)
+          .foregroundColor(.primary.opacity(0.5))
           .padding()
       }
       .padding()
@@ -37,7 +42,12 @@ struct CardView<Content>: View where Content: View {
 }
 
 #Preview {
-  CardView(background: Color.generateRandomPastelColor()) {
+  CardView(
+    background: Color.generateRandomPastelColor(),
+    onTap: {
+      print("tapped")
+    }
+  ) {
     Text("test")
       .frame(width: 200, height: 200)
   }
