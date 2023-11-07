@@ -151,8 +151,21 @@ class NotesGridViewModel: ViewModel {
 
   private func onDeleteNote() {
     self.deleteNote
+      .receive(on: .main)
+      .flatMap { [weak self] index -> AnyPublisher<Int?, Error> in
+        guard let self = self else {
+          return Just(nil)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+        }
+        let note = self.model.notes[index]
+
+        return self.summaries.deleteNote(note: note)
+          .map { _ in index }
+          .eraseToAnyPublisher()
+      }
       .sink(receiveValue: { [weak self] index in
-        guard let self = self else { return }
+        guard let self = self, let index = index else { return }
         withAnimation {
           self.model.notes.remove(at: index)
           self.selected = index

@@ -30,13 +30,12 @@ struct CardView<Content>: View where Content: View {
         .background(background)
         .cornerRadius(10)
         .shadow(radius: 5)
-        .padding()
       Button(action: onTap ?? {}) {
         Image(systemName: "xmark.circle.fill")
           .foregroundColor(.primary.opacity(0.5))
-          .padding()
       }
-      .padding()
+      .padding(.trailing, 10)
+      .padding(.top, 10)
     }
   }
 }
