@@ -77,13 +77,24 @@ struct NotesGridView: View {
                 currentIndicator: UIColor(self.notesGridViewModel.theme)
               ) {
                 ForEach(Array(self.notesGridViewModel.model.notes.enumerated()), id: \.0) { i, note in
-                  NoteCardView(background: Color(UIColor.secondarySystemBackground)) {
-                    Text(note.summary)
-                      .fontWeight(.light)
-                      .font(.system(size: 36))
-                      .multilineTextAlignment(.leading)
-                      .minimumScaleFactor(0.1)
-                      .padding()
+                  CardView(
+                    background: self.notesGridViewModel.theme,
+                    onTap: { self.notesGridViewModel.deleteNote.send(i) }
+                  ) {
+                    VStack {
+                      Spacer()
+                      HStack {
+                        Spacer()
+                        Text(note.summary)
+                          .fontWeight(.light)
+                          .font(.system(size: 36))
+                          .multilineTextAlignment(.leading)
+                          .minimumScaleFactor(0.1)
+                          .padding()
+                        Spacer()
+                      }
+                      Spacer()
+                    }
                   }
                   .tag(i)
                   .padding()

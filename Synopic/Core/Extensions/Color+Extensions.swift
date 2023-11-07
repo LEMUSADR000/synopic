@@ -73,7 +73,7 @@ extension UIColor {
     var randomColor = UIColor(red: self.randomCGFloat, green: self.randomCGFloat, blue: self.randomCGFloat, alpha: 1.0)
 
     // Saturate the color by 10%
-    randomColor = randomColor.saturated(by: 0.1)
+    randomColor = randomColor.saturated(by: 0.01)
 
     // Mix with white
     randomColor = randomColor.mixed(with: UIColor.white)

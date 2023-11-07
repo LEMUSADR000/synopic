@@ -13,13 +13,15 @@ import Foundation
 protocol SummariesRepository {
   var groups: CurrentValueSubject<LazyList<Group>, Error> { get }
 
-  @discardableResult  func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
+  @discardableResult func loadGroups() -> AnyPublisher<LazyList<Group>, Error>
 
   func loadNotes(parent: InternalObjectId) -> AnyPublisher<[Note], Error>
 
   @discardableResult func updateGroup(group: Group, notes: [Note]) -> AnyPublisher<LazyList<Group>, Error>
 
   @discardableResult func deleteGroup(group: Group) -> AnyPublisher<LazyList<Group>, Error>
+  
+  func deleteNote(note: Note) -> AnyPublisher<Void, Error>
 
   func requestSummary(text: String, type: SummaryType) -> AnyPublisher<Summary, Error>
 }
@@ -105,6 +107,13 @@ class SummariesRepositoryImpl: SummariesRepository {
     }
     .flatMap { _ in self.loadGroups() }
     .eraseToAnyPublisher()
+  }
+
+  func deleteNote(note: Note) -> AnyPublisher<Void, Error> {
+    return Just(note.id)
+      .compactMap { $0 }
+      .flatMap { self.persistentStore.delete(for: $0) }
+      .eraseToAnyPublisher()
   }
 
   func deleteGroup(group: Group) -> AnyPublisher<LazyList<Group>, Error> {
