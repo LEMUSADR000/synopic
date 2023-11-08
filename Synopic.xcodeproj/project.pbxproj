@@ -364,7 +364,6 @@
 		1EA1872C2952C0710017B38B /* AppRootCoordinator */ = {
 			isa = PBXGroup;
 			children = (
-				79EC3B9F2AEA190000EE0C4D /* Components */,
 				1EA1872F2952C0990017B38B /* AppRootCoordinatorView.swift */,
 				1EA1872D2952C0850017B38B /* AppRootCoordinator.swift */,
 			);
@@ -630,13 +629,6 @@
 				7924A6532AE745A4000F8575 /* GroupModel.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		79EC3B9F2AEA190000EE0C4D /* Components */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

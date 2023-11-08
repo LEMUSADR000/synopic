@@ -23,6 +23,7 @@ struct NoteGroupDetailsCoordinatorView: View {
           CameraView(model: c)
         }
     }
+    .navigationViewStyle(StackNavigationViewStyle())
     .navigationBarTitleDisplayMode(.inline)
     .navigationTitle("")
     .toolbar {

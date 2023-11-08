@@ -19,6 +19,7 @@ struct AppRootCoordinatorView: View {
           NoteGroupDetailsCoordinatorView(coordinator: c)
         }
     }
+    .navigationViewStyle(StackNavigationViewStyle())
   }
 }
 

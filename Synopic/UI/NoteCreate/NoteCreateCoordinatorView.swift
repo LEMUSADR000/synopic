@@ -21,6 +21,7 @@ struct NoteCreateCoordinatorView: View {
         ProcessScansView(viewModel: self.coordinator.noteCreateViewModel)
       }
     }
+    .navigationViewStyle(StackNavigationViewStyle())
   }
 }
 
