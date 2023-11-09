@@ -1,7 +1,7 @@
 # Synopic - Study guide pocket buddy
 
-Architecture: MVVM + Service Locator (Swinject)
-Backend: AWS Lambda + API Gateway + Secrets Manager + OpenAI API
+* Architecture: MVVM + Service Locator (Swinject)
+* Backend: AWS Lambda + API Gateway + Secrets Manager + OpenAI API
 
 ## Using AI tools to make an app from scratch breakdown
 #### ChatGPT
